@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2022
-** Loader.hpp
+** Node.hpp
 ** File description:
-** Loader
+** Node
 */
 
 #ifndef NODE_HPP
@@ -16,8 +16,13 @@ namespace neo
 {
     class Node
     {
+    public:
+        Node(std::shared_ptr<MessageBus> messageBus);
+        virtual ~Node() = default;
+
         protected:
-            std::shared_ptr<MessageBus> messageBus;
+            std::shared_ptr<MessageBus> _messageBus;
+
             std::function<void (Message)> getNotify(void);
             void postMessage(Message);
             virtual void onNotify(Message) = 0;
