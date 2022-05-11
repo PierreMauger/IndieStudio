@@ -16,17 +16,17 @@ namespace neo
 {
     class Node
     {
-    public:
-        Node(std::shared_ptr<MessageBus> messageBus);
-        virtual ~Node() = default;
-
         protected:
             std::shared_ptr<MessageBus> _messageBus;
 
             std::function<void(Message)> getNotify();
             void postMessage(Message);
             virtual void onNotify(Message) = 0;
+
+        public:
+            Node(std::shared_ptr<MessageBus> messageBus);
+            virtual ~Node() = default;
     };
 }
 
-#endif
+#endif // NODE_HPP

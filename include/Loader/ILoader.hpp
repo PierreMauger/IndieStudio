@@ -18,4 +18,4 @@ namespace neo
     };
 }
 
-#endif
+#endif // LOADER_HPP

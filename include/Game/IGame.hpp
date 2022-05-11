@@ -8,15 +8,14 @@
 #ifndef GAME_HPP
     #define GAME_HPP
 
-    #include "includes.hpp"
-
+    #include "Node.hpp"
 
 namespace neo
 {
-    class IGame
+    class IGame : public virtual Node
     {
 
     };
 }
 
-#endif
+#endif // GAME_HPP

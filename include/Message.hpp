@@ -27,4 +27,4 @@ namespace neo
     };
 }
 
-#endif
+#endif // MESSAGE_HPP
