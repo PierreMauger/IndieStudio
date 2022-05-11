@@ -16,8 +16,9 @@ namespace neo
     class MessageBus
     {
         private:
-            std::vector<std::function<void ()>> functionList;
-            std::queue<Message> messageQueue;
+            std::vector<std::function<void(Message)>> _functionList;
+            std::queue<Message> _messageQueue;
+
         public:
             void addReceiver(std::function<void (Message)>);
             void notify(void);
