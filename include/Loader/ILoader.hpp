@@ -5,8 +5,8 @@
 ** Loader
 */
 
-#ifndef LOADER_HPP
-    #define LOADER_HPP
+#ifndef ILOADER_HPP
+    #define ILOADER_HPP
 
     #include "Node.hpp"
 
@@ -18,4 +18,4 @@ namespace neo
     };
 }
 
-#endif // LOADER_HPP
+#endif // ILOADER_HPP

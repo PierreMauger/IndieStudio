@@ -5,8 +5,8 @@
 ** Graphics
 */
 
-#ifndef GRAPHICS_HPP
-    #define GRAPHICS_HPP
+#ifndef IGRAPHICS_HPP
+    #define IGRAPHICS_HPP
 
     #include "Node.hpp"
 
@@ -18,4 +18,4 @@ namespace neo
     };
 }
 
-#endif // GRAPHICS_HPP
+#endif // IGRAPHICS_HPP

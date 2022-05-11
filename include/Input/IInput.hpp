@@ -5,8 +5,8 @@
 ** Input
 */
 
-#ifndef INPUT_HPP
-    #define INPUT_HPP
+#ifndef IINPUT_HPP
+    #define IINPUT_HPP
 
     #include "Node.hpp"
 
@@ -18,4 +18,4 @@ namespace neo
     };
 }
 
-#endif // INPUT_HPP
+#endif // IINPUT_HPP

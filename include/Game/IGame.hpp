@@ -5,8 +5,8 @@
 ** Game
 */
 
-#ifndef GAME_HPP
-    #define GAME_HPP
+#ifndef IGAME_HPP
+    #define IGAME_HPP
 
     #include "Node.hpp"
 
@@ -18,4 +18,4 @@ namespace neo
     };
 }
 
-#endif // GAME_HPP
+#endif // IGAME_HPP
