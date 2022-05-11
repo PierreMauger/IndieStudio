@@ -23,7 +23,7 @@ namespace neo
         protected:
             std::shared_ptr<MessageBus> _messageBus;
 
-            std::function<void (Message)> getNotify(void);
+            std::function<void(Message)> getNotify();
             void postMessage(Message);
             virtual void onNotify(Message) = 0;
     };

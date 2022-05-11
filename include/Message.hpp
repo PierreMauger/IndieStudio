@@ -8,7 +8,6 @@
 #ifndef MESSAGE_HPP
     #define MESSAGE_HPP
 
-    #include "Message.hpp"
     #include "includes.hpp"
 
 namespace neo
@@ -16,11 +15,15 @@ namespace neo
     class Message
     {
         private:
-            std::vector<std::byte> data;
-            int target;
+            std::vector<std::byte> _data;
+            int _target;
+
         public:
-            std::vector<std::byte> getData(void);
-            int getTarget(void);
+            Message(std::vector<std::byte> data, int target = -1);
+            ~Message() = default;
+
+            std::vector<std::byte> getData() const;
+            int getTarget() const;
     };
 }
 

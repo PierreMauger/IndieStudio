@@ -20,8 +20,8 @@ namespace neo
             std::queue<Message> _messageQueue;
 
         public:
-            void addReceiver(std::function<void (Message)>);
-            void notify(void);
+            void addReceiver(std::function<void(Message)>);
+            void notify();
             void sendMessage(Message);
     };
 }
