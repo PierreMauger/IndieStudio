@@ -6,8 +6,10 @@
 */
 
 #include "includes.hpp"
+#include "Neo.hpp"
 
 int main(int argc, char **argv)
 {
+    neo::Neo neo;
     return 0;
 }

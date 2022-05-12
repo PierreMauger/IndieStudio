@@ -37,6 +37,7 @@ set(SRC
   src/MessageBus.cpp
   src/Node.cpp
   src/Audio/Audio.cpp
+  src/Neo.cpp
 )
 
 set(CMAKE_EXE_LINKER_FLAGS -fexceptions)

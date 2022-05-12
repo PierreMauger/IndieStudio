@@ -8,9 +8,9 @@
 #ifndef NODE_HPP
     #define NODE_HPP
 
-    #include "MessageBus.hpp"
-    #include "Message.hpp"
     #include "includes.hpp"
+    #include "Message.hpp"
+    #include "MessageBus.hpp"
 
 namespace neo
 {
