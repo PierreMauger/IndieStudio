@@ -25,12 +25,11 @@ void MessageBus::notify()
         int target = this->_messageQueue.front().getTarget();
         // Broadcast message, else send to target
         if (target == -1) {
-            for (auto it = this->_functionList.begin(); it != this->_functionList.end(); it++)
-                (*it)(this->_messageQueue.front());
+            for (auto &function : this->_functionList)
+                function(this->_messageQueue.front());
         } else {
-            auto it = std::find(this->_functionList.begin(), this->_functionList.end(), target);
-            if (it != this->_functionList.end())
-                (*it)(this->_messageQueue.front());
+            if (target < this->_functionList.size())
+                this->_functionList[target](this->_messageQueue.front());
         }
         this->_messageQueue.pop();
     }

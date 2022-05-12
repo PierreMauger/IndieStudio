@@ -2,4 +2,6 @@ cross_platform/
 *.o
 bomberman
 .vscode
+build/
+bomberman
 dorian
