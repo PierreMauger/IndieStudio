@@ -37,6 +37,10 @@ set(SRC
   src/MessageBus.cpp
   src/Node.cpp
   src/Audio/Audio.cpp
+  src/Game/Game.cpp
+  src/Graphics/Graphics.cpp
+  src/Input/Input.cpp
+  src/Loader/Loader.cpp
   src/Neo.cpp
 )
 

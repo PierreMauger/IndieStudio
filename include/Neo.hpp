@@ -10,6 +10,10 @@
 
     #include "includes.hpp"
     #include "Audio.hpp"
+    #include "Game.hpp"
+    #include "Graphics.hpp"
+    #include "Input.hpp"
+    #include "Loader.hpp"
 
 namespace neo
 {
@@ -18,6 +22,10 @@ namespace neo
         private:
             std::shared_ptr<MessageBus> _messageBus;
             Audio _audio;
+            Game _game;
+            Graphics _graphics;
+            Input _input;
+            Loader _loader;
 
         public:
             Neo();

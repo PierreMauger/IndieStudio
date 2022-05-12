@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2022
-** MessageBus.hpp
+** MessageBus.cpp
 ** File description:
 ** MessageBus
 */

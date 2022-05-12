@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2022
-** Message.hpp
+** Message.cpp
 ** File description:
 ** Message
 */

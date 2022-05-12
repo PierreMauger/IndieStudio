@@ -8,13 +8,14 @@
 #ifndef IINPUT_HPP
     #define IINPUT_HPP
 
-    #include "Node.hpp"
+    #include "includes.hpp"
 
 namespace neo
 {
-    class IInput : public virtual Node
+    class IInput
     {
-
+        public:
+            virtual ~IInput() = default;
     };
 }
 

@@ -8,13 +8,14 @@
 #ifndef IGRAPHICS_HPP
     #define IGRAPHICS_HPP
 
-    #include "Node.hpp"
+    #include "includes.hpp"
 
 namespace neo
 {
-    class IGraphics : public virtual Node
+    class IGraphics
     {
-
+        public:
+            virtual ~IGraphics() = default;
     };
 }
 

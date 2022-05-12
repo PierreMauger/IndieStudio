@@ -8,13 +8,14 @@
 #ifndef ILOADER_HPP
     #define ILOADER_HPP
 
-    #include "Node.hpp"
+    #include "includes.hpp"
 
 namespace neo
 {
-    class ILoader : public virtual Node
+    class ILoader
     {
-
+        public:
+            virtual ~ILoader() = default;
     };
 }
 

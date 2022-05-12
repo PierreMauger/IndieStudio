@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2022
-** Node.hpp
+** Node.cpp
 ** File description:
 ** Node
 */

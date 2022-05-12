@@ -8,13 +8,14 @@
 #ifndef IGAME_HPP
     #define IGAME_HPP
 
-    #include "Node.hpp"
+    #include "includes.hpp"
 
 namespace neo
 {
-    class IGame : public virtual Node
+    class IGame
     {
-
+        public:
+            virtual ~IGame() = default;
     };
 }
 

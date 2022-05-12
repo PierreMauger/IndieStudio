@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2022
-** Neo.hpp
+** Neo.cpp
 ** File description:
 ** Neo
 */
@@ -11,6 +11,11 @@ using namespace neo;
 
 Neo::Neo() :
 _messageBus(std::make_shared<MessageBus>()),
-_audio(_messageBus)
+_audio(_messageBus),
+_game(_messageBus),
+_graphics(_messageBus),
+_input(_messageBus),
+_loader(_messageBus)
 {
+    std::cout << "Engine created" << std::endl;
 }
