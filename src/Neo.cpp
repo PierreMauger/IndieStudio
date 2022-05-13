@@ -19,3 +19,13 @@ _loader(_messageBus)
 {
     std::cout << "Engine created" << std::endl;
 }
+
+void Neo::run()
+{
+    while (1) {
+        this->_input.update();
+        this->_game.update();
+
+        this->_messageBus->notify();
+    }
+}

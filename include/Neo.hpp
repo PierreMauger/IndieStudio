@@ -30,6 +30,8 @@ namespace neo
         public:
             Neo();
             ~Neo() = default;
+
+            void run();
     };
 }
 

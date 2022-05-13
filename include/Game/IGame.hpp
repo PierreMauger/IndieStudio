@@ -16,6 +16,8 @@ namespace neo
     {
         public:
             virtual ~IGame() = default;
+
+            virtual void update() = 0;
     };
 }
 

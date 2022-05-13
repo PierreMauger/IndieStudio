@@ -16,6 +16,8 @@ namespace neo
     {
         public:
             virtual ~IInput() = default;
+
+            virtual void update() = 0;
     };
 }
 

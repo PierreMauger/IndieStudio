@@ -20,3 +20,8 @@ void Input::onNotify(Message message)
 
     // should not receive any message, but will send on player input
 }
+
+void Input::update()
+{
+
+}

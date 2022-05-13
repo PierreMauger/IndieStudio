@@ -20,3 +20,8 @@ void Game::onNotify(Message message)
 
     // from data, handle player movement/bombs etc
 }
+
+void Game::update()
+{
+
+}

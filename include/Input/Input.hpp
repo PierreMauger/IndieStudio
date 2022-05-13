@@ -26,6 +26,7 @@ namespace neo
             void onNotify(Message);
 
             // Interface functions
+            void update();
     };
 }
 

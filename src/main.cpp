@@ -11,5 +11,7 @@
 int main(int argc, char **argv)
 {
     neo::Neo neo;
+
+    neo.run();
     return 0;
 }
