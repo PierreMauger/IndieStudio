@@ -22,7 +22,7 @@ _loader(_messageBus)
 
 void Neo::run()
 {
-    while (1) {
+    while (!WindowShouldClose()) {
         this->_input.update();
         this->_game.update();
         this->_graphics.draw();

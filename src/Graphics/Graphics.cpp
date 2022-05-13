@@ -12,6 +12,7 @@ using namespace neo;
 Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
     std::cout << "Graphics module created" << std::endl;
+    SetTraceLogLevel(LOG_NONE);
     InitWindow(600, 600, "Neo");
     SetTargetFPS(60);
 }
@@ -32,6 +33,6 @@ void Graphics::draw()
 {
     BeginDrawing();
         ClearBackground(RAYWHITE);
-        DrawText("dorian dans le .gitignore", 100, 100, 20, LIGHTGRAY);
+        DrawText("neo genesis evangelion 3.0 + 1.0", 100, 100, 20, LIGHTGRAY);
     EndDrawing();
 }
