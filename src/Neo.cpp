@@ -25,6 +25,7 @@ void Neo::run()
     while (1) {
         this->_input.update();
         this->_game.update();
+        this->_graphics.draw();
 
         this->_messageBus->notify();
     }

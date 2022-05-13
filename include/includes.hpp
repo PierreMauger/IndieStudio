@@ -14,5 +14,6 @@
     #include <queue>
     #include <iostream>
     #include <cstddef>
+    #include "raylib.h"
 
 #endif // INCLUDES_HPP

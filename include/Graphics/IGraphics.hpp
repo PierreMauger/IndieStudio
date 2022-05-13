@@ -16,6 +16,8 @@ namespace neo
     {
         public:
             virtual ~IGraphics() = default;
+
+            virtual void draw() = 0;
     };
 }
 

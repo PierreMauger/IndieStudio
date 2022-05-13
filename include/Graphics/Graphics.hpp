@@ -20,12 +20,13 @@ namespace neo
 
         public:
             Graphics(std::shared_ptr<MessageBus> messageBus);
-            ~Graphics() = default;
+            ~Graphics();
 
             // Node functions
             void onNotify(Message);
 
             // Interface functions
+            void draw();
     };
 }
 

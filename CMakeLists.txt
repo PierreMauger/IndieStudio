@@ -57,10 +57,17 @@ target_include_directories(${EXEC_NAME} PUBLIC
 
 # link with libs
 # target_link_libraries(${EXEC_NAME} PUBLIC ${CMAKE_THREAD_LIBS_INIT})
-find_library(LIBRT rt)
-if(LIBRT)
-   target_link_libraries(${EXEC_NAME} PUBLIC ${LIBRT})
-endif()
+# find_library(LIBRT rt)
+# if(LIBRT)
+#    target_link_libraries(${EXEC_NAME} PUBLIC ${LIBRT})
+# endif()
+target_link_libraries(${EXEC_NAME} PUBLIC raylib)
+target_link_libraries(${EXEC_NAME} PUBLIC GL)
+target_link_libraries(${EXEC_NAME} PUBLIC m)
+target_link_libraries(${EXEC_NAME} PUBLIC pthread)
+target_link_libraries(${EXEC_NAME} PUBLIC dl)
+target_link_libraries(${EXEC_NAME} PUBLIC rt)
+target_link_libraries(${EXEC_NAME} PUBLIC X11)
 ################## MISC ###################
 
 add_custom_command(
