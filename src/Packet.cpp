@@ -9,14 +9,19 @@
 
 using namespace neo;
 
+std::vector<std::byte> Packet::getData() const
+{
+    return this->_data;
+}
+
 bool Packet::checkSize(size_t size) const
 {
     return (this->_data.size() >= size);
 }
 
-std::vector<std::byte> Packet::getData() const
+void Packet::clear()
 {
-    return this->_data;
+    this->_data.clear();
 }
 
 Packet &Packet::operator<<(int data)

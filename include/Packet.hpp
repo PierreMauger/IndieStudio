@@ -21,9 +21,10 @@ namespace neo
             Packet() = default;
             ~Packet() = default;
 
-            bool checkSize(size_t size) const;
-
             std::vector<std::byte> getData() const;
+
+            bool checkSize(size_t size) const;
+            void clear();
 
             Packet &operator<<(int data);
             Packet &operator<<(float data);
