@@ -28,6 +28,14 @@ Packet &Packet::operator<<(int data)
     return *this;
 }
 
+Packet &Packet::operator<<(float data)
+{
+    this->_data.resize(this->_data.size() + sizeof(float));
+
+    std::memcpy(this->_data.data() + this->_data.size() - sizeof(float), &data, sizeof(float));
+    return *this;
+}
+
 Packet &Packet::operator<<(const std::string &data)
 {
     *this << static_cast<int>(data.size());
@@ -43,6 +51,15 @@ Packet &Packet::operator>>(int &data)
         for (size_t i = 0; i < sizeof(int); i++)
             data += static_cast<int>(this->_data[i]) << (i * 8);
         this->_data.erase(this->_data.begin(), this->_data.begin() + sizeof(int));
+    }
+    return *this;
+}
+
+Packet &Packet::operator>>(float &data)
+{
+    if (this->checkSize(sizeof(float))) {
+        std::memcpy(&data, &this->_data[0], sizeof(float));
+        this->_data.erase(this->_data.begin(), this->_data.begin() + sizeof(float));
     }
     return *this;
 }

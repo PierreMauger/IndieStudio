@@ -26,9 +26,11 @@ namespace neo
             std::vector<std::byte> getData() const;
 
             Packet &operator<<(int data);
+            Packet &operator<<(float data);
             Packet &operator<<(const std::string &data);
 
             Packet &operator>>(int &data);
+            Packet &operator>>(float &data);
             Packet &operator>>(std::string &data);
     };
 }
