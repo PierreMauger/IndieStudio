@@ -16,7 +16,7 @@ Audio::Audio(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 
 void Audio::onNotify(Message message)
 {
-    std::vector<std::byte> data = message.getData();
+    Packet data = message.getData();
 
     // from data, get the sound/music to play
 }

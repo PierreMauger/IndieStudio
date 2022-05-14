@@ -9,13 +9,14 @@
 
 using namespace neo;
 
-Message::Message(std::vector<std::byte> data, int target)
+Message::Message(Packet data, int status, int target)
 {
     this->_data = data;
+    this->_status = status;
     this->_target = target;
 }
 
-std::vector<std::byte> Message::getData() const
+Packet Message::getData() const
 {
     return this->_data;
 }
@@ -23,4 +24,9 @@ std::vector<std::byte> Message::getData() const
 int Message::getTarget() const
 {
     return this->_target;
+}
+
+int Message::getStatus() const
+{
+    return this->_status;
 }

@@ -24,7 +24,7 @@ Graphics::~Graphics()
 
 void Graphics::onNotify(Message message)
 {
-    std::vector<std::byte> data = message.getData();
+    Packet data = message.getData();
 
     // from data, draw elements on screen
 }

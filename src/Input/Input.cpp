@@ -16,12 +16,17 @@ Input::Input(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 
 void Input::onNotify(Message message)
 {
-    std::vector<std::byte> data = message.getData();
+    Packet data = message.getData();
 
     // should not receive any message, but will send on player input
 }
 
 void Input::update()
 {
+    Packet data;
 
+    if (IsKeyPressed(KEY_RIGHT)) {
+        data << "right" << "player";
+        this->postMessage(Message(data, 0, 1));
+    }
 }

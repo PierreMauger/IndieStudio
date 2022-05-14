@@ -9,21 +9,24 @@
     #define MESSAGE_HPP
 
     #include "includes.hpp"
+    #include "Packet.hpp"
 
 namespace neo
 {
     class Message
     {
         private:
-            std::vector<std::byte> _data;
+            Packet _data;
             int _target;
+            int _status;
 
         public:
-            Message(std::vector<std::byte> data, int target = -1);
+            Message(Packet data, int status, int target = -1);
             ~Message() = default;
 
-            std::vector<std::byte> getData() const;
+            Packet getData() const;
             int getTarget() const;
+            int getStatus() const;
     };
 }
 

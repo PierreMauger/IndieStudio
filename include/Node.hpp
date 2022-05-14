@@ -11,6 +11,7 @@
     #include "includes.hpp"
     #include "Message.hpp"
     #include "MessageBus.hpp"
+    #include "Packet.hpp"
 
 namespace neo
 {

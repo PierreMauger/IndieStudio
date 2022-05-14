@@ -16,8 +16,12 @@ Game::Game(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 
 void Game::onNotify(Message message)
 {
-    std::vector<std::byte> data = message.getData();
+    Packet data = message.getData();
+    std::string str;
+    std::string str2;
 
+    data >> str >> str2;
+    std::cout << str << " " << str2 << std::endl;
     // from data, handle player movement/bombs etc
 }
 

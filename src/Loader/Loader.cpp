@@ -16,7 +16,7 @@ Loader::Loader(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 
 void Loader::onNotify(Message message)
 {
-    std::vector<std::byte> data = message.getData();
+    Packet data = message.getData();
 
     // from data, load ressources
 }
