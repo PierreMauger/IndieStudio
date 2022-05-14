@@ -17,7 +17,7 @@ namespace neo
     {
         private:
             Vector2 _pos;
-            Vector4 _speed;
+            Vector2 _speed;
             // attributes
 
         public:

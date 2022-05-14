@@ -32,9 +32,9 @@ void Game::onNotify(Message message)
 
 void Game::update()
 {
-    if (this->_speed.x - this->_speed.z != 0 || this->_speed.w - this->_speed.y != 0) {
-        this->_pos.x += this->_speed.x - this->_speed.z;
-        this->_pos.y += this->_speed.w - this->_speed.y;
+    if (this->_speed.x != 0 || this->_speed.y != 0) {
+        this->_pos.x += this->_speed.x;
+        this->_pos.y += this->_speed.y;
         Packet packet;
         packet << this->_pos.x << this->_pos.y;
         this->postMessage(Message(packet, 0, 2));
@@ -47,13 +47,13 @@ void Game::receiveKeyPressed(Packet data)
 
     data >> key;
     if (key == KEY_RIGHT)
-        this->_speed.x = 1;
+        this->_speed.x += 1;
     if (key == KEY_LEFT)
-        this->_speed.z = 1;
+        this->_speed.x -= 1;
     if (key == KEY_UP)
-        this->_speed.y = 1;
+        this->_speed.y -= 1;
     if (key == KEY_DOWN)
-        this->_speed.w = 1;
+        this->_speed.y += 1;
 }
 
 void Game::receiveKeyReleased(Packet data)
@@ -62,11 +62,11 @@ void Game::receiveKeyReleased(Packet data)
 
     data >> key;
     if (key == KEY_RIGHT)
-        this->_speed.x = 0;
+        this->_speed.x -= 1;
     if (key == KEY_LEFT)
-        this->_speed.z = 0;
+        this->_speed.x += 1;
     if (key == KEY_UP)
-        this->_speed.y = 0;
+        this->_speed.y += 1;
     if (key == KEY_DOWN)
-        this->_speed.w = 0;
+        this->_speed.y -= 1;
 }

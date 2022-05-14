@@ -23,14 +23,14 @@ void Input::onNotify(Message message)
 
 void Input::update()
 {
-    Packet data;
-
     for (int i = KEY_RIGHT; i <= KEY_UP; i++) {
         if (IsKeyPressed(i)) {
+            Packet data;
             data << i;
             this->postMessage(Message(data, 0, 1));
         }
         if (IsKeyReleased(i)) {
+            Packet data;
             data << i;
             this->postMessage(Message(data, 1, 1));
         }
