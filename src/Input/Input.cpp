@@ -26,7 +26,7 @@ void Input::update()
     Packet data;
 
     if (IsKeyPressed(KEY_RIGHT)) {
-        data << "right" << "player";
+        data << "player" << 1 << "right";
         this->postMessage(Message(data, 0, 1));
     }
 }

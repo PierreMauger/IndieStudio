@@ -18,10 +18,11 @@ void Game::onNotify(Message message)
 {
     Packet data = message.getData();
     std::string str;
+    int nb;
     std::string str2;
 
-    data >> str >> str2;
-    std::cout << str << " " << str2 << std::endl;
+    data >> str >> nb >> str2;
+    std::cout << str << " " << nb << " " << str2 << std::endl;
     // from data, handle player movement/bombs etc
 }
 

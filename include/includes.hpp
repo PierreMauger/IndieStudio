@@ -13,6 +13,8 @@
     #include <functional>
     #include <queue>
     #include <iostream>
+    #include <string>
+    #include <cstring>
     #include <cstddef>
     #include "raylib.h"
 
