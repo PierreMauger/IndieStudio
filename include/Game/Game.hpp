@@ -16,6 +16,8 @@ namespace neo
     class Game : public virtual Node, public virtual IGame
     {
         private:
+            float _x;
+            float _y;
             // attributes
 
         public:
@@ -27,6 +29,8 @@ namespace neo
 
             // Interface functions
             void update();
+
+            void receiveInput(Packet);
     };
 }
 

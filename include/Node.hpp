@@ -19,6 +19,7 @@ namespace neo
     {
         protected:
             std::shared_ptr<MessageBus> _messageBus;
+            std::vector<std::function<void(Packet)>> _functionTab;
 
             std::function<void(Message)> getNotify();
             void postMessage(Message);

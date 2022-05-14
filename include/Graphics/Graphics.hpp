@@ -16,6 +16,7 @@ namespace neo
     class Graphics : public virtual Node, public virtual IGraphics
     {
         private:
+            std::string _text;
             // attributes
 
         public:
@@ -27,6 +28,8 @@ namespace neo
 
             // Interface functions
             void draw();
+
+            void receivePos(Packet);
     };
 }
 
