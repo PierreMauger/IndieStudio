@@ -25,8 +25,14 @@ void Input::update()
 {
     Packet data;
 
-    if (IsKeyPressed(KEY_RIGHT)) {
-        data << KEY_RIGHT;
-        this->postMessage(Message(data, 0, 1));
+    for (int i = KEY_RIGHT; i <= KEY_UP; i++) {
+        if (IsKeyPressed(i)) {
+            data << i;
+            this->postMessage(Message(data, 0, 1));
+        }
+        if (IsKeyReleased(i)) {
+            data << i;
+            this->postMessage(Message(data, 1, 1));
+        }
     }
 }

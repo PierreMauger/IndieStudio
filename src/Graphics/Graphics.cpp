@@ -40,11 +40,15 @@ void Graphics::draw()
     BeginDrawing();
         ClearBackground(RAYWHITE);
         DrawText("neo genesis evangelion 3.0 + 1.0", 100, 100, 20, LIGHTGRAY);
-        DrawText(this->_text.c_str(), 100, 200, 20, LIGHTGRAY);
+        DrawCircleV(this->_pos, 20, GREEN);
     EndDrawing();
 }
 
 void Graphics::receivePos(Packet data)
 {
-    data >> this->_text;
+    float x = 0;
+    float y = 0;
+
+    data >> x >> y;
+    this->_pos = {x, y};
 }

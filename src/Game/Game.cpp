@@ -12,10 +12,11 @@ using namespace neo;
 Game::Game(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
     std::cout << "Game module created" << std::endl;
-    this->_x = 0;
-    this->_y = 0;
+    this->_pos = {0, 0};
+    this->_speed = {0, 0};
     this->_functionTab = {
-        std::bind(&Game::receiveInput, this, std::placeholders::_1),
+        std::bind(&Game::receiveKeyPressed, this, std::placeholders::_1),
+        std::bind(&Game::receiveKeyReleased, this, std::placeholders::_1),
     };
 }
 
@@ -31,17 +32,41 @@ void Game::onNotify(Message message)
 
 void Game::update()
 {
-
+    if (this->_speed.x - this->_speed.z != 0 || this->_speed.w - this->_speed.y != 0) {
+        this->_pos.x += this->_speed.x - this->_speed.z;
+        this->_pos.y += this->_speed.w - this->_speed.y;
+        Packet packet;
+        packet << this->_pos.x << this->_pos.y;
+        this->postMessage(Message(packet, 0, 2));
+    }
 }
 
-void Game::receiveInput(Packet data)
+void Game::receiveKeyPressed(Packet data)
 {
     int key = 0;
 
     data >> key;
-    if (key == KEY_RIGHT) {
-        Packet packet;
-        packet << "Player moving left";
-        this->postMessage(Message(packet, 0, 2));
-    }
+    if (key == KEY_RIGHT)
+        this->_speed.x = 1;
+    if (key == KEY_LEFT)
+        this->_speed.z = 1;
+    if (key == KEY_UP)
+        this->_speed.y = 1;
+    if (key == KEY_DOWN)
+        this->_speed.w = 1;
+}
+
+void Game::receiveKeyReleased(Packet data)
+{
+    int key = 0;
+
+    data >> key;
+    if (key == KEY_RIGHT)
+        this->_speed.x = 0;
+    if (key == KEY_LEFT)
+        this->_speed.z = 0;
+    if (key == KEY_UP)
+        this->_speed.y = 0;
+    if (key == KEY_DOWN)
+        this->_speed.w = 0;
 }

@@ -16,7 +16,7 @@ namespace neo
     class Graphics : public virtual Node, public virtual IGraphics
     {
         private:
-            std::string _text;
+            Vector2 _pos;
             // attributes
 
         public:
