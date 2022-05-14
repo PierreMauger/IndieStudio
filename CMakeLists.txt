@@ -33,6 +33,7 @@ set(INC
 )
 
 set(SRC
+  src/Packet.cpp
   src/Message.cpp
   src/MessageBus.cpp
   src/Node.cpp
