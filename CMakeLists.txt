@@ -67,6 +67,7 @@ target_include_directories(${EXEC_NAME} PUBLIC
 # endif()
 target_link_libraries(${EXEC_NAME} PUBLIC raylib)
 target_link_libraries(${EXEC_NAME} PUBLIC GLEW)
+target_link_libraries(${EXEC_NAME} PUBLIC GL)
 ################## MISC ###################
 
 add_custom_command(
