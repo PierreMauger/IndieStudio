@@ -9,7 +9,7 @@ project(plazza_project LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 # find packages
-find_package(Threads REQUIRED)
+find_package(GLEW REQUIRED)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     add_compile_options(-fdiagnostics-color=always)
@@ -65,12 +65,7 @@ target_include_directories(${EXEC_NAME} PUBLIC
 #    target_link_libraries(${EXEC_NAME} PUBLIC ${LIBRT})
 # endif()
 target_link_libraries(${EXEC_NAME} PUBLIC raylib)
-target_link_libraries(${EXEC_NAME} PUBLIC GL)
-target_link_libraries(${EXEC_NAME} PUBLIC m)
-target_link_libraries(${EXEC_NAME} PUBLIC pthread)
-target_link_libraries(${EXEC_NAME} PUBLIC dl)
-target_link_libraries(${EXEC_NAME} PUBLIC rt)
-target_link_libraries(${EXEC_NAME} PUBLIC X11)
+target_link_libraries(${EXEC_NAME} PUBLIC GLEW)
 ################## MISC ###################
 
 add_custom_command(

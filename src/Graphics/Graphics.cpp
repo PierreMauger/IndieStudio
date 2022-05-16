@@ -41,6 +41,13 @@ void Graphics::draw()
         ClearBackground(RAYWHITE);
         DrawText("neo genesis evangelion 3.0 + 1.0", 100, 100, 20, LIGHTGRAY);
         DrawCircleV(this->_pos, 20, GREEN);
+        if (IsGamepadAvailable(0)) {
+            for (int i = 0; i < GetGamepadAxisCount(0); i++) {
+                DrawText(TextFormat("AXIS %i: %.02f", i, GetGamepadAxisMovement(0, i)), 20, 70 + 20*i, 10, DARKGRAY);
+            }
+            if (GetGamepadButtonPressed() != -1) DrawText(TextFormat("DETECTED BUTTON: %i", GetGamepadButtonPressed()), 10, 430, 10, RED);
+                else DrawText("DETECTED BUTTON: NONE", 10, 430, 10, GRAY);
+        }
     EndDrawing();
 }
 

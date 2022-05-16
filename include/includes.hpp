@@ -9,6 +9,7 @@
     #define INCLUDES_HPP
 
     #include <vector>
+    #include <map>
     #include <memory>
     #include <functional>
     #include <queue>
