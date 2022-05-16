@@ -1,15 +1,13 @@
 ################# CONFIG ##################
 
 cmake_minimum_required(VERSION 3.16)
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 # Project name
 project(plazza_project LANGUAGES CXX)
 
 # Set c++ version
 set(CMAKE_CXX_STANDARD 17)
-
-# find packages
-find_package(GLEW REQUIRED)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     add_compile_options(-fdiagnostics-color=always)
@@ -66,8 +64,10 @@ target_include_directories(${EXEC_NAME} PUBLIC
 # if(LIBRT)
 #    target_link_libraries(${EXEC_NAME} PUBLIC ${LIBRT})
 # endif()
+find_package(raylib REQUIRED)
+#find_package(glew REQUIRED)
 target_link_libraries(${EXEC_NAME} PUBLIC raylib)
-target_link_libraries(${EXEC_NAME} PUBLIC GLEW)
+target_link_libraries(${EXEC_NAME} PUBLIC glew)
 target_link_libraries(${EXEC_NAME} PUBLIC GL)
 ################## MISC ###################
 
