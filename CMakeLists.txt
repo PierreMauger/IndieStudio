@@ -45,6 +45,7 @@ set(SRC
   src/Loader/Loader.cpp
   src/Animation/Shader.cpp
   src/Animation/Mesh.cpp
+  src/Animation/Bone.cpp
   src/Neo.cpp
 )
 

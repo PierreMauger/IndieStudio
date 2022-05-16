@@ -40,8 +40,8 @@ namespace neo
     class Mesh
     {
         private:
-            std::vector<Vertex> vertices;
-            std::vector<unsigned int> indices;
+            std::vector<Vertex> _vertices;
+            std::vector<unsigned int> _indices;
             neo::Material _material;
             unsigned int VAO;
             unsigned int VBO;
