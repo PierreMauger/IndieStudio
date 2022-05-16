@@ -30,6 +30,7 @@ set(INC
   include/Graphics/
   include/Input/
   include/Loader/
+  include/Animation/
 )
 
 set(SRC
@@ -42,6 +43,7 @@ set(SRC
   src/Graphics/Graphics.cpp
   src/Input/Input.cpp
   src/Loader/Loader.cpp
+  src/Animation/Shader.cpp
   src/Neo.cpp
 )
 
