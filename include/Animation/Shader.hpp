@@ -16,13 +16,13 @@
 
 namespace neo
 {
-    class Shaders
+    class Shader
     {
         public:
             unsigned int ID;
             // constructor generates the shader on the fly
             // ------------------------------------------------------------------------
-            Shaders(const char *vertexPath, const char *fragmentPath);
+            Shader(const char *vertexPath, const char *fragmentPath);
             // activate the shader
             // ------------------------------------------------------------------------
             void use() const;
