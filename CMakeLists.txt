@@ -49,6 +49,7 @@ set(SRC
   src/Animation/Bone.cpp
   src/Animation/Model.cpp
   src/Animation/Animation.cpp
+  src/Animation/Animator.cpp
   src/Neo.cpp
 )
 
