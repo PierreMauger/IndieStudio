@@ -18,6 +18,10 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->_functionTab = {
         std::bind(&Graphics::receivePos, this, std::placeholders::_1),
     };
+    glEnable(GL_DEPTH_TEST);
+
+    this->_shader = new neo::Shader("ressources/camera.vs", "ressources/camera.fs");
+    this->_model = new neo::Model("ressources/FloofFox_model.dae");
 }
 
 Graphics::~Graphics()
@@ -48,6 +52,23 @@ void Graphics::draw()
             if (GetGamepadButtonPressed() != -1) DrawText(TextFormat("DETECTED BUTTON: %i", GetGamepadButtonPressed()), 10, 430, 10, RED);
                 else DrawText("DETECTED BUTTON: NONE", 10, 430, 10, GRAY);
         }
+
+        this->_shader->use();
+        glm::vec3 pos = glm::vec3(this->_pos.x, this->_pos.y, 0);
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
+        glm::mat4 view = glm::lookAt(glm::vec3(0, 0, 10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+        this->_shader->setMat4("projection", glm::perspective(glm::radians(45.0f), (float)480 / (float)480, 0.1f, 100.0f));
+        this->_shader->setMat4("view", view);
+        this->_shader->setMat4("model", model);
+
+        this->_shader->setVec3("viewPos", 1.0f, 0.0f, 0.0f);
+        this->_shader->setVec3("lightPos", 1.0f, 0.0f, 0.0f);
+
+        for (std::size_t i = 0; i < 100; i++)
+            this->_shader->setMat4("finalBonesMatrices[" + std::to_string(i) + "]", glm::mat4(1.0f));
+
+        this->_model->draw(*this->_shader);
+
     EndDrawing();
 }
 

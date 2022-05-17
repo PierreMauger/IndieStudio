@@ -6,6 +6,9 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 # Project name
 project(plazza_project LANGUAGES CXX)
 
+# find packages
+find_package(GLEW REQUIRED)
+
 # Set c++ version
 set(CMAKE_CXX_STANDARD 17)
 
@@ -68,7 +71,7 @@ target_include_directories(${EXEC_NAME} PUBLIC
 find_package(raylib REQUIRED)
 #find_package(glew REQUIRED)
 target_link_libraries(${EXEC_NAME} PUBLIC raylib)
-target_link_libraries(${EXEC_NAME} PUBLIC glew)
+target_link_libraries(${EXEC_NAME} PUBLIC GLEW)
 target_link_libraries(${EXEC_NAME} PUBLIC GL)
 target_link_libraries(${EXEC_NAME} PUBLIC assimp)
 ################## MISC ###################

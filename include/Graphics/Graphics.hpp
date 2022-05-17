@@ -10,6 +10,7 @@
 
     #include "Node.hpp"
     #include "IGraphics.hpp"
+    #include "Model.hpp"
 
 namespace neo
 {
@@ -17,6 +18,8 @@ namespace neo
     {
         private:
             Vector2 _pos;
+            neo::Shader *_shader;
+            neo::Model *_model;
             // attributes
 
         public:
