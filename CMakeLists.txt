@@ -46,6 +46,7 @@ set(SRC
   src/Animation/Shader.cpp
   src/Animation/Mesh.cpp
   src/Animation/Bone.cpp
+  src/Animation/Model.cpp
   src/Neo.cpp
 )
 
@@ -69,6 +70,7 @@ target_include_directories(${EXEC_NAME} PUBLIC
 target_link_libraries(${EXEC_NAME} PUBLIC raylib)
 target_link_libraries(${EXEC_NAME} PUBLIC GLEW)
 target_link_libraries(${EXEC_NAME} PUBLIC GL)
+target_link_libraries(${EXEC_NAME} PUBLIC assimp)
 ################## MISC ###################
 
 add_custom_command(
