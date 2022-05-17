@@ -65,13 +65,7 @@ target_include_directories(${EXEC_NAME} PUBLIC
 )
 
 # link with libs
-# target_link_libraries(${EXEC_NAME} PUBLIC ${CMAKE_THREAD_LIBS_INIT})
-# find_library(LIBRT rt)
-# if(LIBRT)
-#    target_link_libraries(${EXEC_NAME} PUBLIC ${LIBRT})
-# endif()
 find_package(raylib REQUIRED)
-#find_package(glew REQUIRED)
 target_link_libraries(${EXEC_NAME} PUBLIC raylib)
 target_link_libraries(${EXEC_NAME} PUBLIC GLEW)
 target_link_libraries(${EXEC_NAME} PUBLIC GL)
