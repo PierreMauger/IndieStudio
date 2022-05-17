@@ -15,10 +15,10 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     SetTraceLogLevel(LOG_NONE);
     InitWindow(600, 600, "Neo");
     SetTargetFPS(60);
+    glEnable(GL_DEPTH_TEST);
     this->_functionTab = {
         std::bind(&Graphics::receivePos, this, std::placeholders::_1),
     };
-    glEnable(GL_DEPTH_TEST);
 
     this->_shader = new neo::Shader("ressources/camera.vs", "ressources/camera.fs");
     this->_model = new neo::Model("ressources/FloofFox_model.dae");
