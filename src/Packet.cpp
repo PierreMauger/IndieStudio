@@ -52,6 +52,17 @@ Packet &Packet::operator<<(const std::string &data)
     return *this;
 }
 
+Packet &Packet::operator<<(std::map<int, std::string> &data)
+{
+    *this << static_cast<int>(data.size());
+
+    for (auto &it : data) {
+        *this << it.first;
+        *this << it.second;
+    }
+    return *this;
+}
+
 Packet &Packet::operator>>(int &data)
 {
     if (this->checkSize(sizeof(int))) {
@@ -80,6 +91,22 @@ Packet &Packet::operator>>(std::string &data)
         data.resize(size);
         std::memcpy(&data[0], &this->_data[0], size);
         this->_data.erase(this->_data.begin(), this->_data.begin() + size);
+    }
+    return *this;
+}
+
+Packet &Packet::operator>>(std::map<int, std::string> &data)
+{
+    int size = 0;
+    *this >> size;
+
+    for (int i = 0; i < size; i++) {
+        int key = 0;
+        std::string value;
+
+        *this >> key;
+        *this >> value;
+        data[key] = value;
     }
     return *this;
 }

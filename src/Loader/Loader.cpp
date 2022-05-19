@@ -12,15 +12,16 @@ using namespace neo;
 Loader::Loader(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
     std::cout << "Loader module created" << std::endl;
+    Packet packet;
 
-    this->loadConfig(this->loadFile("ressources/input.conf"));
+    std::map<int, std::string> config = this->loadConfig(this->loadFile("ressources/input.conf"));
+    packet << config;
+    this->postMessage(Message(packet, 0, 3));
 }
 
 void Loader::onNotify(Message message)
 {
     Packet data = message.getData();
-
-    // from data, load ressources
 }
 
 std::string Loader::loadFile(std::string fileName)
@@ -51,7 +52,5 @@ std::map<int, std::string> Loader::loadConfig(std::string fileContent)
         std::getline(lineBuffer, value);
         config[std::stoi(key)] = value;
     }
-    for (auto &it : config)
-        std::cout << it.first << ": " << it.second << std::endl;
     return config;
 }

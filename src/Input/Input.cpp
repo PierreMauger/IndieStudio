@@ -15,13 +15,19 @@ Input::Input(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->_axisInputs.reserve(8);
     for (int i = 0; i < 8; i++)
         this->_axisInputs.push_back(false);
+
+    this->_functionTab = {
+        std::bind(&Input::receiveKeyConfig, this, std::placeholders::_1),
+    };
 }
 
 void Input::onNotify(Message message)
 {
     Packet data = message.getData();
+    int status = message.getStatus();
 
-    // should not receive any message, but will send on player input
+    if (status >= 0 && status < this->_functionTab.size())
+        this->_functionTab[status](data);
 }
 
 void Input::update()
@@ -104,4 +110,11 @@ void Input::update()
 void Input::editConfig(int key, std::string action)
 {
 
+}
+
+void Input::receiveKeyConfig(Packet data)
+{
+    data >> this->_config;
+    for (auto &it : this->_config)
+        std::cout << it.first << ": " << it.second << std::endl;
 }

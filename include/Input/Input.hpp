@@ -29,6 +29,8 @@ namespace neo
             // Interface functions
             void update();
             void editConfig(int key, std::string action);
+
+            void receiveKeyConfig(Packet);
     };
 }
 
