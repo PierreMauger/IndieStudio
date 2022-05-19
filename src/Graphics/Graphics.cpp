@@ -71,9 +71,5 @@ void Graphics::draw()
 
 void Graphics::receivePos(Packet data)
 {
-    float x = 0;
-    float y = 0;
-
-    data >> x >> y;
-    this->_pos = {x, y};
+    data >> this->_pos.x >> this->_pos.y;
 }

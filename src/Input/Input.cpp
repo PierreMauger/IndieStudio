@@ -100,3 +100,8 @@ void Input::update()
         }
     }
 }
+
+void Input::editConfig(int key, std::string action)
+{
+
+}

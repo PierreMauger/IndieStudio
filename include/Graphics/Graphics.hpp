@@ -20,7 +20,6 @@ namespace neo
             Vector2 _pos;
             neo::Shader *_shader;
             neo::Model *_model;
-            // attributes
 
         public:
             Graphics(std::shared_ptr<MessageBus> messageBus);

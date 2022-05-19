@@ -18,7 +18,6 @@ namespace neo
         private:
             Vector2 _pos;
             Vector2 _speed;
-            // attributes
 
         public:
             Game(std::shared_ptr<MessageBus> messageBus);

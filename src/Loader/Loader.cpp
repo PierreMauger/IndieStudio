@@ -20,3 +20,16 @@ void Loader::onNotify(Message message)
 
     // from data, load ressources
 }
+
+std::string Loader::loadFile(std::string fileName)
+{
+    std::ifstream fileBuffer;
+    std::string buffer;
+
+    fileBuffer.open(fileName);
+    if (fileBuffer.is_open()) {
+        std::getline(fileBuffer, buffer, '\0');
+        fileBuffer.close();
+    }
+    return buffer;
+}

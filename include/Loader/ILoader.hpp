@@ -16,6 +16,8 @@ namespace neo
     {
         public:
             virtual ~ILoader() = default;
+
+            virtual std::string loadFile(std::string fileName) = 0;
     };
 }
 

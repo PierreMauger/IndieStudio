@@ -16,7 +16,6 @@ namespace neo
     class Audio : public virtual Node, public virtual IAudio
     {
         private:
-            // attributes
 
         public:
             Audio(std::shared_ptr<MessageBus> messageBus);

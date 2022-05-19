@@ -16,7 +16,6 @@ namespace neo
     class Loader : public virtual Node, public virtual ILoader
     {
         private:
-            // attributes
 
         public:
             Loader(std::shared_ptr<MessageBus> messageBus);
@@ -26,6 +25,7 @@ namespace neo
             void onNotify(Message);
 
             // Interface functions
+            std::string loadFile(std::string fileName);
     };
 }
 

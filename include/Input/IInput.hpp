@@ -18,6 +18,7 @@ namespace neo
             virtual ~IInput() = default;
 
             virtual void update() = 0;
+            virtual void editConfig(int key, std::string action) = 0;
     };
 }
 
