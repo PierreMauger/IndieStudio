@@ -30,11 +30,12 @@ namespace neo
             Packet &operator<<(int data);
             Packet &operator<<(float data);
             Packet &operator<<(const std::string &data);
-            Packet &operator<<(std::unique_ptr<std::map<int, std::string>> data);
+            Packet &operator<<(std::map<int, std::string> &data);
 
             Packet &operator>>(int &data);
             Packet &operator>>(float &data);
             Packet &operator>>(std::string &data);
+            Packet &operator>>(std::map<int, std::string> &data);
     };
 }
 

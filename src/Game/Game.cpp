@@ -14,6 +14,7 @@ Game::Game(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     std::cout << "Game module created" << std::endl;
     this->_pos = {0, 0};
     this->_speed = {0, 0};
+
     this->_functionTab = {
         std::bind(&Game::receiveKeyPressed, this, std::placeholders::_1),
         std::bind(&Game::receiveKeyReleased, this, std::placeholders::_1),
@@ -27,7 +28,6 @@ void Game::onNotify(Message message)
 
     if (status >= 0 && status < this->_functionTab.size())
         this->_functionTab[status](data);
-    // from data, handle player movement/bombs etc
 }
 
 void Game::update()
