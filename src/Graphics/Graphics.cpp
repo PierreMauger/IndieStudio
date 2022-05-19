@@ -29,6 +29,8 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 Graphics::~Graphics()
 {
     CloseWindow();
+    delete this->_shader;
+    delete this->_model;
 }
 
 void Graphics::onNotify(Message message)
@@ -52,7 +54,7 @@ void Graphics::draw()
         glm::vec3 pos = glm::vec3(this->_pos.x, this->_pos.y, 0);
         glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
         glm::mat4 view = glm::lookAt(glm::vec3(0, 0, 10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-        this->_shader->setMat4("projection", glm::perspective(glm::radians(45.0f), (float)480 / (float)480, 0.1f, 100.0f));
+        this->_shader->setMat4("projection", glm::perspective(glm::radians(45.0f), 600.f / 600.f, 0.1f, 100.0f));
         this->_shader->setMat4("view", view);
         this->_shader->setMat4("model", model);
 
