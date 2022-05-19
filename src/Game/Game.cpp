@@ -46,13 +46,13 @@ void Game::receiveKeyPressed(Packet data)
     int key = 0;
 
     data >> key;
-    if (key == KEY_RIGHT)
+    if (key == KEY_RIGHT || key == GAMEPAD_BUTTON_LEFT_FACE_RIGHT)
         this->_speed.x += 1;
-    if (key == KEY_LEFT)
+    if (key == KEY_LEFT || key == GAMEPAD_BUTTON_LEFT_FACE_LEFT)
         this->_speed.x -= 1;
-    if (key == KEY_UP)
+    if (key == KEY_UP || key == GAMEPAD_BUTTON_LEFT_FACE_UP)
         this->_speed.y -= 1;
-    if (key == KEY_DOWN)
+    if (key == KEY_DOWN || key == GAMEPAD_BUTTON_LEFT_FACE_DOWN)
         this->_speed.y += 1;
 }
 
@@ -61,12 +61,12 @@ void Game::receiveKeyReleased(Packet data)
     int key = 0;
 
     data >> key;
-    if (key == KEY_RIGHT)
+    if (key == KEY_RIGHT || key == GAMEPAD_BUTTON_LEFT_FACE_RIGHT)
         this->_speed.x -= 1;
-    if (key == KEY_LEFT)
+    if (key == KEY_LEFT || key == GAMEPAD_BUTTON_LEFT_FACE_LEFT)
         this->_speed.x += 1;
-    if (key == KEY_UP)
+    if (key == KEY_UP || key == GAMEPAD_BUTTON_LEFT_FACE_UP)
         this->_speed.y += 1;
-    if (key == KEY_DOWN)
+    if (key == KEY_DOWN || key == GAMEPAD_BUTTON_LEFT_FACE_DOWN)
         this->_speed.y -= 1;
 }

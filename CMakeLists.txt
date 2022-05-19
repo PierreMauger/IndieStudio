@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.16)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 # Project name
-project(plazza_project LANGUAGES CXX)
+project(indie_project LANGUAGES CXX)
 
 # find packages
 find_package(GLEW REQUIRED)

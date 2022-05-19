@@ -35,4 +35,18 @@ void Input::update()
             this->postMessage(Message(data, 1, 1));
         }
     }
+    if (IsGamepadAvailable(0)) {
+        for (int i = GAMEPAD_BUTTON_LEFT_FACE_UP; i <= GAMEPAD_BUTTON_RIGHT_THUMB; i++) {
+            if (IsGamepadButtonPressed(0, i)) {
+                Packet data;
+                data << i;
+                this->postMessage(Message(data, 0, 1));
+            }
+            if (IsGamepadButtonReleased(0, i)) {
+                Packet data;
+                data << i;
+                this->postMessage(Message(data, 1, 1));
+            }
+        }
+    }
 }
