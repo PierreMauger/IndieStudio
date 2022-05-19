@@ -17,6 +17,7 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     InitWindow(600, 600, "Neo");
     SetTargetFPS(60);
     glEnable(GL_DEPTH_TEST);
+    this->_pos = {0};
     this->_functionTab = {
         std::bind(&Graphics::receivePos, this, std::placeholders::_1),
     };
