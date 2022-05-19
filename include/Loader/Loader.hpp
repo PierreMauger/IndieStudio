@@ -26,6 +26,7 @@ namespace neo
 
             // Interface functions
             std::string loadFile(std::string fileName);
+            std::map<int, std::string> loadConfig(std::string fileContent);
     };
 }
 
