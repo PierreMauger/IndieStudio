@@ -32,18 +32,11 @@ void Input::onNotify(Message message)
 
 void Input::update()
 {
-    for (int i = KEY_RIGHT; i <= KEY_UP; i++) {
-        if (IsKeyPressed(i)) {
-            Packet data;
-            data << i;
-            this->postMessage(Message(data, 0, 1));
-        }
-        if (IsKeyReleased(i)) {
-            Packet data;
-            data << i;
-            this->postMessage(Message(data, 1, 1));
-        }
-    }
+    this->checkKeyStatus(this->_config["MoveRight"]);
+    this->checkKeyStatus(this->_config["MoveLeft"]);
+    this->checkKeyStatus(this->_config["MoveUp"]);
+    this->checkKeyStatus(this->_config["MoveDown"]);
+
     if (IsGamepadAvailable(0)) {
         for (int i = GAMEPAD_BUTTON_LEFT_FACE_UP; i <= GAMEPAD_BUTTON_RIGHT_THUMB; i++) {
             if (IsGamepadButtonPressed(0, i)) {
@@ -107,6 +100,20 @@ void Input::update()
     }
 }
 
+void Input::checkKeyStatus(int key)
+{
+    if (IsKeyPressed(key)) {
+        Packet data;
+        data << key;
+        this->postMessage(Message(data, 0, 1));
+    }
+    if (IsKeyReleased(key)) {
+        Packet data;
+        data << key;
+        this->postMessage(Message(data, 1, 1));
+    }
+}
+
 void Input::editConfig(int key, std::string action)
 {
 
@@ -115,6 +122,4 @@ void Input::editConfig(int key, std::string action)
 void Input::receiveKeyConfig(Packet data)
 {
     data >> this->_config;
-    for (auto &it : this->_config)
-        std::cout << it.first << ": " << it.second << std::endl;
 }

@@ -14,7 +14,7 @@ Loader::Loader(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     std::cout << "Loader module created" << std::endl;
     Packet packet;
 
-    std::map<int, std::string> config = this->loadConfig(this->loadFile("ressources/input.conf"));
+    std::map<std::string, int> config = this->loadConfig(this->loadFile("ressources/input.conf"));
     packet << config;
     this->postMessage(Message(packet, 0, 3));
 }
@@ -37,20 +37,20 @@ std::string Loader::loadFile(std::string fileName)
     return buffer;
 }
 
-std::map<int, std::string> Loader::loadConfig(std::string fileContent)
+std::map<std::string, int> Loader::loadConfig(std::string fileContent)
 {
-    std::map<int, std::string> config;
+    std::map<std::string, int> config;
     std::stringstream buffer(fileContent);
     std::string line;
 
     while (std::getline(buffer, line)) {
         std::stringstream lineBuffer(line);
         std::string key;
-        std::string value;
+        std::string action;
 
-        std::getline(lineBuffer, key, ':');
-        std::getline(lineBuffer, value);
-        config[std::stoi(key)] = value;
+        std::getline(lineBuffer, action, ':');
+        std::getline(lineBuffer, key);
+        config[action] = std::stoi(key);
     }
     return config;
 }

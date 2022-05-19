@@ -52,7 +52,7 @@ Packet &Packet::operator<<(const std::string &data)
     return *this;
 }
 
-Packet &Packet::operator<<(std::map<int, std::string> &data)
+Packet &Packet::operator<<(std::map<std::string, int> &data)
 {
     *this << static_cast<int>(data.size());
 
@@ -95,18 +95,18 @@ Packet &Packet::operator>>(std::string &data)
     return *this;
 }
 
-Packet &Packet::operator>>(std::map<int, std::string> &data)
+Packet &Packet::operator>>(std::map<std::string, int> &data)
 {
     int size = 0;
     *this >> size;
 
     for (int i = 0; i < size; i++) {
+        std::string action;
         int key = 0;
-        std::string value;
 
+        *this >> action;
         *this >> key;
-        *this >> value;
-        data[key] = value;
+        data[action] = key;
     }
     return *this;
 }
