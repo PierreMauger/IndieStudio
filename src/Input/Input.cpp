@@ -38,18 +38,9 @@ void Input::update()
     this->checkKeyStatus(this->_config["MoveDown"]);
 
     if (IsGamepadAvailable(0)) {
-        for (int i = GAMEPAD_BUTTON_LEFT_FACE_UP; i <= GAMEPAD_BUTTON_RIGHT_THUMB; i++) {
-            if (IsGamepadButtonPressed(0, i)) {
-                Packet data;
-                data << i;
-                this->postMessage(Message(data, 0, 1));
-            }
-            if (IsGamepadButtonReleased(0, i)) {
-                Packet data;
-                data << i;
-                this->postMessage(Message(data, 1, 1));
-            }
-        }
+        for (int i = GAMEPAD_BUTTON_LEFT_FACE_UP; i <= GAMEPAD_BUTTON_RIGHT_THUMB; i++)
+            this->checkButtonStatus(i);
+
         if (GetGamepadAxisMovement(0, 0) > 0.5f && !this->_axisInputs[0]) {
             Packet data;
             data << 2;
@@ -108,6 +99,20 @@ void Input::checkKeyStatus(int key)
         this->postMessage(Message(data, 0, 1));
     }
     if (IsKeyReleased(key)) {
+        Packet data;
+        data << key;
+        this->postMessage(Message(data, 1, 1));
+    }
+}
+
+void Input::checkButtonStatus(int key)
+{
+    if (IsGamepadButtonPressed(0, key)) {
+        Packet data;
+        data << key;
+        this->postMessage(Message(data, 0, 1));
+    }
+    if (IsGamepadButtonReleased(0, key)) {
         Packet data;
         data << key;
         this->postMessage(Message(data, 1, 1));
