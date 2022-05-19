@@ -16,6 +16,7 @@ namespace neo
     class Input : public virtual Node, public virtual IInput
     {
         private:
+            std::vector<bool> _axisInputs;
             // attributes
 
         public:
