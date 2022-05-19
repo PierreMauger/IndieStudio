@@ -51,7 +51,7 @@ void Graphics::draw()
         DrawCircleV(this->_pos, 20, GREEN);
 
         this->_shader->use();
-        glm::vec3 pos = glm::vec3(this->_pos.x, this->_pos.y, 0);
+        glm::vec3 pos = glm::vec3(this->_pos.x / 5.f, -this->_pos.y / 5.f, 0);
         glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
         glm::mat4 view = glm::lookAt(glm::vec3(0, 0, 10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
         this->_shader->setMat4("projection", glm::perspective(glm::radians(45.0f), 600.f / 600.f, 0.1f, 100.0f));
