@@ -11,7 +11,6 @@ using namespace neo;
 
 Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    std::cout << "Graphics module created" << std::endl;
     SetTraceLogLevel(LOG_NONE);
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(600, 600, "Neo");

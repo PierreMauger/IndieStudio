@@ -17,7 +17,6 @@ _graphics(_messageBus),
 _input(_messageBus),
 _loader(_messageBus)
 {
-    std::cout << "Engine created" << std::endl;
 }
 
 void Neo::run()

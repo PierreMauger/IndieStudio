@@ -11,7 +11,6 @@ using namespace neo;
 
 Game::Game(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    std::cout << "Game module created" << std::endl;
     this->_pos = {0, 0};
     this->_speed = {0, 0};
 

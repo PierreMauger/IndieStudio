@@ -11,11 +11,10 @@ using namespace neo;
 
 Loader::Loader(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    std::cout << "Loader module created" << std::endl;
     Packet packet;
 
     PlayerConfig conf = this->loadPlayerConfig(this->loadFile("ressources/input/player1.conf"));
-    conf.setMode(false);
+    conf.setMode(true);
     packet << conf;
     this->postMessage(Message(packet, 0, 3));
 }

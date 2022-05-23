@@ -11,7 +11,6 @@ using namespace neo;
 
 Input::Input(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    std::cout << "Input module created" << std::endl;
     this->_axisInputs.reserve(8);
     for (int i = 0; i < 8; i++)
         this->_axisInputs.push_back(false);
@@ -36,7 +35,42 @@ void Input::update()
     this->checkInputStatus(this->_config.getActConfig()["MoveLeft"]);
     this->checkInputStatus(this->_config.getActConfig()["MoveUp"]);
     this->checkInputStatus(this->_config.getActConfig()["MoveDown"]);
+}
 
+void Input::checkInputStatus(int key)
+{
+    if (key <= 17)
+        this->checkButtonStatus(key);
+    else
+        this->checkKeyStatus(key);
+}
+
+void Input::checkKeyStatus(int key)
+{
+    if (IsKeyPressed(key)) {
+        Packet data;
+        data << key;
+        this->postMessage(Message(data, 0, 1));
+    }
+    if (IsKeyReleased(key)) {
+        Packet data;
+        data << key;
+        this->postMessage(Message(data, 1, 1));
+    }
+}
+
+void Input::checkButtonStatus(int key)
+{
+    if (IsGamepadButtonPressed(0, key)) {
+        Packet data;
+        data << key;
+        this->postMessage(Message(data, 0, 1));
+    }
+    if (IsGamepadButtonReleased(0, key)) {
+        Packet data;
+        data << key;
+        this->postMessage(Message(data, 1, 1));
+    }
     if (IsGamepadAvailable(0)) {
         if (GetGamepadAxisMovement(0, 0) > 0.5f && !this->_axisInputs[0]) {
             Packet data;
@@ -85,42 +119,6 @@ void Input::update()
             this->postMessage(Message(data, 1, 1));
             this->_axisInputs[3] = false;
         }
-    }
-}
-
-void Input::checkInputStatus(int key)
-{
-    if (key <= 17)
-        this->checkButtonStatus(key);
-    else
-        this->checkKeyStatus(key);
-}
-
-void Input::checkKeyStatus(int key)
-{
-    if (IsKeyPressed(key)) {
-        Packet data;
-        data << key;
-        this->postMessage(Message(data, 0, 1));
-    }
-    if (IsKeyReleased(key)) {
-        Packet data;
-        data << key;
-        this->postMessage(Message(data, 1, 1));
-    }
-}
-
-void Input::checkButtonStatus(int key)
-{
-    if (IsGamepadButtonPressed(0, key)) {
-        Packet data;
-        data << key;
-        this->postMessage(Message(data, 0, 1));
-    }
-    if (IsGamepadButtonReleased(0, key)) {
-        Packet data;
-        data << key;
-        this->postMessage(Message(data, 1, 1));
     }
 }
 

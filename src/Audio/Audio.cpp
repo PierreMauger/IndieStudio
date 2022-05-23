@@ -11,7 +11,6 @@ using namespace neo;
 
 Audio::Audio(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    std::cout << "Audio module created" << std::endl;
 }
 
 void Audio::onNotify(Message message)
