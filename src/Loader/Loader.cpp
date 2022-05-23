@@ -14,7 +14,7 @@ Loader::Loader(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     std::cout << "Loader module created" << std::endl;
     Packet packet;
 
-    std::map<std::string, int> config = this->loadConfig(this->loadFile("ressources/input.conf"));
+    std::map<std::string, int> config = this->loadConfig(this->loadFile("ressources/input/player1.conf"));
     packet << config;
     this->postMessage(Message(packet, 0, 3));
 }
@@ -40,17 +40,12 @@ std::string Loader::loadFile(std::string fileName)
 std::map<std::string, int> Loader::loadConfig(std::string fileContent)
 {
     std::map<std::string, int> config;
-    std::stringstream buffer(fileContent);
-    std::string line;
+    std::regex regex("(\\S+):(\\d+)");
+    std::smatch match;
 
-    while (std::getline(buffer, line)) {
-        std::stringstream lineBuffer(line);
-        std::string key;
-        std::string action;
-
-        std::getline(lineBuffer, action, ':');
-        std::getline(lineBuffer, key);
-        config[action] = std::stoi(key);
+    while (std::regex_search(fileContent, match, regex)) {
+        config[match[1]] = std::stoi(match[2]);
+        fileContent = match.suffix().str();
     }
     return config;
 }

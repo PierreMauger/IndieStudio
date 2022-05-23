@@ -10,6 +10,7 @@
 
     #include "Node.hpp"
     #include "ILoader.hpp"
+    #include <regex>
 
 namespace neo
 {
