@@ -32,15 +32,12 @@ void Input::onNotify(Message message)
 
 void Input::update()
 {
-    this->checkKeyStatus(this->_config["MoveRight"]);
-    this->checkKeyStatus(this->_config["MoveLeft"]);
-    this->checkKeyStatus(this->_config["MoveUp"]);
-    this->checkKeyStatus(this->_config["MoveDown"]);
+    this->checkInputStatus(this->_config.getActConfig()["MoveRight"]);
+    this->checkInputStatus(this->_config.getActConfig()["MoveLeft"]);
+    this->checkInputStatus(this->_config.getActConfig()["MoveUp"]);
+    this->checkInputStatus(this->_config.getActConfig()["MoveDown"]);
 
     if (IsGamepadAvailable(0)) {
-        for (int i = GAMEPAD_BUTTON_LEFT_FACE_UP; i <= GAMEPAD_BUTTON_RIGHT_THUMB; i++)
-            this->checkButtonStatus(i);
-
         if (GetGamepadAxisMovement(0, 0) > 0.5f && !this->_axisInputs[0]) {
             Packet data;
             data << 2;
@@ -91,6 +88,14 @@ void Input::update()
     }
 }
 
+void Input::checkInputStatus(int key)
+{
+    if (key <= 17)
+        this->checkButtonStatus(key);
+    else
+        this->checkKeyStatus(key);
+}
+
 void Input::checkKeyStatus(int key)
 {
     if (IsKeyPressed(key)) {
@@ -126,8 +131,5 @@ void Input::editConfig(int key, std::string action)
 
 void Input::receiveKeyConfig(Packet data)
 {
-    PlayerConfig config;
-    data >> config;
-
-    this->_config = config.getKeyboardConfig();
+    data >> this->_config;
 }

@@ -17,7 +17,7 @@ namespace neo
     {
         private:
             std::vector<bool> _axisInputs;
-            std::map<std::string, int> _config;
+            PlayerConfig _config;
 
         public:
             Input(std::shared_ptr<MessageBus> messageBus);
@@ -28,6 +28,7 @@ namespace neo
 
             // Interface functions
             void update();
+            void checkInputStatus(int key);
             void checkKeyStatus(int key);
             void checkButtonStatus(int key);
             void editConfig(int key, std::string action);

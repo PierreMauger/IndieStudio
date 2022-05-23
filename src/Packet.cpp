@@ -123,6 +123,7 @@ Packet &Packet::operator>>(PlayerConfig &data)
 {
     int mode = 0;
     *this >> mode;
+    std::cout << "mode: " << mode << std::endl;
     data.setMode(static_cast<bool>(mode));
 
     *this >> data.getControllerConfig();
