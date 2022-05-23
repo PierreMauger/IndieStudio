@@ -10,6 +10,8 @@
 
     #include "Node.hpp"
     #include "ILoader.hpp"
+    #include "PlayerConfig.hpp"
+
     #include <regex>
 
 namespace neo
@@ -27,6 +29,7 @@ namespace neo
 
             // Interface functions
             std::string loadFile(std::string fileName);
+            PlayerConfig loadPlayerConfig(std::string fileContent);
             std::map<std::string, int> loadConfig(std::string fileContent);
     };
 }

@@ -14,8 +14,9 @@ Loader::Loader(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     std::cout << "Loader module created" << std::endl;
     Packet packet;
 
-    std::map<std::string, int> config = this->loadConfig(this->loadFile("ressources/input/player1.conf"));
-    packet << config;
+    PlayerConfig conf = this->loadPlayerConfig(this->loadFile("ressources/input/player1.conf"));
+    conf.setMode(false);
+    packet << conf.getConfig();
     this->postMessage(Message(packet, 0, 3));
 }
 
@@ -35,6 +36,23 @@ std::string Loader::loadFile(std::string fileName)
         fileBuffer.close();
     }
     return buffer;
+}
+
+PlayerConfig Loader::loadPlayerConfig(std::string fileContent)
+{
+    PlayerConfig playerConfig;
+    std::regex regex("(.Keyboard:\n|.Controller:\n)([^.]*)");
+    std::smatch match;
+
+    while (std::regex_search(fileContent, match, regex)) {
+        if (match[1] == ".Keyboard:\n") {
+            playerConfig.setKeyboardConfig(this->loadConfig(match[2]));
+        } else if (match[1] == ".Controller:\n") {
+            playerConfig.setControllerConfig(this->loadConfig(match[2]));
+        }
+        fileContent = match.suffix().str();
+    }
+    return playerConfig;
 }
 
 std::map<std::string, int> Loader::loadConfig(std::string fileContent)

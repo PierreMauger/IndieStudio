@@ -9,7 +9,7 @@
 
 using namespace neo;
 
-std::map<std::string, int> PlayerConfig::getConfig() const
+std::map<std::string, int> &PlayerConfig::getConfig()
 {
     if (this->_mode)
         return this->_controllerConfig;
