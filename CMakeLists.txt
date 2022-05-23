@@ -39,6 +39,7 @@ set(SRC
   src/Message.cpp
   src/MessageBus.cpp
   src/Node.cpp
+  src/PlayerConfig.cpp
   src/Audio/Audio.cpp
   src/Game/Game.cpp
   src/Graphics/Graphics.cpp
