@@ -39,10 +39,12 @@ void Input::update()
 
 void Input::checkInputStatus(int key)
 {
-    if (key <= 17)
+    if (key <= 17) {
         this->checkButtonStatus(key);
-    else
+        this->checkJoystickStatus(key);
+    } else {
         this->checkKeyStatus(key);
+    }
 }
 
 void Input::checkKeyStatus(int key)
@@ -71,6 +73,10 @@ void Input::checkButtonStatus(int key)
         data << key;
         this->postMessage(Message(data, 1, 1));
     }
+}
+
+void Input::checkJoystickStatus(int key)
+{
     if (IsGamepadAvailable(0)) {
         if (GetGamepadAxisMovement(0, 0) > 0.5f && !this->_axisInputs[0]) {
             Packet data;

@@ -31,6 +31,7 @@ namespace neo
             void checkInputStatus(int key);
             void checkKeyStatus(int key);
             void checkButtonStatus(int key);
+            void checkJoystickStatus(int key);
             void editConfig(int key, std::string action);
 
             void receiveKeyConfig(Packet);
