@@ -23,7 +23,9 @@ namespace neo
             PlayerConfig() = default;
             ~PlayerConfig() = default;
 
-            std::map<std::string, int> &getConfig();
+            std::map<std::string, int> &getActConfig();
+            std::map<std::string, int> &getKeyboardConfig();
+            std::map<std::string, int> &getControllerConfig();
             bool getMode() const;
 
             void setKeyboardConfig(std::map<std::string, int> config);

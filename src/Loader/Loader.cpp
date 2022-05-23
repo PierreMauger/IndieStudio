@@ -16,7 +16,7 @@ Loader::Loader(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 
     PlayerConfig conf = this->loadPlayerConfig(this->loadFile("ressources/input/player1.conf"));
     conf.setMode(false);
-    packet << conf.getConfig();
+    packet << conf;
     this->postMessage(Message(packet, 0, 3));
 }
 

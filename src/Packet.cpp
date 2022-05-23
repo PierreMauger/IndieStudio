@@ -63,6 +63,14 @@ Packet &Packet::operator<<(std::map<std::string, int> &data)
     return *this;
 }
 
+Packet &Packet::operator<<(PlayerConfig &data)
+{
+    *this << data.getMode();
+    *this << data.getControllerConfig();
+    *this << data.getKeyboardConfig();
+    return *this;
+}
+
 Packet &Packet::operator>>(int &data)
 {
     if (this->checkSize(sizeof(int))) {
@@ -108,5 +116,16 @@ Packet &Packet::operator>>(std::map<std::string, int> &data)
         *this >> key;
         data[action] = key;
     }
+    return *this;
+}
+
+Packet &Packet::operator>>(PlayerConfig &data)
+{
+    int mode = 0;
+    *this >> mode;
+    data.setMode(static_cast<bool>(mode));
+
+    *this >> data.getControllerConfig();
+    *this >> data.getKeyboardConfig();
     return *this;
 }

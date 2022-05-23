@@ -9,12 +9,22 @@
 
 using namespace neo;
 
-std::map<std::string, int> &PlayerConfig::getConfig()
+std::map<std::string, int> &PlayerConfig::getActConfig()
 {
     if (this->_mode)
         return this->_controllerConfig;
     else
         return this->_keyboardConfig;
+}
+
+std::map<std::string, int> &PlayerConfig::getKeyboardConfig()
+{
+    return this->_keyboardConfig;
+}
+
+std::map<std::string, int> &PlayerConfig::getControllerConfig()
+{
+    return this->_controllerConfig;
 }
 
 bool PlayerConfig::getMode() const

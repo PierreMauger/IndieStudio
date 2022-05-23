@@ -126,5 +126,8 @@ void Input::editConfig(int key, std::string action)
 
 void Input::receiveKeyConfig(Packet data)
 {
-    data >> this->_config;
+    PlayerConfig config;
+    data >> config;
+
+    this->_config = config.getKeyboardConfig();
 }
