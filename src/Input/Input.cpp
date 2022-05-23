@@ -31,98 +31,95 @@ void Input::onNotify(Message message)
 
 void Input::update()
 {
-    this->checkInputStatus(this->_config.getActConfig()["MoveRight"]);
-    this->checkInputStatus(this->_config.getActConfig()["MoveLeft"]);
-    this->checkInputStatus(this->_config.getActConfig()["MoveUp"]);
-    this->checkInputStatus(this->_config.getActConfig()["MoveDown"]);
+    for (auto &conf : this->_config.getActConfig())
+        this->checkInputStatus(conf.second, conf.first);
 }
 
-void Input::checkInputStatus(int key)
+void Input::checkInputStatus(int key, std::string action)
 {
     if (key <= 25) {
-        this->checkButtonStatus(key);
-        this->checkJoystickStatus(key);
+        this->checkButtonStatus(key, action);
+        this->checkJoystickStatus(key, action);
     } else {
-        this->checkKeyStatus(key);
+        this->checkKeyStatus(key, action);
     }
 }
 
-void Input::checkKeyStatus(int key)
+void Input::checkKeyStatus(int key, std::string action)
 {
     if (IsKeyPressed(key)) {
         Packet data;
-        data << key;
+        data << action;
         this->postMessage(Message(data, 0, 1));
     }
     if (IsKeyReleased(key)) {
         Packet data;
-        data << key;
+        data << action;
         this->postMessage(Message(data, 1, 1));
     }
 }
 
-void Input::checkButtonStatus(int key)
+void Input::checkButtonStatus(int key, std::string action)
 {
     if (IsGamepadButtonPressed(0, key)) {
         Packet data;
-        data << key;
+        data << action;
         this->postMessage(Message(data, 0, 1));
     }
     if (IsGamepadButtonReleased(0, key)) {
         Packet data;
-        data << key;
+        data << action;
         this->postMessage(Message(data, 1, 1));
     }
 }
 
-void Input::checkJoystickStatus(int key)
+void Input::checkJoystickStatus(int key, std::string action)
 {
     if (IsGamepadAvailable(0)) {
-
         if (GetGamepadAxisMovement(0, 1) < -0.5f && !this->_axisInputs[0] && key == 18) {
             Packet data;
-            data << key - 17;
+            data << action;
             this->postMessage(Message(data, 0, 1));
             this->_axisInputs[0] = true;
         } else if (GetGamepadAxisMovement(0, 1) > -0.5f && this->_axisInputs[0] && key == 18) {
             Packet data;
-            data << key - 17;
+            data << action;
             this->postMessage(Message(data, 1, 1));
             this->_axisInputs[0] = false;
         }
 
         if (GetGamepadAxisMovement(0, 0) > 0.5f && !this->_axisInputs[1] && key == 19) {
             Packet data;
-            data << key - 17;
+            data << action;
             this->postMessage(Message(data, 0, 1));
             this->_axisInputs[1] = true;
         } else if (GetGamepadAxisMovement(0, 0) < 0.5f && this->_axisInputs[1] && key == 19) {
             Packet data;
-            data << key - 17;
+            data << action;
             this->postMessage(Message(data, 1, 1));
             this->_axisInputs[1] = false;
         }
 
         if (GetGamepadAxisMovement(0, 1) > 0.5f && !this->_axisInputs[2] && key == 20) {
             Packet data;
-            data << key - 17;
+            data << action;
             this->postMessage(Message(data, 0, 1));
             this->_axisInputs[2] = true;
         } else if (GetGamepadAxisMovement(0, 1) < 0.5f && this->_axisInputs[2] && key == 20) {
             Packet data;
-            data << key - 17;
+            data << action;
             this->postMessage(Message(data, 1, 1));
             this->_axisInputs[2] = false;
         }
 
         if (GetGamepadAxisMovement(0, 0) < -0.5f && !this->_axisInputs[3] && key == 21) {
             Packet data;
-            data << key - 17;
+            data << action;
             this->postMessage(Message(data, 0, 1));
             this->_axisInputs[3] = true;
         } else if (GetGamepadAxisMovement(0, 0) > -0.5f && this->_axisInputs[3] && key == 21) {
             Packet data;
-            data << key - 17;
+            data << action;
             this->postMessage(Message(data, 1, 1));
             this->_axisInputs[3] = false;
         }

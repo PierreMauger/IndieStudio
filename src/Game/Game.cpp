@@ -42,30 +42,30 @@ void Game::update()
 
 void Game::receiveKeyPressed(Packet data)
 {
-    int key = 0;
+    std::string key;
 
     data >> key;
-    if (key == KEY_RIGHT || key == GAMEPAD_BUTTON_LEFT_FACE_RIGHT)
+    if (key == "MoveRight")
         this->_speed.x += 1;
-    if (key == KEY_LEFT || key == GAMEPAD_BUTTON_LEFT_FACE_LEFT)
+    if (key == "MoveLeft")
         this->_speed.x -= 1;
-    if (key == KEY_UP || key == GAMEPAD_BUTTON_LEFT_FACE_UP)
+    if (key == "MoveUp")
         this->_speed.y -= 1;
-    if (key == KEY_DOWN || key == GAMEPAD_BUTTON_LEFT_FACE_DOWN)
+    if (key == "MoveDown")
         this->_speed.y += 1;
 }
 
 void Game::receiveKeyReleased(Packet data)
 {
-    int key = 0;
+    std::string key;
 
     data >> key;
-    if (key == KEY_RIGHT || key == GAMEPAD_BUTTON_LEFT_FACE_RIGHT)
+    if (key == "MoveRight")
         this->_speed.x -= 1;
-    if (key == KEY_LEFT || key == GAMEPAD_BUTTON_LEFT_FACE_LEFT)
+    if (key == "MoveLeft")
         this->_speed.x += 1;
-    if (key == KEY_UP || key == GAMEPAD_BUTTON_LEFT_FACE_UP)
+    if (key == "MoveUp")
         this->_speed.y += 1;
-    if (key == KEY_DOWN || key == GAMEPAD_BUTTON_LEFT_FACE_DOWN)
+    if (key == "MoveDown")
         this->_speed.y -= 1;
 }
