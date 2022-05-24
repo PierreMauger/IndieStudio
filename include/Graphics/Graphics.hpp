@@ -11,6 +11,7 @@
     #include "Node.hpp"
     #include "IGraphics.hpp"
     #include "Model.hpp"
+    #include "Camera.hpp"
 
 namespace neo
 {
@@ -18,7 +19,7 @@ namespace neo
     {
         private:
             Vector2 _pos;
-            neo::Shader *_shader;
+            std::unique_ptr<neo::Camera> _camera;
             neo::Model *_model;
 
         public:

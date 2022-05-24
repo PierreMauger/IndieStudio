@@ -40,6 +40,7 @@ set(SRC
   src/MessageBus.cpp
   src/Node.cpp
   src/PlayerConfig.cpp
+  src/Camera.cpp
   src/Audio/Audio.cpp
   src/Game/Game.cpp
   src/Graphics/Graphics.cpp

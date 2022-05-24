@@ -16,23 +16,23 @@
     #include <glm/gtx/quaternion.hpp>
     #include <assimp/scene.h>
 
-typedef struct {
-	glm::vec3 position;
-	float timeStamp;
-} KeyPosition;
-
-typedef struct {
-	glm::quat orientation;
-	float timeStamp;
-} KeyRotation;
-
-typedef struct {
-	glm::vec3 scale;
-	float timeStamp;
-} KeyScale;
-
 namespace neo
 {
+    typedef struct {
+    	glm::vec3 position;
+    	float timeStamp;
+    } KeyPosition;
+
+    typedef struct {
+    	glm::quat orientation;
+    	float timeStamp;
+    } KeyRotation;
+
+    typedef struct {
+    	glm::vec3 scale;
+    	float timeStamp;
+    } KeyScale;
+
     class Bone
     {
         private:

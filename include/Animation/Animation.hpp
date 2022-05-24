@@ -18,15 +18,15 @@
     #include <assimp/scene.h>
     #include <assimp/postprocess.h>
 
-typedef struct AssimpNodeData_s {
-	glm::mat4 transformation;
-	std::string name;
-	int childrenCount;
-	std::vector<AssimpNodeData_s> children;
-} AssimpNodeData;
-
 namespace neo
 {
+    typedef struct AssimpNodeData_s {
+        glm::mat4 transformation;
+        std::string name;
+        int childrenCount;
+        std::vector<AssimpNodeData_s> children;
+    } AssimpNodeData;
+
     class Animation
     {
         private:

@@ -17,19 +17,17 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     SetTargetFPS(60);
     glEnable(GL_DEPTH_TEST);
     this->_pos = {0};
+    this->_camera = std::unique_ptr<Camera>(new Camera());
 
     this->_functionTab = {
         std::bind(&Graphics::receivePos, this, std::placeholders::_1),
     };
-
-    this->_shader = new neo::Shader("ressources/camera.vs", "ressources/camera.fs");
     this->_model = new neo::Model("ressources/FloofFox_model.dae");
 }
 
 Graphics::~Graphics()
 {
     CloseWindow();
-    delete this->_shader;
     delete this->_model;
 }
 
@@ -45,26 +43,20 @@ void Graphics::onNotify(Message message)
 void Graphics::draw()
 {
     BeginDrawing();
-        ClearBackground(RAYWHITE);
-        DrawText("neo genesis evangelion 3.0 + 1.0", 100, 100, 20, LIGHTGRAY);
-        DrawCircleV(this->_pos, 20, GREEN);
+    ClearBackground(RAYWHITE);
 
-        this->_shader->use();
-        glm::vec3 pos = glm::vec3(this->_pos.x / 5.f, -this->_pos.y / 5.f, 0);
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
-        glm::mat4 view = glm::lookAt(glm::vec3(0, 0, 10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-        this->_shader->setMat4("projection", glm::perspective(glm::radians(45.0f), 600.f / 600.f, 0.1f, 100.0f));
-        this->_shader->setMat4("view", view);
-        this->_shader->setMat4("model", model);
+    this->_camera->getShader().use();
+    this->_camera->setPos(glm::vec3(0.0f, 0.0f, 10.0f));
+    this->_camera->setShader(0.0f);
 
-        this->_shader->setVec3("viewPos", 1.0f, 0.0f, 0.0f);
-        this->_shader->setVec3("lightPos", 1.0f, 0.0f, 0.0f);
+    glm::vec3 pos = glm::vec3(this->_pos.x / 5.f, -this->_pos.y / 5.f, 0);
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
 
-        for (std::size_t i = 0; i < 100; i++)
-            this->_shader->setMat4("finalBonesMatrices[" + std::to_string(i) + "]", glm::mat4(1.0f));
+    this->_camera->getShader().setMat4("model", model);
+    for (std::size_t i = 0; i < 100; i++)
+        this->_camera->getShader().setMat4("finalBonesMatrices[" + std::to_string(i) + "]", glm::mat4(1.0f));
 
-        this->_model->draw(*this->_shader);
-
+    this->_model->draw(this->_camera->getShader());
     EndDrawing();
 }
 
