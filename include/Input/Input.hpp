@@ -16,7 +16,7 @@ namespace neo
     class Input : public virtual Node, public virtual IInput
     {
         private:
-            PlayerConfig _config;
+            std::vector<PlayerConfig> _configs;
 
         public:
             Input(std::shared_ptr<MessageBus> messageBus);

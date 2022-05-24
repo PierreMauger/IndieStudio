@@ -27,8 +27,9 @@ void Input::onNotify(Message message)
 
 void Input::update()
 {
-    for (auto &conf : this->_config.getActConfig())
-        this->checkInputStatus(conf.second, conf.first, 0);
+    for (auto &config : this->_configs)
+        for (auto &conf : config.getActConfig())
+            this->checkInputStatus(conf.second, conf.first, 0);
 }
 
 void Input::checkInputStatus(int key, std::string action, int playerNb)
@@ -73,52 +74,52 @@ void Input::checkButtonStatus(int key, std::string action)
 
 void Input::checkJoystickStatus(int key, std::string action, int playerNb)
 {
-    if (GetGamepadAxisMovement(0, 1) < -0.5f && !this->_config.getAxisInputs()[0] && key == 18) {
+    if (GetGamepadAxisMovement(0, 1) < -0.5f && !this->_configs[0].getAxisInputs()[0] && key == 18) {
         Packet data;
         data << action;
         this->postMessage(Message(data, 0, 1));
-        this->_config.getAxisInputs()[0] = true;
-    } else if (GetGamepadAxisMovement(0, 1) > -0.5f && this->_config.getAxisInputs()[0] && key == 18) {
+        this->_configs[0].getAxisInputs()[0] = true;
+    } else if (GetGamepadAxisMovement(0, 1) > -0.5f && this->_configs[0].getAxisInputs()[0] && key == 18) {
         Packet data;
         data << action;
         this->postMessage(Message(data, 1, 1));
-        this->_config.getAxisInputs()[0] = false;
+        this->_configs[0].getAxisInputs()[0] = false;
     }
 
-    if (GetGamepadAxisMovement(0, 0) > 0.5f && !this->_config.getAxisInputs()[1] && key == 19) {
+    if (GetGamepadAxisMovement(0, 0) > 0.5f && !this->_configs[0].getAxisInputs()[1] && key == 19) {
         Packet data;
         data << action;
         this->postMessage(Message(data, 0, 1));
-        this->_config.getAxisInputs()[1] = true;
-    } else if (GetGamepadAxisMovement(0, 0) < 0.5f && this->_config.getAxisInputs()[1] && key == 19) {
+        this->_configs[0].getAxisInputs()[1] = true;
+    } else if (GetGamepadAxisMovement(0, 0) < 0.5f && this->_configs[0].getAxisInputs()[1] && key == 19) {
         Packet data;
         data << action;
         this->postMessage(Message(data, 1, 1));
-        this->_config.getAxisInputs()[1] = false;
+        this->_configs[0].getAxisInputs()[1] = false;
     }
 
-    if (GetGamepadAxisMovement(0, 1) > 0.5f && !this->_config.getAxisInputs()[2] && key == 20) {
+    if (GetGamepadAxisMovement(0, 1) > 0.5f && !this->_configs[0].getAxisInputs()[2] && key == 20) {
         Packet data;
         data << action;
         this->postMessage(Message(data, 0, 1));
-        this->_config.getAxisInputs()[2] = true;
-    } else if (GetGamepadAxisMovement(0, 1) < 0.5f && this->_config.getAxisInputs()[2] && key == 20) {
+        this->_configs[0].getAxisInputs()[2] = true;
+    } else if (GetGamepadAxisMovement(0, 1) < 0.5f && this->_configs[0].getAxisInputs()[2] && key == 20) {
         Packet data;
         data << action;
         this->postMessage(Message(data, 1, 1));
-        this->_config.getAxisInputs()[2] = false;
+        this->_configs[0].getAxisInputs()[2] = false;
     }
 
-    if (GetGamepadAxisMovement(0, 0) < -0.5f && !this->_config.getAxisInputs()[3] && key == 21) {
+    if (GetGamepadAxisMovement(0, 0) < -0.5f && !this->_configs[0].getAxisInputs()[3] && key == 21) {
         Packet data;
         data << action;
         this->postMessage(Message(data, 0, 1));
-        this->_config.getAxisInputs()[3] = true;
-    } else if (GetGamepadAxisMovement(0, 0) > -0.5f && this->_config.getAxisInputs()[3] && key == 21) {
+        this->_configs[0].getAxisInputs()[3] = true;
+    } else if (GetGamepadAxisMovement(0, 0) > -0.5f && this->_configs[0].getAxisInputs()[3] && key == 21) {
         Packet data;
         data << action;
         this->postMessage(Message(data, 1, 1));
-        this->_config.getAxisInputs()[3] = false;
+        this->_configs[0].getAxisInputs()[3] = false;
     }
 }
 
@@ -129,5 +130,10 @@ void Input::editConfig(int key, std::string action)
 
 void Input::receiveKeyConfig(Packet data)
 {
-    data >> this->_config;
+    PlayerConfig config;
+
+    data >> config;
+    this->_configs.push_back(config);
+    for (auto &conf : this->_configs.back().getActConfig())
+        std::cout << conf.first << " " << conf.second << std::endl;
 }

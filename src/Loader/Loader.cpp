@@ -12,11 +12,15 @@ using namespace neo;
 Loader::Loader(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
     Packet packet;
+    std::vector<std::string> files = this->getFilesFromDir("ressources/config/");
 
-    PlayerConfig conf = this->loadPlayerConfig(this->loadFile("ressources/config/player1.conf"));
-    conf.setMode(true);
-    packet << conf;
-    this->postMessage(Message(packet, 0, 3));
+    for (auto &file : files) {
+        PlayerConfig conf = this->loadPlayerConfig(this->loadFile(file));
+        conf.setMode(false);
+        packet << conf;
+        this->postMessage(Message(packet, 0, 3));
+        packet.clear();
+    }
 }
 
 void Loader::onNotify(Message message)
