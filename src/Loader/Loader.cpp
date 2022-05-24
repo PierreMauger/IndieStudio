@@ -13,7 +13,7 @@ Loader::Loader(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
     Packet packet;
 
-    PlayerConfig conf = this->loadPlayerConfig(this->loadFile("ressources/input/player1.conf"));
+    PlayerConfig conf = this->loadPlayerConfig(this->loadFile("ressources/config/player1.conf"));
     conf.setMode(true);
     packet << conf;
     this->postMessage(Message(packet, 0, 3));
@@ -22,6 +22,15 @@ Loader::Loader(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 void Loader::onNotify(Message message)
 {
     Packet data = message.getData();
+}
+
+std::vector<std::string> Loader::getFilesFromDir(std::string dir)
+{
+    std::vector<std::string> files;
+
+    for (auto &file : std::filesystem::directory_iterator(dir))
+        files.push_back(file.path());
+    return files;
 }
 
 std::string Loader::loadFile(std::string fileName)
