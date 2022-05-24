@@ -64,62 +64,46 @@ void Input::checkButtonStatus(int key, std::string action, int playerNb)
         Packet data;
         data << playerNb << action;
         this->postMessage(Message(data, 0, 1));
-    }
-    if (IsGamepadButtonReleased(0, key)) {
+    } else if (IsGamepadButtonReleased(0, key)) {
         Packet data;
         data << playerNb << action;
         this->postMessage(Message(data, 1, 1));
     }
 }
 
+float Input::checkAxisStatus(int gamepad, int key, std::string action)
+{
+    int axis = (key + 1) % 2;
+    float value = GetGamepadAxisMovement(gamepad, axis);
+
+    if (key % 4 < 2)
+        value = -value;
+    if (axis) {
+        if (value < 0.5f)
+            return value;
+    } else {
+        if (value > 0.5f)
+            return value;
+    }
+    return 0;
+}
+
 void Input::checkJoystickStatus(int key, std::string action, int playerNb)
 {
-    if (GetGamepadAxisMovement(0, 1) < -0.5f && !this->_configs[playerNb].getAxisInputs()[0] && key == 18) {
-        Packet data;
-        data << playerNb << action;
-        this->postMessage(Message(data, 0, 1));
-        this->_configs[playerNb].getAxisInputs()[0] = true;
-    } else if (GetGamepadAxisMovement(0, 1) > -0.5f && this->_configs[playerNb].getAxisInputs()[0] && key == 18) {
-        Packet data;
-        data << playerNb << action;
-        this->postMessage(Message(data, 1, 1));
-        this->_configs[playerNb].getAxisInputs()[0] = false;
-    }
+    if (key >= 18) {
+        int i = key - 18;
 
-    if (GetGamepadAxisMovement(0, 0) > 0.5f && !this->_configs[playerNb].getAxisInputs()[1] && key == 19) {
-        Packet data;
-        data << playerNb << action;
-        this->postMessage(Message(data, 0, 1));
-        this->_configs[playerNb].getAxisInputs()[1] = true;
-    } else if (GetGamepadAxisMovement(0, 0) < 0.5f && this->_configs[playerNb].getAxisInputs()[1] && key == 19) {
-        Packet data;
-        data << playerNb << action;
-        this->postMessage(Message(data, 1, 1));
-        this->_configs[playerNb].getAxisInputs()[1] = false;
-    }
-
-    if (GetGamepadAxisMovement(0, 1) > 0.5f && !this->_configs[playerNb].getAxisInputs()[2] && key == 20) {
-        Packet data;
-        data << playerNb << action;
-        this->postMessage(Message(data, 0, 1));
-        this->_configs[playerNb].getAxisInputs()[2] = true;
-    } else if (GetGamepadAxisMovement(0, 1) < 0.5f && this->_configs[playerNb].getAxisInputs()[2] && key == 20) {
-        Packet data;
-        data << playerNb << action;
-        this->postMessage(Message(data, 1, 1));
-        this->_configs[playerNb].getAxisInputs()[2] = false;
-    }
-
-    if (GetGamepadAxisMovement(0, 0) < -0.5f && !this->_configs[playerNb].getAxisInputs()[3] && key == 21) {
-        Packet data;
-        data << playerNb << action;
-        this->postMessage(Message(data, 0, 1));
-        this->_configs[playerNb].getAxisInputs()[3] = true;
-    } else if (GetGamepadAxisMovement(0, 0) > -0.5f && this->_configs[playerNb].getAxisInputs()[3] && key == 21) {
-        Packet data;
-        data << playerNb << action;
-        this->postMessage(Message(data, 1, 1));
-        this->_configs[playerNb].getAxisInputs()[3] = false;
+        if (this->checkAxisStatus(0, key, action) && !this->_configs[playerNb].getAxisInputs()[i]) {
+            Packet data;
+            data << playerNb << action;
+            this->postMessage(Message(data, 0, 1));
+            this->_configs[playerNb].getAxisInputs()[i] = true;
+        } else if (!this->checkAxisStatus(0, key, action) && this->_configs[playerNb].getAxisInputs()[i]) {
+            Packet data;
+            data << playerNb << action;
+            this->postMessage(Message(data, 1, 1));
+            this->_configs[playerNb].getAxisInputs()[i] = false;
+        }
     }
 }
 

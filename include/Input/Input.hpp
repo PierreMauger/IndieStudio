@@ -27,6 +27,7 @@ namespace neo
 
             // Interface functions
             void update();
+            float checkAxisStatus(int gamepad, int key, std::string action);
             void checkInputStatus(int key, std::string action, int playerNb);
             void checkKeyStatus(int key, std::string action, int playerNb);
             void checkButtonStatus(int key, std::string action, int playerNb);
