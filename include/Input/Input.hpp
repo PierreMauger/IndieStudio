@@ -28,8 +28,8 @@ namespace neo
             // Interface functions
             void update();
             void checkInputStatus(int key, std::string action, int playerNb);
-            void checkKeyStatus(int key, std::string action);
-            void checkButtonStatus(int key, std::string action);
+            void checkKeyStatus(int key, std::string action, int playerNb);
+            void checkButtonStatus(int key, std::string action, int playerNb);
             void checkJoystickStatus(int key, std::string action, int playerNb);
             void editConfig(int key, std::string action);
 

@@ -43,8 +43,9 @@ void Game::update()
 void Game::receiveKeyPressed(Packet data)
 {
     std::string key;
+    int playerNb = 0;
 
-    data >> key;
+    data >> playerNb >> key;
     if (key == "MoveRight")
         this->_speed.x += 1;
     if (key == "MoveLeft")
@@ -58,8 +59,9 @@ void Game::receiveKeyPressed(Packet data)
 void Game::receiveKeyReleased(Packet data)
 {
     std::string key;
+    int playerNb = 0;
 
-    data >> key;
+    data >> playerNb >> key;
     if (key == "MoveRight")
         this->_speed.x -= 1;
     if (key == "MoveLeft")
