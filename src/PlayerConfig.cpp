@@ -9,6 +9,13 @@
 
 using namespace neo;
 
+PlayerConfig::PlayerConfig()
+{
+    this->_axisInputs.reserve(8);
+    for (int i = 0; i < 8; i++)
+        this->_axisInputs.push_back(false);
+}
+
 std::map<std::string, int> &PlayerConfig::getActConfig()
 {
     if (this->_mode)
@@ -25,6 +32,11 @@ std::map<std::string, int> &PlayerConfig::getKeyboardConfig()
 std::map<std::string, int> &PlayerConfig::getControllerConfig()
 {
     return this->_controllerConfig;
+}
+
+std::vector<bool> &PlayerConfig::getAxisInputs()
+{
+    return this->_axisInputs;
 }
 
 bool PlayerConfig::getMode() const

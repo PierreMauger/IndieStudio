@@ -16,7 +16,6 @@ namespace neo
     class Input : public virtual Node, public virtual IInput
     {
         private:
-            std::vector<bool> _axisInputs;
             PlayerConfig _config;
 
         public:
@@ -28,10 +27,10 @@ namespace neo
 
             // Interface functions
             void update();
-            void checkInputStatus(int key, std::string action);
+            void checkInputStatus(int key, std::string action, int playerNb);
             void checkKeyStatus(int key, std::string action);
             void checkButtonStatus(int key, std::string action);
-            void checkJoystickStatus(int key, std::string action);
+            void checkJoystickStatus(int key, std::string action, int playerNb);
             void editConfig(int key, std::string action);
 
             void receiveKeyConfig(Packet);

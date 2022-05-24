@@ -18,14 +18,16 @@ namespace neo
             bool _mode;
             std::map<std::string, int> _keyboardConfig;
             std::map<std::string, int> _controllerConfig;
+            std::vector<bool> _axisInputs;
 
         public:
-            PlayerConfig() = default;
+            PlayerConfig();
             ~PlayerConfig() = default;
 
             std::map<std::string, int> &getActConfig();
             std::map<std::string, int> &getKeyboardConfig();
             std::map<std::string, int> &getControllerConfig();
+            std::vector<bool> &getAxisInputs();
             bool getMode() const;
 
             void setKeyboardConfig(std::map<std::string, int> config);
