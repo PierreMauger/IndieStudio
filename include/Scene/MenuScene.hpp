@@ -9,14 +9,16 @@
     #define MENUSCENE_HPP
 
     #include "IScene.hpp"
+    #include "GameObject.hpp"
 
 namespace neo
 {
     class MenuScene : public virtual IScene
     {
         private:
-            Rectangle _rectangle;
-            Vector2 _modelPos;
+            std::map<int, GameObject> _objects;
+            // Rectangle _rectangle;
+            // Vector2 _modelPos;
 
         public:
             MenuScene();
