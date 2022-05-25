@@ -16,9 +16,7 @@ namespace neo
     class MenuScene : public virtual IScene
     {
         private:
-            std::map<int, GameObject> _objects;
-            // Rectangle _rectangle;
-            // Vector2 _modelPos;
+            std::map<int, std::unique_ptr<GameObject>> _objects;
 
         public:
             MenuScene();

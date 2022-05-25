@@ -11,8 +11,6 @@ using namespace neo;
 
 MenuScene::MenuScene()
 {
-    // this->_rectangle = {25, 25, 100, 100};
-    // this->_modelPos = {0, 0};
 }
 
 void MenuScene::update()
@@ -24,8 +22,9 @@ void MenuScene::loadScene(std::shared_ptr<MessageBus> messageBus)
     Packet packet;
 
     for (auto &object : this->_objects)
-        packet << object.first << object.second.getPosition().x << object.second.getPosition().y << object.second.getName();
-    messageBus->sendMessage(Message(packet, 0, 2));
+        packet << object.first << object.second->getPosition().x << object.second->getPosition().y << object.second->getName();
+    if (this->_objects.size())
+        messageBus->sendMessage(Message(packet, 0, 2));
 }
 
 void MenuScene::handleKeyPressed(int playerNb, std::string action)

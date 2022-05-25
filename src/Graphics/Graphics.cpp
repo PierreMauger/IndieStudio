@@ -74,6 +74,6 @@ void Graphics::receiveLoad(Packet data)
         std::string name;
 
         data >> id >> x >> y >> name;
-        this->_objects[id] = GraphicObject(name, glm::vec3(x, y, 0));
+        this->_objects[id] = std::unique_ptr<GraphicObject>(new GraphicObject(name, glm::vec3(x, y, 0)));
     }
 }
