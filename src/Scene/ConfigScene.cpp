@@ -17,7 +17,7 @@ void ConfigScene::update()
 {
 }
 
-void ConfigScene::loadScene()
+void ConfigScene::loadScene(std::shared_ptr<MessageBus> messageBus)
 {
 }
 

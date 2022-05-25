@@ -19,8 +19,6 @@ namespace neo
         private:
             std::vector<std::shared_ptr<IScene>> _scenes;
             int _currentScene;
-            // Vector2 _pos;
-            // Vector2 _speed;
 
         public:
             Core(std::shared_ptr<MessageBus> messageBus);

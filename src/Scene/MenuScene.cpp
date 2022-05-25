@@ -11,14 +11,20 @@ using namespace neo;
 
 MenuScene::MenuScene()
 {
+    this->_rectangle = {25, 25, 100, 100};
+    this->_modelPos = {0, 0};
 }
 
 void MenuScene::update()
 {
 }
 
-void MenuScene::loadScene()
+void MenuScene::loadScene(std::shared_ptr<MessageBus> messageBus)
 {
+    Packet packet;
+
+    packet << "loadScene";
+    messageBus->sendMessage(Message(packet, 0, 2));
 }
 
 void MenuScene::handleKeyPressed(int playerNb, std::string action)

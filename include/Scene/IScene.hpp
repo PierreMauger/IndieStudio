@@ -9,6 +9,7 @@
     #define ISCENE_HPP
 
     #include "includes.hpp"
+    #include "MessageBus.hpp"
 
 namespace neo
 {
@@ -18,7 +19,7 @@ namespace neo
             virtual ~IScene() = default;
 
             virtual void update() = 0;
-            virtual void loadScene() = 0;
+            virtual void loadScene(std::shared_ptr<MessageBus> messageBus) = 0;
 
             virtual void handleKeyPressed(int playerNb, std::string action) = 0;
             virtual void handleKeyRelease(int playerNb, std::string action) = 0;

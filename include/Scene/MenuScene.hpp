@@ -15,6 +15,8 @@ namespace neo
     class MenuScene : public virtual IScene
     {
         private:
+            Rectangle _rectangle;
+            Vector2 _modelPos;
 
         public:
             MenuScene();
@@ -22,7 +24,7 @@ namespace neo
 
             // Interface functions
             void update();
-            void loadScene();
+            void loadScene(std::shared_ptr<MessageBus> messageBus);
 
             void handleKeyPressed(int playerNb, std::string action);
             void handleKeyRelease(int playerNb, std::string action);
