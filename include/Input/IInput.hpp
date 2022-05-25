@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2022
-** Input.hpp
+** IInput.hpp
 ** File description:
-** Input
+** IInput
 */
 
 #ifndef IINPUT_HPP
