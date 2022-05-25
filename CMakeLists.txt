@@ -43,6 +43,8 @@ set(SRC
   src/PlayerConfig.cpp
   src/Camera.cpp
   src/mappings.cpp
+  src/GameObject.cpp
+  src/GraphicObject.cpp
   src/Audio/Audio.cpp
   src/Core/Core.cpp
   src/Scene/ConfigScene.cpp
