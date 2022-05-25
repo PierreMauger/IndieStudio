@@ -16,6 +16,10 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     InitWindow(600, 600, "Neo");
     SetTargetFPS(60);
     glEnable(GL_DEPTH_TEST);
+
+    for (int i = 0; getMapping(i); i++)
+        SetGamepadMappings(getMapping(i));
+
     this->_pos = {0};
     this->_camera = std::unique_ptr<Camera>(new Camera());
 

@@ -14,6 +14,7 @@
     #include "Camera.hpp"
     #include "Animation.hpp"
     #include "Animator.hpp"
+    #include "mappings.hpp"
 
 namespace neo
 {

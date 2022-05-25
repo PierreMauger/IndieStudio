@@ -41,6 +41,7 @@ set(SRC
   src/Node.cpp
   src/PlayerConfig.cpp
   src/Camera.cpp
+  src/mappings.cpp
   src/Audio/Audio.cpp
   src/Game/Game.cpp
   src/Graphics/Graphics.cpp
@@ -70,7 +71,6 @@ target_include_directories(${EXEC_NAME} PUBLIC
 find_package(raylib REQUIRED)
 target_link_libraries(${EXEC_NAME} PUBLIC raylib)
 target_link_libraries(${EXEC_NAME} PUBLIC GLEW)
-target_link_libraries(${EXEC_NAME} PUBLIC GL)
 target_link_libraries(${EXEC_NAME} PUBLIC assimp)
 ################## MISC ###################
 
