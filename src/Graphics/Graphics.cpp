@@ -23,6 +23,8 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
         std::bind(&Graphics::receivePos, this, std::placeholders::_1),
     };
     this->_model = new neo::Model("ressources/FloofFox_model.dae");
+    // this->_animation = new Animation("ressources/FloofFox_model.dae", this->_model);
+    // this->_animator = new Animator(this->_animation);
 }
 
 Graphics::~Graphics()

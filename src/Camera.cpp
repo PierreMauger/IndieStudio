@@ -30,8 +30,7 @@ void neo::Camera::lookAt(glm::vec3 const &pos, glm::vec3 const &front, glm::vec3
     this->_pos = pos;
     this->_front = front;
     this->_up = up;
-    this->_view = glm::lookAt(glm::vec3(0, 0, 10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-    // this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
+    this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
     this->_projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
     this->_model = glm::mat4(1.0f);
 }

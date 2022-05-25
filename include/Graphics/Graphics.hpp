@@ -12,6 +12,8 @@
     #include "IGraphics.hpp"
     #include "Model.hpp"
     #include "Camera.hpp"
+    #include "Animation.hpp"
+    #include "Animator.hpp"
 
 namespace neo
 {
@@ -21,6 +23,8 @@ namespace neo
             Vector2 _pos;
             std::unique_ptr<neo::Camera> _camera;
             neo::Model *_model;
+            Animation *_animation;
+            Animator *_animator;
 
         public:
             Graphics(std::shared_ptr<MessageBus> messageBus);
