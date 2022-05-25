@@ -68,7 +68,7 @@ void Graphics::receiveLoad(Packet data)
 {
     this->_objects.clear();
 
-    while (!data.checkSize(1)) {
+    while (data.checkSize(1)) {
         int id;
         float x, y;
         std::string name;

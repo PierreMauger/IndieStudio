@@ -23,8 +23,7 @@ void MenuScene::loadScene(std::shared_ptr<MessageBus> messageBus)
 
     for (auto &object : this->_objects)
         packet << object.first << object.second->getPosition().x << object.second->getPosition().y << object.second->getName();
-    if (this->_objects.size())
-        messageBus->sendMessage(Message(packet, 0, 2));
+    messageBus->sendMessage(Message(packet, 0, 2));
 }
 
 void MenuScene::handleKeyPressed(int playerNb, std::string action)
