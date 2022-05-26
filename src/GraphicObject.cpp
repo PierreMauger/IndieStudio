@@ -15,6 +15,11 @@ GraphicObject::GraphicObject(std::string name, glm::vec3 position) : _model(name
     this->_position = position;
 }
 
+glm::vec3 GraphicObject::getPosition() const
+{
+    return this->_position;
+}
+
 void GraphicObject::setPosition(glm::vec3 position)
 {
     this->_position = position;

@@ -16,23 +16,21 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     InitWindow(600, 600, "Neo");
     SetTargetFPS(60);
     glEnable(GL_DEPTH_TEST);
-
     for (int i = 0; getMapping(i); i++)
         SetGamepadMappings(getMapping(i));
-
     this->_camera = std::unique_ptr<Camera>(new Camera());
 
     this->_functionTab = {
         std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
     };
-    // this->_model = new neo::Model("ressources/FloofFox_model.dae");
-    // this->_animation = new Animation("ressources/FloofFox_model.dae", this->_model);
-    // this->_animator = new Animator(this->_animation);
 }
 
 Graphics::~Graphics()
 {
     CloseWindow();
+    for (auto &object : this->_objects)
+        object.second.reset();
+    this->_camera.reset();
 }
 
 void Graphics::onNotify(Message message)
@@ -54,7 +52,7 @@ void Graphics::draw()
     this->_camera->setShader(0.0f);
 
     for (auto &object : this->_objects) {
-        this->_camera->setOnModel(glm::vec3(0.0f, 0.0f, 0.0f));
+        this->_camera->setOnModel(object.second->getPosition());
         object.second->draw(this->_camera->getShader());
     }
     EndDrawing();

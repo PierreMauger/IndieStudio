@@ -18,7 +18,7 @@ namespace neo
 
         public:
             GameScene();
-            ~GameScene() = default;
+            ~GameScene();
 
             // Interface functions
             void update();

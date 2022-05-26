@@ -20,7 +20,7 @@ namespace neo
 
         public:
             MenuScene();
-            ~MenuScene() = default;
+            ~MenuScene();
 
             // Interface functions
             void update();

@@ -13,6 +13,12 @@ ConfigScene::ConfigScene()
 {
 }
 
+ConfigScene::~ConfigScene()
+{
+    // for (auto &object : this->_objects)
+        // object.second.reset();
+}
+
 void ConfigScene::update()
 {
 }

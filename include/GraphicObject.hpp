@@ -28,6 +28,7 @@ namespace neo
             GraphicObject(std::string name, glm::vec3 pos);
             ~GraphicObject() = default;
 
+            glm::vec3 getPosition() const;
             void setPosition(glm::vec3 pos);
             void draw(neo::Shader &shader);
     };

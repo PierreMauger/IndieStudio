@@ -13,6 +13,12 @@ GameScene::GameScene()
 {
 }
 
+GameScene::~GameScene()
+{
+    // for (auto &object : this->_objects)
+        // object.second.reset();
+}
+
 void GameScene::update()
 {
     // if (this->_speed.x != 0 || this->_speed.y != 0) {

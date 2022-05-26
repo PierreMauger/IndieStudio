@@ -18,7 +18,7 @@ namespace neo
 
         public:
             ConfigScene();
-            ~ConfigScene() = default;
+            ~ConfigScene();
 
             // Interface functions
             void update();
