@@ -27,6 +27,8 @@ void GameScene::update(std::shared_ptr<MessageBus> messageBus)
 {
     for (auto &playerSpeed : this->_playerSpeed) {
         if (playerSpeed.second.x != 0 || playerSpeed.second.y != 0) {
+            if (this->_objects.find(playerSpeed.first) == this->_objects.end())
+                break;
             this->_objects[playerSpeed.first]->move(playerSpeed.second);
             Packet packet;
             packet << playerSpeed.first << this->_objects[playerSpeed.first]->getPosition().x << this->_objects[playerSpeed.first]->getPosition().y;
@@ -47,24 +49,28 @@ void GameScene::loadScene(std::shared_ptr<MessageBus> messageBus)
 
 void GameScene::handleKeyPressed(int playerNb, std::string action)
 {
+    if (this->_playerSpeed.find(playerNb) == this->_playerSpeed.end())
+        return;
     if (action == "MoveRight")
         this->_playerSpeed[playerNb].x += 0.1f;
-    if (action == "MoveLeft")
+    else if (action == "MoveLeft")
         this->_playerSpeed[playerNb].x -= 0.1f;
-    if (action == "MoveUp")
+    else if (action == "MoveUp")
         this->_playerSpeed[playerNb].y += 0.1f;
-    if (action == "MoveDown")
+    else if (action == "MoveDown")
         this->_playerSpeed[playerNb].y -= 0.1f;
 }
 
 void GameScene::handleKeyRelease(int playerNb, std::string action)
 {
+    if (this->_playerSpeed.find(playerNb) == this->_playerSpeed.end())
+        return;
     if (action == "MoveRight")
         this->_playerSpeed[playerNb].x -= 0.1f;
-    if (action == "MoveLeft")
+    else if (action == "MoveLeft")
         this->_playerSpeed[playerNb].x += 0.1f;
-    if (action == "MoveUp")
+    else if (action == "MoveUp")
         this->_playerSpeed[playerNb].y -= 0.1f;
-    if (action == "MoveDown")
+    else if (action == "MoveDown")
         this->_playerSpeed[playerNb].y += 0.1f;
 }
