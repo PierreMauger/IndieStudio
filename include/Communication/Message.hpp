@@ -9,6 +9,7 @@
     #define MESSAGE_HPP
 
     #include "includes.hpp"
+    #include "ModuleList.hpp"
     #include "Packet.hpp"
 
 namespace neo
