@@ -52,18 +52,18 @@ namespace neo
             ~Bone() = default;
 
             void update(float animationTime);
-            int getPositionIndex(float animationTime);
-            int getRotationIndex(float animationTime);
-            int getScaleIndex(float animationTime);
 
-            glm::mat4 getLocalTransform();
+            glm::mat4 getLocalTransform() const;
             std::string getName() const;
-            int getID();
+            int getID() const;
 
-            float getScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
-            glm::mat4 InterpolatePosition(float animationTime);
-            glm::mat4 InterpolateRotation(float animationTime);
-            glm::mat4 InterpolateScale(float animationTime);
+            int getPositionIndex(float animationTime) const;
+            int getRotationIndex(float animationTime) const;
+            int getScaleIndex(float animationTime) const;
+            float getScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime) const;
+            glm::mat4 InterpolatePosition(float animationTime) const;
+            glm::mat4 InterpolateRotation(float animationTime) const;
+            glm::mat4 InterpolateScale(float animationTime) const;
     };
 }
 

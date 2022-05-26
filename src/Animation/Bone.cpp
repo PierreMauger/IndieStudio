@@ -48,7 +48,7 @@ void Bone::update(float animationTime)
     this->_localTransform = translation * rotation * scale;
 }
 
-glm::mat4 Bone::getLocalTransform()
+glm::mat4 Bone::getLocalTransform() const
 {
     return this->_localTransform;
 }
@@ -58,12 +58,12 @@ std::string Bone::getName() const
     return this->_name;
 }
 
-int Bone::getID()
+int Bone::getID() const
 {
     return this->_ID;
 }
 
-int Bone::getPositionIndex(float animationTime)
+int Bone::getPositionIndex(float animationTime) const
 {
     for (int index = 0; index < this->_numPositions; index++)
         if (animationTime < this->_positions[index + 1].timeStamp)
@@ -71,7 +71,7 @@ int Bone::getPositionIndex(float animationTime)
     return 0;
 }
 
-int Bone::getRotationIndex(float animationTime)
+int Bone::getRotationIndex(float animationTime) const
 {
     for (int index = 0; index < this->_numRotations; index++)
         if (animationTime < this->_rotations[index + 1].timeStamp)
@@ -79,7 +79,7 @@ int Bone::getRotationIndex(float animationTime)
     return 0;
 }
 
-int Bone::getScaleIndex(float animationTime)
+int Bone::getScaleIndex(float animationTime) const
 {
     for (int index = 0; index < this->_numScalings; index++)
         if (animationTime < this->_scales[index + 1].timeStamp)
@@ -87,14 +87,14 @@ int Bone::getScaleIndex(float animationTime)
     return 0;
 }
 
-float Bone::getScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime)
+float Bone::getScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime) const
 {
     float factor = (animationTime - lastTimeStamp) / (nextTimeStamp - lastTimeStamp);
 
     return factor;
 }
 
-glm::mat4 Bone::InterpolatePosition(float animationTime)
+glm::mat4 Bone::InterpolatePosition(float animationTime) const
 {
     if (this->_numPositions == 1)
         return glm::translate(glm::mat4(1.0f), this->_positions[0].position);
@@ -106,7 +106,7 @@ glm::mat4 Bone::InterpolatePosition(float animationTime)
     return glm::translate(glm::mat4(1.0f), position);
 }
 
-glm::mat4 Bone::InterpolateRotation(float animationTime)
+glm::mat4 Bone::InterpolateRotation(float animationTime) const
 {
     if (this->_numRotations == 1) {
         auto rotation = glm::normalize(this->_rotations[0].orientation);
@@ -121,7 +121,7 @@ glm::mat4 Bone::InterpolateRotation(float animationTime)
     return glm::mat4_cast(rotation);
 }
 
-glm::mat4 Bone::InterpolateScale(float animationTime)
+glm::mat4 Bone::InterpolateScale(float animationTime) const
 {
     if (this->_numScalings == 1)
         return glm::scale(glm::mat4(1.0f), this->_scales[0].scale);

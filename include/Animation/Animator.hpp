@@ -28,7 +28,7 @@ namespace neo
             void update(float deltaTime);
             void play(Animation *animation);
             void calculateBoneTransform(const AssimpNodeData *node, const glm::mat4 &parentTransform);
-            std::vector<glm::mat4> getFinalBoneMatrices();
+            std::vector<glm::mat4> getFinalBoneMatrices() const;
     };
 }
 
