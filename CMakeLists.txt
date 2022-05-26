@@ -26,6 +26,7 @@ set(EXEC_NAME
 
 set(INC
   include/
+  include/Communication/
   include/Audio/
   include/Core/
   include/Graphics/
@@ -36,10 +37,10 @@ set(INC
 )
 
 set(SRC
-  src/Packet.cpp
-  src/Message.cpp
-  src/MessageBus.cpp
-  src/Node.cpp
+  src/Communication/Packet.cpp
+  src/Communication/Message.cpp
+  src/Communication/MessageBus.cpp
+  src/Communication/Node.cpp
   src/PlayerConfig.cpp
   src/Camera.cpp
   src/mappings.cpp
