@@ -22,6 +22,7 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 
     this->_functionTab = {
         std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
+        std::bind(&Graphics::receiveMove, this, std::placeholders::_1),
     };
 }
 
@@ -70,4 +71,13 @@ void Graphics::receiveLoad(Packet data)
         data >> id >> x >> y >> name;
         this->_objects[id] = std::unique_ptr<GraphicObject>(new GraphicObject(name, glm::vec3(x, y, 0)));
     }
+}
+
+void Graphics::receiveMove(Packet data)
+{
+    int id;
+    float x, y;
+
+    data >> id >> x >> y;
+    this->_objects[id]->setPosition(glm::vec3(x, y, 0));
 }

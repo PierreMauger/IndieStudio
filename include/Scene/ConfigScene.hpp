@@ -21,7 +21,7 @@ namespace neo
             ~ConfigScene();
 
             // Interface functions
-            void update();
+            void update(std::shared_ptr<MessageBus> messageBus);
             void loadScene(std::shared_ptr<MessageBus> messageBus);
 
             void handleKeyPressed(int playerNb, std::string action);

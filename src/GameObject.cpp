@@ -29,3 +29,9 @@ void GameObject::setPosition(Vector2 position)
 {
     this->_position = position;
 }
+
+void GameObject::move(Vector2 speed)
+{
+    this->_position.x += speed.x;
+    this->_position.y += speed.y;
+}

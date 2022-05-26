@@ -19,7 +19,7 @@ ConfigScene::~ConfigScene()
         // object.second.reset();
 }
 
-void ConfigScene::update()
+void ConfigScene::update(std::shared_ptr<MessageBus> messageBus)
 {
 }
 

@@ -14,11 +14,11 @@ using namespace neo;
 
 Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    this->_currentScene = 0;
+    this->_currentScene = 2;
 
     this->_scenes.push_back(std::make_shared<MenuScene>());
-    this->_scenes.push_back(std::make_shared<GameScene>());
     this->_scenes.push_back(std::make_shared<ConfigScene>());
+    this->_scenes.push_back(std::make_shared<GameScene>());
 
     this->_scenes[this->_currentScene]->loadScene(this->_messageBus);
 
@@ -39,7 +39,7 @@ void Core::onNotify(Message message)
 
 void Core::update()
 {
-    this->_scenes[this->_currentScene]->update();
+    this->_scenes[this->_currentScene]->update(this->_messageBus);
 }
 
 void Core::receiveKeyPressed(Packet data)

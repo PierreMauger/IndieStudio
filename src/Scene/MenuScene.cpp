@@ -20,7 +20,7 @@ MenuScene::~MenuScene()
         object.second.reset();
 }
 
-void MenuScene::update()
+void MenuScene::update(std::shared_ptr<MessageBus> messageBus)
 {
 }
 

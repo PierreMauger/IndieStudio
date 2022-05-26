@@ -25,6 +25,7 @@ namespace neo
             std::string getName() const;
             Vector2 getPosition() const;
             void setPosition(Vector2 position);
+            void move(Vector2 speed);
     };
 }
 

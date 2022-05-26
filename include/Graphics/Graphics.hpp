@@ -33,6 +33,7 @@ namespace neo
             void draw();
 
             void receiveLoad(Packet);
+            void receiveMove(Packet);
     };
 }
 
