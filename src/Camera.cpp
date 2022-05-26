@@ -61,3 +61,22 @@ void neo::Camera::setShader(float time)
     this->_shader.setVec3("viewPos", this->_pos);
     this->_shader.setVec3("lightPos", glm::vec3(0.0f, 0.0f, 0.0f));
 }
+
+void neo::Camera::setOnModel(glm::vec3 pos)
+{
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
+    this->_shader.setMat4("model", model);
+
+    for (std::size_t i = 0; i < 100; i++)
+        this->_shader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", glm::mat4(1.0f));
+}
+
+void neo::Camera::setOnAnimatedModel(glm::vec3 pos, Animator &animator)
+{
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
+    this->_shader.setMat4("model", model);
+
+    auto transforms = animator.getFinalBoneMatrices();
+    for (std::size_t i = 0; i < 100; i++)
+        this->_shader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+}

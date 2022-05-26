@@ -11,6 +11,7 @@ using namespace neo;
 
 MenuScene::MenuScene()
 {
+    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>("ressources/FloofFox_model.dae", (Vector2){0, 0})));
 }
 
 void MenuScene::update()

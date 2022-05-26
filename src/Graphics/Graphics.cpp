@@ -53,14 +53,10 @@ void Graphics::draw()
     this->_camera->setPos(glm::vec3(0.0f, 0.0f, 10.0f));
     this->_camera->setShader(0.0f);
 
-    // glm::vec3 pos = glm::vec3(this->_pos.x / 5.f, -this->_pos.y / 5.f, 0);
-    // glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
-
-    // this->_camera->getShader().setMat4("model", model);
-    // for (std::size_t i = 0; i < 100; i++)
-        // this->_camera->getShader().setMat4("finalBonesMatrices[" + std::to_string(i) + "]", glm::mat4(1.0f));
-
-    // this->_model->draw(this->_camera->getShader());
+    for (auto &object : this->_objects) {
+        this->_camera->setOnModel(glm::vec3(0.0f, 0.0f, 0.0f));
+        object.second->draw(this->_camera->getShader());
+    }
     EndDrawing();
 }
 
