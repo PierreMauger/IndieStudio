@@ -9,7 +9,7 @@
 
 using namespace neo;
 
-neo::Camera::Camera() : _shader("ressources/camera.vs", "ressources/camera.fs")
+neo::Camera::Camera() : _shader("ressources/shaders/camera.vs", "ressources/shaders/camera.fs")
 {
     this->_pos = glm::vec3(0.0f, 0.0f, 0.0f);
     this->_front = glm::vec3(0.0f, 0.0f, -1.0f);
