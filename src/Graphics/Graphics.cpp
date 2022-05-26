@@ -16,25 +16,22 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     InitWindow(600, 600, "Neo");
     SetTargetFPS(60);
     glEnable(GL_DEPTH_TEST);
-
     for (int i = 0; getMapping(i); i++)
         SetGamepadMappings(getMapping(i));
-
-    this->_pos = {0};
     this->_camera = std::unique_ptr<Camera>(new Camera());
 
     this->_functionTab = {
-        std::bind(&Graphics::receivePos, this, std::placeholders::_1),
+        std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
+        std::bind(&Graphics::receiveMove, this, std::placeholders::_1),
     };
-    this->_model = new neo::Model("ressources/FloofFox_model.dae");
-    // this->_animation = new Animation("ressources/FloofFox_model.dae", this->_model);
-    // this->_animator = new Animator(this->_animation);
 }
 
 Graphics::~Graphics()
 {
     CloseWindow();
-    delete this->_model;
+    for (auto &object : this->_objects)
+        object.second.reset();
+    this->_camera.reset();
 }
 
 void Graphics::onNotify(Message message)
@@ -55,18 +52,32 @@ void Graphics::draw()
     this->_camera->setPos(glm::vec3(0.0f, 0.0f, 10.0f));
     this->_camera->setShader(0.0f);
 
-    glm::vec3 pos = glm::vec3(this->_pos.x / 5.f, -this->_pos.y / 5.f, 0);
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
-
-    this->_camera->getShader().setMat4("model", model);
-    for (std::size_t i = 0; i < 100; i++)
-        this->_camera->getShader().setMat4("finalBonesMatrices[" + std::to_string(i) + "]", glm::mat4(1.0f));
-
-    this->_model->draw(this->_camera->getShader());
+    for (auto &object : this->_objects) {
+        this->_camera->setOnModel(object.second->getPosition());
+        object.second->draw(this->_camera->getShader());
+    }
     EndDrawing();
 }
 
-void Graphics::receivePos(Packet data)
+void Graphics::receiveLoad(Packet data)
 {
-    data >> this->_pos.x >> this->_pos.y;
+    this->_objects.clear();
+
+    while (data.checkSize(1)) {
+        int id;
+        float x, y;
+        std::string name;
+
+        data >> id >> x >> y >> name;
+        this->_objects[id] = std::unique_ptr<GraphicObject>(new GraphicObject(name, glm::vec3(x, y, 0)));
+    }
+}
+
+void Graphics::receiveMove(Packet data)
+{
+    int id;
+    float x, y;
+
+    data >> id >> x >> y;
+    this->_objects[id]->setPosition(glm::vec3(x, y, 0));
 }

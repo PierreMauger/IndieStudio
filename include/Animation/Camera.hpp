@@ -10,6 +10,7 @@
 
     #include "includes.hpp"
     #include "Shader.hpp"
+    #include "Animator.hpp"
 
     #include <GL/glew.h>
     #include <glm/glm.hpp>
@@ -37,6 +38,8 @@ namespace neo
             void setPos(glm::vec3 const &pos);
             void centerOn(glm::vec3 const &pos);
             void setShader(float time);
+            void setOnModel(glm::vec3 pos);
+            void setOnAnimatedModel(glm::vec3 pos, Animator &animator);
     };
 }
 

@@ -1,27 +1,28 @@
 /*
 ** EPITECH PROJECT, 2022
-** Game.hpp
+** Core.hpp
 ** File description:
-** Game
+** Core
 */
 
-#ifndef GAME_HPP
-    #define GAME_HPP
+#ifndef CORE_HPP
+    #define CORE_HPP
 
     #include "Node.hpp"
-    #include "IGame.hpp"
+    #include "ICore.hpp"
+    #include "IScene.hpp"
 
 namespace neo
 {
-    class Game : public virtual Node, public virtual IGame
+    class Core : public virtual Node, public virtual ICore
     {
         private:
-            Vector2 _pos;
-            Vector2 _speed;
+            std::vector<std::shared_ptr<IScene>> _scenes;
+            int _currentScene;
 
         public:
-            Game(std::shared_ptr<MessageBus> messageBus);
-            ~Game() = default;
+            Core(std::shared_ptr<MessageBus> messageBus);
+            ~Core() = default;
 
             // Node functions
             void onNotify(Message);
@@ -34,4 +35,4 @@ namespace neo
     };
 }
 
-#endif // GAME_HPP
+#endif // CORE_HPP

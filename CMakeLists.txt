@@ -27,11 +27,12 @@ set(EXEC_NAME
 set(INC
   include/
   include/Audio/
-  include/Game/
+  include/Core/
   include/Graphics/
   include/Input/
   include/Loader/
   include/Animation/
+  include/Scene/
 )
 
 set(SRC
@@ -42,8 +43,13 @@ set(SRC
   src/PlayerConfig.cpp
   src/Camera.cpp
   src/mappings.cpp
+  src/GameObject.cpp
+  src/GraphicObject.cpp
   src/Audio/Audio.cpp
-  src/Game/Game.cpp
+  src/Core/Core.cpp
+  src/Scene/ConfigScene.cpp
+  src/Scene/GameScene.cpp
+  src/Scene/MenuScene.cpp
   src/Graphics/Graphics.cpp
   src/Input/Input.cpp
   src/Loader/Loader.cpp

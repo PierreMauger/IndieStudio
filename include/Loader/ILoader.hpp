@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2022
-** Loader.hpp
+** ILoader.hpp
 ** File description:
-** Loader
+** ILoader
 */
 
 #ifndef ILOADER_HPP

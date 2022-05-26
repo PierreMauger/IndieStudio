@@ -1,24 +1,24 @@
 /*
 ** EPITECH PROJECT, 2022
-** Game.hpp
+** ICore.hpp
 ** File description:
-** Game
+** ICore
 */
 
-#ifndef IGAME_HPP
-    #define IGAME_HPP
+#ifndef ICORE_HPP
+    #define ICORE_HPP
 
     #include "includes.hpp"
 
 namespace neo
 {
-    class IGame
+    class ICore
     {
         public:
-            virtual ~IGame() = default;
+            virtual ~ICore() = default;
 
             virtual void update() = 0;
     };
 }
 
-#endif // IGAME_HPP
+#endif // ICORE_HPP

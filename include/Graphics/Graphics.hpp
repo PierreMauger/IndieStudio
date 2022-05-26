@@ -10,10 +10,8 @@
 
     #include "Node.hpp"
     #include "IGraphics.hpp"
-    #include "Model.hpp"
+    #include "GraphicObject.hpp"
     #include "Camera.hpp"
-    #include "Animation.hpp"
-    #include "Animator.hpp"
     #include "mappings.hpp"
 
 namespace neo
@@ -21,11 +19,8 @@ namespace neo
     class Graphics : public virtual Node, public virtual IGraphics
     {
         private:
-            Vector2 _pos;
             std::unique_ptr<neo::Camera> _camera;
-            neo::Model *_model;
-            Animation *_animation;
-            Animator *_animator;
+            std::map<int, std::unique_ptr<GraphicObject>> _objects;
 
         public:
             Graphics(std::shared_ptr<MessageBus> messageBus);
@@ -37,7 +32,8 @@ namespace neo
             // Interface functions
             void draw();
 
-            void receivePos(Packet);
+            void receiveLoad(Packet);
+            void receiveMove(Packet);
     };
 }
 

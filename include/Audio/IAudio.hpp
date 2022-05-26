@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2022
-** Audio.hpp
+** IAudio.hpp
 ** File description:
-** Audio
+** IAudio
 */
 
 #ifndef IAUDIO_HPP

@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2022
-** Graphics.hpp
+** IGraphics.hpp
 ** File description:
-** Graphics
+** IGraphics
 */
 
 #ifndef IGRAPHICS_HPP
