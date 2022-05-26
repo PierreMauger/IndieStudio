@@ -17,6 +17,7 @@ namespace neo
     {
         private:
             std::map<int, std::unique_ptr<GameObject>> _objects;
+            std::map<int, std::unique_ptr<GameObject>> _buttons;
 
         public:
             MenuScene();

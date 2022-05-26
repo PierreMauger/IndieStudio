@@ -57,7 +57,7 @@ namespace neo
             std::string getName() const;
             int getID() const;
 
-            int getPositionIndex(float animationTime) const;
+            int getPosIndex(float animationTime) const;
             int getRotationIndex(float animationTime) const;
             int getScaleIndex(float animationTime) const;
             float getScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime) const;

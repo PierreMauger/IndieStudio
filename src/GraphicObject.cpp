@@ -9,20 +9,28 @@
 
 using namespace neo;
 
-GraphicObject::GraphicObject(std::string name, glm::vec3 position) : _model(name)
+GraphicObject::GraphicObject(std::string name, glm::vec3 pos) : _model(name)
 {
     this->_name = name;
-    this->_position = position;
+    this->_position = pos;
+    this->_size = glm::vec3(0, 0, 0);
 }
 
-glm::vec3 GraphicObject::getPosition() const
+GraphicObject::GraphicObject(std::string name, glm::vec3 pos, glm::vec3 size) : _model(name)
+{
+    this->_name = name;
+    this->_position = pos;
+    this->_size = size;
+}
+
+glm::vec3 GraphicObject::getPos() const
 {
     return this->_position;
 }
 
-void GraphicObject::setPosition(glm::vec3 position)
+void GraphicObject::setPos(glm::vec3 pos)
 {
-    this->_position = position;
+    this->_position = pos;
 }
 
 void GraphicObject::draw(neo::Shader &shader)

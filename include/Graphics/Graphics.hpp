@@ -23,6 +23,7 @@ namespace neo
         private:
             std::unique_ptr<neo::Camera> _camera;
             std::map<int, std::unique_ptr<GraphicObject>> _objects;
+            std::map<int, std::unique_ptr<GraphicObject>> _buttons;
 
         public:
             Graphics(std::shared_ptr<MessageBus> messageBus);
@@ -34,7 +35,8 @@ namespace neo
             // Interface functions
             void draw();
 
-            void receiveLoad(Packet);
+            void receiveLoadModel(Packet);
+            void receiveLoadButton(Packet);
             void receiveMove(Packet);
     };
 }

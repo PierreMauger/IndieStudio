@@ -9,10 +9,18 @@
 
 using namespace neo;
 
-GameObject::GameObject(std::string name, Vector2 position)
+GameObject::GameObject(std::string name, Vector2 pos)
 {
     this->_name = name;
-    this->_position = position;
+    this->_pos = pos;
+    this->_size = {1, 1};
+}
+
+GameObject::GameObject(std::string name, Vector2 pos, Vector2 size)
+{
+    this->_name = name;
+    this->_pos = pos;
+    this->_size = size;
 }
 
 std::string GameObject::getName() const
@@ -20,18 +28,23 @@ std::string GameObject::getName() const
     return this->_name;
 }
 
-Vector2 GameObject::getPosition() const
+Vector2 GameObject::getPos() const
 {
-    return this->_position;
+    return this->_pos;
 }
 
-void GameObject::setPosition(Vector2 position)
+Vector2 GameObject::getSize() const
 {
-    this->_position = position;
+    return this->_size;
+}
+
+void GameObject::setPos(Vector2 pos)
+{
+    this->_pos = pos;
 }
 
 void GameObject::move(Vector2 speed)
 {
-    this->_position.x += speed.x;
-    this->_position.y += speed.y;
+    this->_pos.x += speed.x;
+    this->_pos.y += speed.y;
 }

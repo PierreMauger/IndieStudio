@@ -21,7 +21,8 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->_camera = std::unique_ptr<Camera>(new Camera());
 
     this->_functionTab = {
-        std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
+        std::bind(&Graphics::receiveLoadModel, this, std::placeholders::_1),
+        std::bind(&Graphics::receiveLoadButton, this, std::placeholders::_1),
         std::bind(&Graphics::receiveMove, this, std::placeholders::_1),
     };
 }
@@ -31,6 +32,8 @@ Graphics::~Graphics()
     CloseWindow();
     for (auto &object : this->_objects)
         object.second.reset();
+    for (auto &button : this->_buttons)
+        button.second.reset();
     this->_camera.reset();
 }
 
@@ -53,13 +56,13 @@ void Graphics::draw()
     this->_camera->setShader(0.0f);
 
     for (auto &object : this->_objects) {
-        this->_camera->setOnModel(object.second->getPosition());
+        this->_camera->setOnModel(object.second->getPos());
         object.second->draw(this->_camera->getShader());
     }
     EndDrawing();
 }
 
-void Graphics::receiveLoad(Packet data)
+void Graphics::receiveLoadModel(Packet data)
 {
     this->_objects.clear();
 
@@ -69,8 +72,18 @@ void Graphics::receiveLoad(Packet data)
         std::string name;
 
         data >> id >> x >> y >> name;
-        this->_objects[id] = std::unique_ptr<GraphicObject>(new GraphicObject(name, glm::vec3(x, y, 0)));
+        this->_objects[id] = std::make_unique<GraphicObject>(name, glm::vec3(x, y, 0));
     }
+}
+
+void Graphics::receiveLoadButton(Packet data)
+{
+    int id;
+    float x, y, w, h;
+    std::string name;
+
+    data >> id >> x >> y >> w >> h >> name;
+    this->_buttons[id] = std::unique_ptr<GraphicObject>(new GraphicObject(name, glm::vec3(x, y, 0), glm::vec3(w, h, 0)));
 }
 
 void Graphics::receiveMove(Packet data)
@@ -79,5 +92,5 @@ void Graphics::receiveMove(Packet data)
     float x, y;
 
     data >> id >> x >> y;
-    this->_objects[id]->setPosition(glm::vec3(x, y, 0));
+    this->_objects[id]->setPos(glm::vec3(x, y, 0));
 }

@@ -31,8 +31,8 @@ void GameScene::update(std::shared_ptr<MessageBus> messageBus)
                 break;
             this->_objects[playerSpeed.first]->move(playerSpeed.second);
             Packet packet;
-            packet << playerSpeed.first << this->_objects[playerSpeed.first]->getPosition().x << this->_objects[playerSpeed.first]->getPosition().y;
-            messageBus->sendMessage(Message(packet, 1, Module::GRAPHICS));
+            packet << playerSpeed.first << this->_objects[playerSpeed.first]->getPos().x << this->_objects[playerSpeed.first]->getPos().y;
+            messageBus->sendMessage(Message(packet, 2, Module::GRAPHICS));
             packet.clear();
         }
     }
@@ -43,7 +43,7 @@ void GameScene::loadScene(std::shared_ptr<MessageBus> messageBus)
     Packet packet;
 
     for (auto &object : this->_objects)
-        packet << object.first << object.second->getPosition().x << object.second->getPosition().y << object.second->getName();
+        packet << object.first << object.second->getPos().x << object.second->getPos().y << object.second->getName();
     messageBus->sendMessage(Message(packet, 0, Module::GRAPHICS));
 }
 

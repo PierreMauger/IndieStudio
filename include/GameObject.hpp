@@ -16,15 +16,18 @@ namespace neo
     {
         private:
             std::string _name;
-            Vector2 _position;
+            Vector2 _pos;
+            Vector2 _size;
 
         public:
-            GameObject(std::string name, Vector2 position);
+            GameObject(std::string name, Vector2 pos);
+            GameObject(std::string name, Vector2 pos, Vector2 size);
             ~GameObject() = default;
 
             std::string getName() const;
-            Vector2 getPosition() const;
-            void setPosition(Vector2 position);
+            Vector2 getPos() const;
+            Vector2 getSize() const;
+            void setPos(Vector2 pos);
             void move(Vector2 speed);
     };
 }
