@@ -8,8 +8,9 @@
 #ifndef LOADER_HPP
     #define LOADER_HPP
 
-    #include "Node.hpp"
     #include "ILoader.hpp"
+    #include "Node.hpp"
+    #include "ModuleList.hpp"
 
     #include <regex>
     #include <filesystem>

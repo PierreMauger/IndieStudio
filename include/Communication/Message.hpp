@@ -21,7 +21,7 @@ namespace neo
             int _status;
 
         public:
-            Message(Packet data, int status, int target = -1);
+            Message(Packet data, int status, Module target = Module::BROADCAST);
             ~Message() = default;
 
             Packet getData() const;

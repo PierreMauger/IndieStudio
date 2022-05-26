@@ -8,8 +8,9 @@
 #ifndef AUDIO_HPP
     #define AUDIO_HPP
 
-    #include "Node.hpp"
     #include "IAudio.hpp"
+    #include "Node.hpp"
+    #include "ModuleList.hpp"
 
 namespace neo
 {

@@ -8,8 +8,10 @@
 #ifndef CORE_HPP
     #define CORE_HPP
 
-    #include "Node.hpp"
     #include "ICore.hpp"
+    #include "Node.hpp"
+    #include "ModuleList.hpp"
+
     #include "IScene.hpp"
 
 namespace neo

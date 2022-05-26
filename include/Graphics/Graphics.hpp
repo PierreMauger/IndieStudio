@@ -8,8 +8,10 @@
 #ifndef GRAPHICS_HPP
     #define GRAPHICS_HPP
 
-    #include "Node.hpp"
     #include "IGraphics.hpp"
+    #include "Node.hpp"
+    #include "ModuleList.hpp"
+
     #include "GraphicObject.hpp"
     #include "Camera.hpp"
     #include "mappings.hpp"

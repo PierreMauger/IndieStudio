@@ -8,8 +8,9 @@
 #ifndef INPUT_HPP
     #define INPUT_HPP
 
-    #include "Node.hpp"
     #include "IInput.hpp"
+    #include "Node.hpp"
+    #include "ModuleList.hpp"
 
 namespace neo
 {
@@ -27,12 +28,12 @@ namespace neo
 
             // Interface functions
             void update();
+            void editConfig(int key, std::string action);
             float checkAxisStatus(int gamepad, int key, std::string action);
             void checkInputStatus(int key, std::string action, int playerNb);
             void checkKeyStatus(int key, std::string action, int playerNb);
             void checkButtonStatus(int key, std::string action, int playerNb);
             void checkJoystickStatus(int key, std::string action, int playerNb);
-            void editConfig(int key, std::string action);
 
             void receiveKeyConfig(Packet);
     };
