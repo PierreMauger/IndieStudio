@@ -21,7 +21,7 @@ namespace neo
             std::string _name;
             glm::vec3 _position;
             glm::vec3 _size;
-            neo::Model _model;
+            std::unique_ptr<neo::Model> _model;
             // Animation _animation;
             // Animator _animator;
 
@@ -31,6 +31,7 @@ namespace neo
             ~GraphicObject() = default;
 
             glm::vec3 getPos() const;
+            glm::vec3 getSize() const;
             void setPos(glm::vec3 pos);
             void draw(neo::Shader &shader);
     };

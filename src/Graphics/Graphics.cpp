@@ -51,6 +51,9 @@ void Graphics::draw()
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
+    for (auto &button : this->_buttons)
+        DrawRectangle(button.second->getPos().x, button.second->getPos().y, button.second->getSize().x, button.second->getSize().y, RED);
+
     this->_camera->getShader().use();
     this->_camera->setPos(glm::vec3(0.0f, 0.0f, 10.0f));
     this->_camera->setShader(0.0f);

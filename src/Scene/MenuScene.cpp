@@ -12,7 +12,7 @@ using namespace neo;
 MenuScene::MenuScene()
 {
     this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>("ressources/models/FloofFox.dae", (Vector2){1, 1})));
-    // this->_buttons.insert(std::make_pair(0, std::make_unique<GameObject>("red", (Vector2){25, 10}, (Vector2){100, 50})));
+    this->_buttons.insert(std::make_pair(0, std::make_unique<GameObject>("red", (Vector2){25, 10}, (Vector2){100, 50})));
 }
 
 MenuScene::~MenuScene()
@@ -35,10 +35,10 @@ void MenuScene::loadScene(std::shared_ptr<MessageBus> messageBus)
         packet << object.first << object.second->getPos().x << object.second->getPos().y << object.second->getName();
     messageBus->sendMessage(Message(packet, 0, Module::GRAPHICS));
 
-    // packet.clear();
-    // for (auto &button : this->_buttons)
-    //     packet << button.first << button.second->getPos().x << button.second->getPos().y << button.second->getSize().x << button.second->getSize().y << button.second->getName();
-    // messageBus->sendMessage(Message(packet, 1, Module::GRAPHICS));
+    packet.clear();
+    for (auto &button : this->_buttons)
+        packet << button.first << button.second->getPos().x << button.second->getPos().y << button.second->getSize().x << button.second->getSize().y << button.second->getName();
+    messageBus->sendMessage(Message(packet, 1, Module::GRAPHICS));
 }
 
 void MenuScene::handleKeyPressed(int playerNb, std::string action)
