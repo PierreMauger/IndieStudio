@@ -15,14 +15,15 @@ namespace neo
     class ConfigScene : public virtual IScene
     {
         private:
+            std::shared_ptr<MessageBus> _messageBus;
 
         public:
-            ConfigScene();
+            ConfigScene(std::shared_ptr<MessageBus> messageBus);
             ~ConfigScene();
 
             // Interface functions
-            void update(std::shared_ptr<MessageBus> messageBus);
-            void loadScene(std::shared_ptr<MessageBus> messageBus);
+            void update();
+            void loadScene();
 
             void handleKeyPressed(int playerNb, std::string action);
             void handleKeyReleased(int playerNb, std::string action);

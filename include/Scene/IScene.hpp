@@ -18,8 +18,8 @@ namespace neo
         public:
             virtual ~IScene() = default;
 
-            virtual void update(std::shared_ptr<MessageBus> messageBus) = 0;
-            virtual void loadScene(std::shared_ptr<MessageBus> messageBus) = 0;
+            virtual void update() = 0;
+            virtual void loadScene() = 0;
 
             virtual void handleKeyPressed(int playerNb, std::string action) = 0;
             virtual void handleKeyReleased(int playerNb, std::string action) = 0;

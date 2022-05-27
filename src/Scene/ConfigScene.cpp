@@ -9,7 +9,7 @@
 
 using namespace neo;
 
-ConfigScene::ConfigScene()
+ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
 {
 }
 
@@ -19,11 +19,11 @@ ConfigScene::~ConfigScene()
         // object.second.reset();
 }
 
-void ConfigScene::update(std::shared_ptr<MessageBus> messageBus)
+void ConfigScene::update()
 {
 }
 
-void ConfigScene::loadScene(std::shared_ptr<MessageBus> messageBus)
+void ConfigScene::loadScene()
 {
 }
 

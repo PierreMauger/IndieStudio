@@ -9,8 +9,9 @@
 
 using namespace neo;
 
-GameScene::GameScene()
+GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 {
+    this->_messageBus = messageBus;
     this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "ressources/models/FloofFox.dae", (Vector2){1, 1})));
     this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>(0, "ressources/models/FloofFox.dae", (Vector2){0, 0})));
     this->_playerSpeed.insert(std::make_pair(0, Vector2{0, 0}));
@@ -23,7 +24,7 @@ GameScene::~GameScene()
         object.second.reset();
 }
 
-void GameScene::update(std::shared_ptr<MessageBus> messageBus)
+void GameScene::update()
 {
     for (auto &playerSpeed : this->_playerSpeed) {
         if (playerSpeed.second.x != 0 || playerSpeed.second.y != 0) {
@@ -32,19 +33,19 @@ void GameScene::update(std::shared_ptr<MessageBus> messageBus)
             this->_objects[playerSpeed.first]->move(playerSpeed.second);
             Packet packet;
             packet << playerSpeed.first << this->_objects[playerSpeed.first]->getPos().x << this->_objects[playerSpeed.first]->getPos().y;
-            messageBus->sendMessage(Message(packet, GraphicsCommand::MOVE, Module::GRAPHICS));
+            this->_messageBus->sendMessage(Message(packet, GraphicsCommand::MOVE, Module::GRAPHICS));
             packet.clear();
         }
     }
 }
 
-void GameScene::loadScene(std::shared_ptr<MessageBus> messageBus)
+void GameScene::loadScene()
 {
     Packet packet;
 
     for (auto &object : this->_objects)
         packet << 0 << object.first << *object.second;
-    messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 }
 
 void GameScene::handleKeyPressed(int playerNb, std::string action)

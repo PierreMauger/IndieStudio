@@ -9,10 +9,14 @@
 
 using namespace neo;
 
-MenuScene::MenuScene()
+MenuScene::MenuScene(std::shared_ptr<MessageBus> messageBus)
 {
-    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "ressources/models/FloofFox.dae", (Vector2){1, 1})));
-    this->_buttons.insert(std::make_pair(0, std::make_unique<GameObject>(0, "red", (Vector2){25, 10}, (Vector2){100, 50})));
+    this->_messageBus = messageBus;
+    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "ressources/models/FloofFox.dae", (Vector2){0, 0})));
+    this->_buttons.insert(std::make_pair(0, std::make_unique<GameObject>(0, "red", (Vector2){50, 500}, (Vector2){100, 50})));
+    this->_buttons.insert(std::make_pair(1, std::make_unique<GameObject>(0, "red", (Vector2){250, 500}, (Vector2){100, 50})));
+
+    this->_selectedButton = -1;
 }
 
 MenuScene::~MenuScene()
@@ -23,11 +27,11 @@ MenuScene::~MenuScene()
         button.second.reset();
 }
 
-void MenuScene::update(std::shared_ptr<MessageBus> messageBus)
+void MenuScene::update()
 {
 }
 
-void MenuScene::loadScene(std::shared_ptr<MessageBus> messageBus)
+void MenuScene::loadScene()
 {
     Packet packet;
 
@@ -35,11 +39,21 @@ void MenuScene::loadScene(std::shared_ptr<MessageBus> messageBus)
         packet << 0 << object.first << *object.second;
     for (auto &button : this->_buttons)
         packet << 2 <<  button.first << *button.second;
-    messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 }
 
 void MenuScene::handleKeyPressed(int playerNb, std::string action)
 {
+    if (playerNb != 0)
+        return;
+
+    if (action == "MoveRight") {
+        this->_selectedButton = (this->_selectedButton + 1) % this->_buttons.size();
+        // Packet packet;
+        // packet << this->_selectedButton;
+        // this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT, Module::GRAPHICS));
+
+    }
 }
 
 void MenuScene::handleKeyReleased(int playerNb, std::string action)

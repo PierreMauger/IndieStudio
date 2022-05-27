@@ -16,16 +16,17 @@ namespace neo
     class GameScene : public virtual IScene
     {
         private:
+            std::shared_ptr<MessageBus> _messageBus;
             std::map<int, std::unique_ptr<GameObject>> _objects;
             std::map<int, Vector2> _playerSpeed;
 
         public:
-            GameScene();
+            GameScene(std::shared_ptr<MessageBus> messageBus);
             ~GameScene();
 
             // Interface functions
-            void update(std::shared_ptr<MessageBus> messageBus);
-            void loadScene(std::shared_ptr<MessageBus> messageBus);
+            void update();
+            void loadScene();
 
             void handleKeyPressed(int playerNb, std::string action);
             void handleKeyReleased(int playerNb, std::string action);
