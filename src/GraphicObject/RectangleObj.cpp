@@ -19,5 +19,8 @@ RectangleObj::RectangleObj(std::string name, Vector2 pos, Vector2 size) : Graphi
 
 void RectangleObj::draw(neo::Shader &shader)
 {
-    DrawRectangle(this->_position.x, this->_position.y, this->_size.x, this->_size.y, RED);
+    if (this->_status)
+        DrawRectangle(this->_pos.x, this->_pos.y, this->_size.x, this->_size.y, YELLOW);
+    else
+        DrawRectangle(this->_pos.x, this->_pos.y, this->_size.x, this->_size.y, RED);
 }

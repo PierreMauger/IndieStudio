@@ -46,13 +46,18 @@ void MenuScene::handleKeyPressed(int playerNb, std::string action)
 {
     if (playerNb != 0)
         return;
+    if (action == "MoveRight" || action == "MoveLeft") {
+        Packet packet;
+        packet << this->_selectedButton << 0;
+        this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT_BUTTON, Module::GRAPHICS));
+        packet.clear();
 
-    if (action == "MoveRight") {
-        this->_selectedButton = (this->_selectedButton + 1) % this->_buttons.size();
-        // Packet packet;
-        // packet << this->_selectedButton;
-        // this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT, Module::GRAPHICS));
-
+        if (action == "MoveRight")
+            this->_selectedButton = (this->_selectedButton + 1) % this->_buttons.size();
+        else
+            this->_selectedButton = (this->_selectedButton - 1) % this->_buttons.size();
+        packet << this->_selectedButton << 1;
+        this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT_BUTTON, Module::GRAPHICS));
     }
 }
 

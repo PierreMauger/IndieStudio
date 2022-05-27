@@ -19,8 +19,9 @@ namespace neo
     {
         protected:
             std::string _name;
-            Vector2 _position;
+            Vector2 _pos;
             Vector2 _size;
+            int _status;
 
         public:
             GraphicObject(std::string name, Vector2 pos);
@@ -30,6 +31,7 @@ namespace neo
             Vector2 getPos() const;
             Vector2 getSize() const;
             void setPos(Vector2 pos);
+            void setStatus(int status);
             virtual void draw(neo::Shader &shader) = 0;
     };
 }

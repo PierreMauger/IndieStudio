@@ -40,6 +40,7 @@ namespace neo
 
             void receiveLoad(Packet);
             void receiveMove(Packet);
+            void receiveSelectButton(Packet);
     };
 }
 

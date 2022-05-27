@@ -51,7 +51,8 @@ namespace neo
         public:
             enum {
                 LOAD = BaseCommand::LAST,
-                MOVE
+                MOVE,
+                SELECT_BUTTON
             };
     };
 

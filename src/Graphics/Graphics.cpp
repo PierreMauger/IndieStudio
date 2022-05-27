@@ -23,6 +23,7 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->_functionTab = {
         std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
         std::bind(&Graphics::receiveMove, this, std::placeholders::_1),
+        std::bind(&Graphics::receiveSelectButton, this, std::placeholders::_1),
     };
 }
 
@@ -51,7 +52,7 @@ void Graphics::draw()
     ClearBackground(RAYWHITE);
 
     for (auto &button : this->_buttons)
-        DrawRectangle(button.second->getPos().x, button.second->getPos().y, button.second->getSize().x, button.second->getSize().y, RED);
+        button.second->draw(this->_camera->getShader());
 
     this->_camera->getShader().use();
     this->_camera->setPos(glm::vec3(0.0f, 0.0f, 10.0f));
@@ -92,4 +93,14 @@ void Graphics::receiveMove(Packet data)
 
     data >> id >> x >> y;
     this->_objects[id]->setPos((Vector2){x, y});
+}
+
+void Graphics::receiveSelectButton(Packet data)
+{
+    int id;
+    int status;
+
+    data >> id >> status;
+    if (this->_buttons.find(id) != this->_buttons.end())
+        this->_buttons[id]->setStatus(status);
 }
