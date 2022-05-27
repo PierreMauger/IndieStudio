@@ -18,7 +18,7 @@ Loader::Loader(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
         PlayerConfig conf = this->loadPlayerConfig(this->loadFile(file));
         conf.setMode(true);
         packet << conf;
-        this->postMessage(Message(packet, 0, Module::INPUT));
+        this->postMessage(Message(packet, InputCommand::KEY_CONFIG, Module::INPUT));
         packet.clear();
     }
 }

@@ -54,12 +54,12 @@ void Input::checkKeyStatus(int key, std::string action, int playerNb)
     if (IsKeyPressed(key)) {
         Packet data;
         data << playerNb << action;
-        this->postMessage(Message(data, 0, Module::CORE));
+        this->postMessage(Message(data, CoreCommand::KEY_PRESSED, Module::CORE));
     }
     if (IsKeyReleased(key)) {
         Packet data;
         data << playerNb << action;
-        this->postMessage(Message(data, 1, Module::CORE));
+        this->postMessage(Message(data, CoreCommand::KEY_RELEASED, Module::CORE));
     }
 }
 
@@ -68,11 +68,11 @@ void Input::checkButtonStatus(int key, std::string action, int playerNb)
     if (IsGamepadButtonPressed(0, key)) {
         Packet data;
         data << playerNb << action;
-        this->postMessage(Message(data, 0, Module::CORE));
+        this->postMessage(Message(data, CoreCommand::KEY_PRESSED, Module::CORE));
     } else if (IsGamepadButtonReleased(0, key)) {
         Packet data;
         data << playerNb << action;
-        this->postMessage(Message(data, 1, Module::CORE));
+        this->postMessage(Message(data, CoreCommand::KEY_RELEASED, Module::CORE));
     }
 }
 
@@ -99,12 +99,12 @@ void Input::checkJoystickStatus(int key, std::string action, int playerNb)
     if (this->checkAxisStatus(0, key, action) && !this->_configs[playerNb].getAxisInputs()[i]) {
         Packet data;
         data << playerNb << action;
-        this->postMessage(Message(data, 0, Module::CORE));
+        this->postMessage(Message(data, CoreCommand::KEY_PRESSED, Module::CORE));
         this->_configs[playerNb].getAxisInputs()[i] = true;
     } else if (!this->checkAxisStatus(0, key, action) && this->_configs[playerNb].getAxisInputs()[i]) {
         Packet data;
         data << playerNb << action;
-        this->postMessage(Message(data, 1, Module::CORE));
+        this->postMessage(Message(data, CoreCommand::KEY_RELEASED, Module::CORE));
         this->_configs[playerNb].getAxisInputs()[i] = false;
     }
 }

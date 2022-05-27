@@ -20,6 +20,49 @@ namespace neo
 
         BROADCAST = -1
     };
+
+    class BaseCommand
+    {
+        public:
+            enum {
+                LAST
+            };
+    };
+
+    class AudioCommand : public BaseCommand
+    {
+        public:
+            enum {
+                // TODO
+            };
+    };
+
+    class CoreCommand : public BaseCommand
+    {
+        public:
+            enum {
+                KEY_PRESSED = BaseCommand::LAST,
+                KEY_RELEASED
+            };
+    };
+
+    class GraphicsCommand : public BaseCommand
+    {
+        public:
+            enum {
+                LOAD_MODEL = BaseCommand::LAST,
+                LOAD_BUTTON,
+                MOVE
+            };
+    };
+
+    class InputCommand : public BaseCommand
+    {
+        public:
+            enum {
+                KEY_CONFIG = BaseCommand::LAST,
+            };
+    };
 }
 
 #endif // MODULE_ENUM_HPP

@@ -32,7 +32,7 @@ void GameScene::update(std::shared_ptr<MessageBus> messageBus)
             this->_objects[playerSpeed.first]->move(playerSpeed.second);
             Packet packet;
             packet << playerSpeed.first << this->_objects[playerSpeed.first]->getPos().x << this->_objects[playerSpeed.first]->getPos().y;
-            messageBus->sendMessage(Message(packet, 2, Module::GRAPHICS));
+            messageBus->sendMessage(Message(packet, GraphicsCommand::MOVE, Module::GRAPHICS));
             packet.clear();
         }
     }
@@ -44,7 +44,7 @@ void GameScene::loadScene(std::shared_ptr<MessageBus> messageBus)
 
     for (auto &object : this->_objects)
         packet << object.first << object.second->getPos().x << object.second->getPos().y << object.second->getName();
-    messageBus->sendMessage(Message(packet, 0, Module::GRAPHICS));
+    messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD_MODEL, Module::GRAPHICS));
 }
 
 void GameScene::handleKeyPressed(int playerNb, std::string action)
