@@ -63,7 +63,7 @@ int Bone::getID() const
     return this->_ID;
 }
 
-int Bone::getPositionIndex(float animationTime) const
+int Bone::getPosIndex(float animationTime) const
 {
     for (int index = 0; index < this->_numPositions; index++)
         if (animationTime < this->_positions[index + 1].timeStamp)
@@ -99,7 +99,7 @@ glm::mat4 Bone::InterpolatePosition(float animationTime) const
     if (this->_numPositions == 1)
         return glm::translate(glm::mat4(1.0f), this->_positions[0].position);
 
-    int positionIndex = this->getPositionIndex(animationTime);
+    int positionIndex = this->getPosIndex(animationTime);
     int nextPositionIndex = positionIndex + 1;
     float factor = this->getScaleFactor(this->_positions[positionIndex].timeStamp, this->_positions[nextPositionIndex].timeStamp, animationTime);
     glm::vec3 position = glm::mix(this->_positions[positionIndex].position, this->_positions[nextPositionIndex].position, factor);

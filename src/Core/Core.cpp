@@ -7,20 +7,20 @@
 
 #include "Core.hpp"
 #include "MenuScene.hpp"
-#include "GameScene.hpp"
 #include "ConfigScene.hpp"
+#include "GameScene.hpp"
 
 using namespace neo;
 
 Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    this->_currentScene = 2;
+    this->_currentScene = 0;
 
-    this->_scenes.push_back(std::make_shared<MenuScene>());
-    this->_scenes.push_back(std::make_shared<ConfigScene>());
-    this->_scenes.push_back(std::make_shared<GameScene>());
+    this->_scenes.push_back(std::make_unique<MenuScene>(this->_messageBus));
+    this->_scenes.push_back(std::make_unique<ConfigScene>(this->_messageBus));
+    this->_scenes.push_back(std::make_unique<GameScene>(this->_messageBus));
 
-    this->_scenes[this->_currentScene]->loadScene(this->_messageBus);
+    this->_scenes[this->_currentScene]->loadScene();
 
     this->_functionTab = {
         std::bind(&Core::receiveKeyPressed, this, std::placeholders::_1),
@@ -39,7 +39,7 @@ void Core::onNotify(Message message)
 
 void Core::update()
 {
-    this->_scenes[this->_currentScene]->update(this->_messageBus);
+    this->_scenes[this->_currentScene]->update();
 }
 
 void Core::receiveKeyPressed(Packet data)
@@ -57,5 +57,5 @@ void Core::receiveKeyReleased(Packet data)
     int playerNb = 0;
 
     data >> playerNb >> action;
-    this->_scenes[this->_currentScene]->handleKeyRelease(playerNb, action);
+    this->_scenes[this->_currentScene]->handleKeyReleased(playerNb, action);
 }

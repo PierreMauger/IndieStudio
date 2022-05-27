@@ -9,10 +9,11 @@
 
 using namespace neo;
 
+//the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
 static glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4 &from)
 {
     glm::mat4 to;
-    //the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
+
     to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
     to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3; to[3][1] = from.b4;
     to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3; to[3][2] = from.c4;
@@ -108,18 +109,15 @@ void neo::Model::ExtractBoneWeightForVertices(std::vector<Vertex> &vertices, aiM
 
 neo::Mesh neo::Model::processMesh(aiMesh *mesh, const aiScene *scene)
 {
-    // data to fill
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 
-    // walk through each of the mesh's vertices
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
         Vertex vertex;
         SetVertexBoneDataToDefault(vertex);
         vertex.Position = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
         vertex.Normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
 
-        // texture coordinates
         if(mesh->mTextureCoords[0]) {
             glm::vec2 vec;
             vec.x = mesh->mTextureCoords[0][i].x;

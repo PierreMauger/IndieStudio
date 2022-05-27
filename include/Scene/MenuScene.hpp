@@ -9,25 +9,31 @@
     #define MENUSCENE_HPP
 
     #include "IScene.hpp"
-    #include "GameObject.hpp"
+    #include "ModelObj.hpp"
+    #include "AnimatedModelObj.hpp"
+    #include "RectangleObj.hpp"
+    #include "SpriteObj.hpp"
 
 namespace neo
 {
     class MenuScene : public virtual IScene
     {
         private:
+            std::shared_ptr<MessageBus> _messageBus;
             std::map<int, std::unique_ptr<GameObject>> _objects;
+            std::map<int, std::unique_ptr<GameObject>> _buttons;
+            int _selectedButton;
 
         public:
-            MenuScene();
+            MenuScene(std::shared_ptr<MessageBus> messageBus);
             ~MenuScene();
 
             // Interface functions
-            void update(std::shared_ptr<MessageBus> messageBus);
-            void loadScene(std::shared_ptr<MessageBus> messageBus);
+            void update();
+            void loadScene();
 
             void handleKeyPressed(int playerNb, std::string action);
-            void handleKeyRelease(int playerNb, std::string action);
+            void handleKeyReleased(int playerNb, std::string action);
     };
 }
 

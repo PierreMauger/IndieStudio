@@ -19,10 +19,13 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     for (int i = 0; getMapping(i); i++)
         SetGamepadMappings(getMapping(i));
     this->_camera = std::unique_ptr<Camera>(new Camera());
+    this->_models["cube"] = std::shared_ptr<Model>(new Model("ressources/models/Cube.dae"));
+    this->_models["fox"] = std::shared_ptr<Model>(new Model("ressources/models/FloofFox.dae"));
 
     this->_functionTab = {
         std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
         std::bind(&Graphics::receiveMove, this, std::placeholders::_1),
+        std::bind(&Graphics::receiveSelectButton, this, std::placeholders::_1),
     };
 }
 
@@ -31,6 +34,8 @@ Graphics::~Graphics()
     CloseWindow();
     for (auto &object : this->_objects)
         object.second.reset();
+    for (auto &button : this->_buttons)
+        button.second.reset();
     this->_camera.reset();
 }
 
@@ -51,11 +56,13 @@ void Graphics::draw()
     this->_camera->getShader().use();
     this->_camera->setPos(glm::vec3(0.0f, 0.0f, 10.0f));
     this->_camera->setShader(0.0f);
-
     for (auto &object : this->_objects) {
-        this->_camera->setOnModel(object.second->getPosition());
+        this->_camera->setOnModel(glm::vec3(object.second->getPos().x, object.second->getPos().y, 0));
         object.second->draw(this->_camera->getShader());
     }
+
+    for (auto &button : this->_buttons)
+        button.second->draw(this->_camera->getShader());
     EndDrawing();
 }
 
@@ -64,12 +71,21 @@ void Graphics::receiveLoad(Packet data)
     this->_objects.clear();
 
     while (data.checkSize(1)) {
-        int id;
-        float x, y;
-        std::string name;
+        int id = 0;
+        int type = 0;
+        GameObject obj;
 
-        data >> id >> x >> y >> name;
-        this->_objects[id] = std::unique_ptr<GraphicObject>(new GraphicObject(name, glm::vec3(x, y, 0)));
+        data >> type >> id >> obj;
+        if ((type == 0 || type == 1) && this->_models.find(obj.getName()) == this->_models.end())
+            return;
+        if (type == 0)
+            this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(obj, this->_models[obj.getName()]));
+        else if (type == 1)
+            this->_objects[id] = std::unique_ptr<GraphicObject>(new AnimatedModelObj(obj, this->_models[obj.getName()]));
+        else if (type == 2)
+            this->_buttons[id] = std::unique_ptr<GraphicObject>(new RectangleObj(obj));
+        else if (type == 3)
+            this->_buttons[id] = std::unique_ptr<GraphicObject>(new SpriteObj(obj));
     }
 }
 
@@ -79,5 +95,15 @@ void Graphics::receiveMove(Packet data)
     float x, y;
 
     data >> id >> x >> y;
-    this->_objects[id]->setPosition(glm::vec3(x, y, 0));
+    this->_objects[id]->setPos((Vector2){x, y});
+}
+
+void Graphics::receiveSelectButton(Packet data)
+{
+    int id;
+    int status;
+
+    data >> id >> status;
+    if (this->_buttons.find(id) != this->_buttons.end())
+        this->_buttons[id]->setStatus(status);
 }

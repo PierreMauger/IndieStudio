@@ -9,6 +9,7 @@
     #define GRAPHICOBJECT_HPP
 
     #include "includes.hpp"
+    #include "GameObject.hpp"
     #include "Model.hpp"
     #include "Animation.hpp"
     #include "Animator.hpp"
@@ -17,20 +18,21 @@ namespace neo
 {
     class GraphicObject
     {
-        private:
+        protected:
             std::string _name;
-            glm::vec3 _position;
-            neo::Model _model;
-            // Animation _animation;
-            // Animator _animator;
+            Vector2 _pos;
+            Vector2 _size;
+            int _status;
 
         public:
-            GraphicObject(std::string name, glm::vec3 pos);
+            GraphicObject(GameObject obj);
             ~GraphicObject() = default;
 
-            glm::vec3 getPosition() const;
-            void setPosition(glm::vec3 pos);
-            void draw(neo::Shader &shader);
+            Vector2 getPos() const;
+            Vector2 getSize() const;
+            void setPos(Vector2 pos);
+            void setStatus(int status);
+            virtual void draw(neo::Shader &shader) = 0;
     };
 }
 

@@ -9,10 +9,11 @@
 
 using namespace neo;
 
-GameScene::GameScene()
+GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 {
-    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>("ressources/models/FloofFox.dae", (Vector2){1, 1})));
-    this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>("ressources/models/FloofFox.dae", (Vector2){0, 0})));
+    this->_messageBus = messageBus;
+    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "fox", (Vector2){1, 1})));
+    this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>(0, "fox", (Vector2){0, 0})));
     this->_playerSpeed.insert(std::make_pair(0, Vector2{0, 0}));
     this->_playerSpeed.insert(std::make_pair(1, Vector2{0, 0}));
 }
@@ -23,7 +24,7 @@ GameScene::~GameScene()
         object.second.reset();
 }
 
-void GameScene::update(std::shared_ptr<MessageBus> messageBus)
+void GameScene::update()
 {
     for (auto &playerSpeed : this->_playerSpeed) {
         if (playerSpeed.second.x != 0 || playerSpeed.second.y != 0) {
@@ -31,20 +32,20 @@ void GameScene::update(std::shared_ptr<MessageBus> messageBus)
                 break;
             this->_objects[playerSpeed.first]->move(playerSpeed.second);
             Packet packet;
-            packet << playerSpeed.first << this->_objects[playerSpeed.first]->getPosition().x << this->_objects[playerSpeed.first]->getPosition().y;
-            messageBus->sendMessage(Message(packet, 1, Module::GRAPHICS));
+            packet << playerSpeed.first << this->_objects[playerSpeed.first]->getPos().x << this->_objects[playerSpeed.first]->getPos().y;
+            this->_messageBus->sendMessage(Message(packet, GraphicsCommand::MOVE, Module::GRAPHICS));
             packet.clear();
         }
     }
 }
 
-void GameScene::loadScene(std::shared_ptr<MessageBus> messageBus)
+void GameScene::loadScene()
 {
     Packet packet;
 
     for (auto &object : this->_objects)
-        packet << object.first << object.second->getPosition().x << object.second->getPosition().y << object.second->getName();
-    messageBus->sendMessage(Message(packet, 0, Module::GRAPHICS));
+        packet << 0 << object.first << *object.second;
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 }
 
 void GameScene::handleKeyPressed(int playerNb, std::string action)
@@ -61,7 +62,7 @@ void GameScene::handleKeyPressed(int playerNb, std::string action)
         this->_playerSpeed[playerNb].y -= 0.1f;
 }
 
-void GameScene::handleKeyRelease(int playerNb, std::string action)
+void GameScene::handleKeyReleased(int playerNb, std::string action)
 {
     if (this->_playerSpeed.find(playerNb) == this->_playerSpeed.end())
         return;

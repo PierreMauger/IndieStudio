@@ -12,7 +12,10 @@
     #include "Node.hpp"
     #include "ModuleList.hpp"
 
-    #include "GraphicObject.hpp"
+    #include "ModelObj.hpp"
+    #include "AnimatedModelObj.hpp"
+    #include "RectangleObj.hpp"
+    #include "SpriteObj.hpp"
     #include "Camera.hpp"
     #include "mappings.hpp"
 
@@ -23,6 +26,8 @@ namespace neo
         private:
             std::unique_ptr<neo::Camera> _camera;
             std::map<int, std::unique_ptr<GraphicObject>> _objects;
+            std::map<int, std::unique_ptr<GraphicObject>> _buttons;
+            std::map<std::string, std::shared_ptr<neo::Model>> _models;
 
         public:
             Graphics(std::shared_ptr<MessageBus> messageBus);
@@ -36,6 +41,7 @@ namespace neo
 
             void receiveLoad(Packet);
             void receiveMove(Packet);
+            void receiveSelectButton(Packet);
     };
 }
 
