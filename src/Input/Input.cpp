@@ -83,7 +83,7 @@ float Input::checkAxisStatus(int gamepad, int key, std::string action)
 
     if (key % 4 < 2)
         value = -value;
-    if (axis && value < 0.5f)
+    if (axis && value < -0.5f)
         return value;
     else if (!axis && value > 0.5f)
         return value;
