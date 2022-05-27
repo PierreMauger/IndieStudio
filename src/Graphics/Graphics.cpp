@@ -75,7 +75,7 @@ void Graphics::receiveLoadModel(Packet data)
         std::string name;
 
         data >> id >> x >> y >> name;
-        this->_objects[id] = std::make_unique<GraphicObject>(name, glm::vec3(x, y, 0));
+        this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(name, glm::vec3(x, y, 0)));
     }
 }
 
@@ -86,7 +86,7 @@ void Graphics::receiveLoadButton(Packet data)
     std::string name;
 
     data >> id >> x >> y >> w >> h >> name;
-    this->_buttons[id] = std::unique_ptr<GraphicObject>(new GraphicObject(name, glm::vec3(x, y, 0), glm::vec3(w, h, 0)));
+    this->_buttons[id] = std::unique_ptr<GraphicObject>(new RectangleObj(name, glm::vec3(x, y, 0), glm::vec3(w, h, 0)));
 }
 
 void Graphics::receiveMove(Packet data)

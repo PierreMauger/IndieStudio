@@ -34,6 +34,7 @@ set(INC
   include/Loader/
   include/Animation/
   include/Scene/
+  include/GraphicObject/
 )
 
 set(SRC
@@ -45,7 +46,11 @@ set(SRC
   src/Camera.cpp
   src/mappings.cpp
   src/GameObject.cpp
-  src/GraphicObject.cpp
+  src/GraphicObject/GraphicObject.cpp
+  src/GraphicObject/ModelObj.cpp
+  src/GraphicObject/AnimatedModelObj.cpp
+  src/GraphicObject/RectangleObj.cpp
+  src/GraphicObject/SpriteObj.cpp
   src/Audio/Audio.cpp
   src/Core/Core.cpp
   src/Scene/ConfigScene.cpp

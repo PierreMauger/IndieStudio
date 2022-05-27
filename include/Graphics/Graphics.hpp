@@ -12,7 +12,10 @@
     #include "Node.hpp"
     #include "ModuleList.hpp"
 
-    #include "GraphicObject.hpp"
+    #include "ModelObj.hpp"
+    #include "AnimatedModelObj.hpp"
+    #include "RectangleObj.hpp"
+    #include "SpriteObj.hpp"
     #include "Camera.hpp"
     #include "mappings.hpp"
 
