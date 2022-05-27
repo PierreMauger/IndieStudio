@@ -9,9 +9,9 @@
 
 using namespace neo;
 
-AnimatedModelObj::AnimatedModelObj(GameObject obj) : GraphicObject(obj)
+AnimatedModelObj::AnimatedModelObj(GameObject obj, std::shared_ptr<neo::Model> model) : GraphicObject(obj)
 {
-    this->_model = std::make_unique<Model>(obj.getName());
+    this->_model = model;
 }
 
 void AnimatedModelObj::draw(neo::Shader &shader)

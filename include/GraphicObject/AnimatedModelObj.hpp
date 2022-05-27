@@ -19,10 +19,10 @@ namespace neo
     class AnimatedModelObj : public GraphicObject
     {
         private:
-            std::unique_ptr<neo::Model> _model;
+            std::shared_ptr<neo::Model> _model;
 
         public:
-            AnimatedModelObj(GameObject obj);
+            AnimatedModelObj(GameObject obj, std::shared_ptr<neo::Model> model);
             ~AnimatedModelObj() = default;
 
             void draw(neo::Shader &shader);

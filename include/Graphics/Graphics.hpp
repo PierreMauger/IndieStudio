@@ -27,6 +27,7 @@ namespace neo
             std::unique_ptr<neo::Camera> _camera;
             std::map<int, std::unique_ptr<GraphicObject>> _objects;
             std::map<int, std::unique_ptr<GraphicObject>> _buttons;
+            std::map<std::string, std::shared_ptr<neo::Model>> _models;
 
         public:
             Graphics(std::shared_ptr<MessageBus> messageBus);

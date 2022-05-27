@@ -19,6 +19,8 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     for (int i = 0; getMapping(i); i++)
         SetGamepadMappings(getMapping(i));
     this->_camera = std::unique_ptr<Camera>(new Camera());
+    this->_models["cube"] = std::shared_ptr<Model>(new Model("ressources/models/Cube.dae"));
+    this->_models["fox"] = std::shared_ptr<Model>(new Model("ressources/models/FloofFox.dae"));
 
     this->_functionTab = {
         std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
@@ -51,17 +53,16 @@ void Graphics::draw()
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
-    for (auto &button : this->_buttons)
-        button.second->draw(this->_camera->getShader());
-
     this->_camera->getShader().use();
     this->_camera->setPos(glm::vec3(0.0f, 0.0f, 10.0f));
     this->_camera->setShader(0.0f);
-
     for (auto &object : this->_objects) {
         this->_camera->setOnModel(glm::vec3(object.second->getPos().x, object.second->getPos().y, 0));
         object.second->draw(this->_camera->getShader());
     }
+
+    for (auto &button : this->_buttons)
+        button.second->draw(this->_camera->getShader());
     EndDrawing();
 }
 
@@ -75,10 +76,12 @@ void Graphics::receiveLoad(Packet data)
         GameObject obj;
 
         data >> type >> id >> obj;
+        if ((type == 0 || type == 1) && this->_models.find(obj.getName()) == this->_models.end())
+            return;
         if (type == 0)
-            this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(obj));
+            this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(obj, this->_models[obj.getName()]));
         else if (type == 1)
-            this->_objects[id] = std::unique_ptr<GraphicObject>(new AnimatedModelObj(obj));
+            this->_objects[id] = std::unique_ptr<GraphicObject>(new AnimatedModelObj(obj, this->_models[obj.getName()]));
         else if (type == 2)
             this->_buttons[id] = std::unique_ptr<GraphicObject>(new RectangleObj(obj));
         else if (type == 3)

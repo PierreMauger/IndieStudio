@@ -17,10 +17,10 @@ namespace neo
     class ModelObj : public GraphicObject
     {
         private:
-            std::unique_ptr<neo::Model> _model;
+            std::shared_ptr<neo::Model> _model;
 
         public:
-            ModelObj(GameObject obj);
+            ModelObj(GameObject obj, std::shared_ptr<neo::Model> model);
             ~ModelObj() = default;
 
             void draw(neo::Shader &shader);

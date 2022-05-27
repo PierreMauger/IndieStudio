@@ -9,11 +9,10 @@
 
 using namespace neo;
 
-ModelObj::ModelObj(GameObject obj) : GraphicObject(obj)
+ModelObj::ModelObj(GameObject obj, std::shared_ptr<neo::Model> model) : GraphicObject(obj)
 {
-    this->_model = std::make_unique<Model>(obj.getName());
+    this->_model = model;
 }
-
 
 void ModelObj::draw(neo::Shader &shader)
 {
