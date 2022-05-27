@@ -31,6 +31,6 @@ void ConfigScene::handleKeyPressed(int playerNb, std::string action)
 {
 }
 
-void ConfigScene::handleKeyRelease(int playerNb, std::string action)
+void ConfigScene::handleKeyReleased(int playerNb, std::string action)
 {
 }

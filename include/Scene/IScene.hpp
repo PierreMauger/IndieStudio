@@ -22,7 +22,7 @@ namespace neo
             virtual void loadScene(std::shared_ptr<MessageBus> messageBus) = 0;
 
             virtual void handleKeyPressed(int playerNb, std::string action) = 0;
-            virtual void handleKeyRelease(int playerNb, std::string action) = 0;
+            virtual void handleKeyReleased(int playerNb, std::string action) = 0;
     };
 }
 

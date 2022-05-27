@@ -42,6 +42,6 @@ void MenuScene::handleKeyPressed(int playerNb, std::string action)
 {
 }
 
-void MenuScene::handleKeyRelease(int playerNb, std::string action)
+void MenuScene::handleKeyReleased(int playerNb, std::string action)
 {
 }

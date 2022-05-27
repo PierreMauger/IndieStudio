@@ -61,7 +61,7 @@ void GameScene::handleKeyPressed(int playerNb, std::string action)
         this->_playerSpeed[playerNb].y -= 0.1f;
 }
 
-void GameScene::handleKeyRelease(int playerNb, std::string action)
+void GameScene::handleKeyReleased(int playerNb, std::string action)
 {
     if (this->_playerSpeed.find(playerNb) == this->_playerSpeed.end())
         return;

@@ -14,11 +14,11 @@ using namespace neo;
 
 Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    this->_currentScene = 0;
+    this->_currentScene = 2;
 
-    this->_scenes.push_back(std::make_shared<MenuScene>());
-    this->_scenes.push_back(std::make_shared<ConfigScene>());
-    this->_scenes.push_back(std::make_shared<GameScene>());
+    this->_scenes.push_back(std::make_unique<MenuScene>());
+    this->_scenes.push_back(std::make_unique<ConfigScene>());
+    this->_scenes.push_back(std::make_unique<GameScene>());
 
     this->_scenes[this->_currentScene]->loadScene(this->_messageBus);
 
@@ -57,5 +57,5 @@ void Core::receiveKeyReleased(Packet data)
     int playerNb = 0;
 
     data >> playerNb >> action;
-    this->_scenes[this->_currentScene]->handleKeyRelease(playerNb, action);
+    this->_scenes[this->_currentScene]->handleKeyReleased(playerNb, action);
 }

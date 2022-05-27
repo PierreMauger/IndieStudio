@@ -19,7 +19,7 @@ namespace neo
     class Core : public virtual Node, public virtual ICore
     {
         private:
-            std::vector<std::shared_ptr<IScene>> _scenes;
+            std::vector<std::unique_ptr<IScene>> _scenes;
             int _currentScene;
 
         public:
