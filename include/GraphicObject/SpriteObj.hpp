@@ -17,8 +17,8 @@ namespace neo
     {
         private:
         public:
-            SpriteObj(std::string name, glm::vec3 pos);
-            SpriteObj(std::string name, glm::vec3 pos, glm::vec3 size);
+            SpriteObj(std::string name, Vector2 pos);
+            SpriteObj(std::string name, Vector2 pos, Vector2 size);
             ~SpriteObj() = default;
 
             void draw(neo::Shader &shader);

@@ -9,12 +9,12 @@
 
 using namespace neo;
 
-AnimatedModelObj::AnimatedModelObj(std::string name, glm::vec3 pos) : GraphicObject(name, pos)
+AnimatedModelObj::AnimatedModelObj(std::string name, Vector2 pos) : GraphicObject(name, pos)
 {
     this->_model = std::make_unique<Model>(name);
 }
 
-AnimatedModelObj::AnimatedModelObj(std::string name, glm::vec3 pos, glm::vec3 size) : GraphicObject(name, pos, size)
+AnimatedModelObj::AnimatedModelObj(std::string name, Vector2 pos, Vector2 size) : GraphicObject(name, pos, size)
 {
     this->_model = std::make_unique<Model>(name);
 }

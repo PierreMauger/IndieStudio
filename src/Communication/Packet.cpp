@@ -71,6 +71,17 @@ Packet &Packet::operator<<(PlayerConfig &data)
     return *this;
 }
 
+Packet &Packet::operator<<(GameObject &data)
+{
+    *this << data.getType();
+    *this << data.getName();
+    *this << data.getPos().x;
+    *this << data.getPos().y;
+    *this << data.getSize().x;
+    *this << data.getSize().y;
+    return *this;
+}
+
 Packet &Packet::operator>>(int &data)
 {
     if (this->checkSize(sizeof(int))) {
@@ -127,5 +138,24 @@ Packet &Packet::operator>>(PlayerConfig &data)
 
     *this >> data.getControllerConfig();
     *this >> data.getKeyboardConfig();
+    return *this;
+}
+
+Packet &Packet::operator>>(GameObject &data)
+{
+    int type = 0;
+    *this >> type;
+    data.setType(type);
+
+    std::string name;
+    *this >> name;
+    data.setName(name);
+
+    float x, y, w, h = 0.0f;
+    *this >> x >> y >> w >> h;
+
+    data.setPos({x, y});
+    data.setSize({w, h});
+
     return *this;
 }

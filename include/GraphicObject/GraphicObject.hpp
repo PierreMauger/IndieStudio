@@ -19,17 +19,17 @@ namespace neo
     {
         protected:
             std::string _name;
-            glm::vec3 _position;
-            glm::vec3 _size;
+            Vector2 _position;
+            Vector2 _size;
 
         public:
-            GraphicObject(std::string name, glm::vec3 pos);
-            GraphicObject(std::string name, glm::vec3 pos, glm::vec3 size);
+            GraphicObject(std::string name, Vector2 pos);
+            GraphicObject(std::string name, Vector2 pos, Vector2 size);
             ~GraphicObject() = default;
 
-            glm::vec3 getPos() const;
-            glm::vec3 getSize() const;
-            void setPos(glm::vec3 pos);
+            Vector2 getPos() const;
+            Vector2 getSize() const;
+            void setPos(Vector2 pos);
             virtual void draw(neo::Shader &shader) = 0;
     };
 }

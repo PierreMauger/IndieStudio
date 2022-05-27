@@ -9,11 +9,11 @@
 
 using namespace neo;
 
-SpriteObj::SpriteObj(std::string name, glm::vec3 pos) : GraphicObject(name, pos)
+SpriteObj::SpriteObj(std::string name, Vector2 pos) : GraphicObject(name, pos)
 {
 }
 
-SpriteObj::SpriteObj(std::string name, glm::vec3 pos, glm::vec3 size) : GraphicObject(name, pos, size)
+SpriteObj::SpriteObj(std::string name, Vector2 pos, Vector2 size) : GraphicObject(name, pos, size)
 {
 }
 

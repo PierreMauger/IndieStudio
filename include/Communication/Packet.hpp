@@ -10,6 +10,7 @@
 
     #include "includes.hpp"
     #include "PlayerConfig.hpp"
+    #include "GameObject.hpp"
 
 namespace neo
 {
@@ -33,12 +34,14 @@ namespace neo
             Packet &operator<<(const std::string &data);
             Packet &operator<<(std::map<std::string, int> &data);
             Packet &operator<<(PlayerConfig &data);
+            Packet &operator<<(GameObject &data);
 
             Packet &operator>>(int &data);
             Packet &operator>>(float &data);
             Packet &operator>>(std::string &data);
             Packet &operator>>(std::map<std::string, int> &data);
             Packet &operator>>(PlayerConfig &data);
+            Packet &operator>>(GameObject &data);
     };
 }
 

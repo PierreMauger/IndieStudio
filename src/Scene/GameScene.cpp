@@ -11,8 +11,8 @@ using namespace neo;
 
 GameScene::GameScene()
 {
-    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>("ressources/models/FloofFox.dae", (Vector2){1, 1})));
-    this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>("ressources/models/FloofFox.dae", (Vector2){0, 0})));
+    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "ressources/models/FloofFox.dae", (Vector2){1, 1})));
+    this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>(0, "ressources/models/FloofFox.dae", (Vector2){0, 0})));
     this->_playerSpeed.insert(std::make_pair(0, Vector2{0, 0}));
     this->_playerSpeed.insert(std::make_pair(1, Vector2{0, 0}));
 }

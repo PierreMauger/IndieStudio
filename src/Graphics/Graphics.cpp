@@ -59,7 +59,7 @@ void Graphics::draw()
     this->_camera->setShader(0.0f);
 
     for (auto &object : this->_objects) {
-        this->_camera->setOnModel(object.second->getPos());
+        this->_camera->setOnModel(glm::vec3(object.second->getPos().x, object.second->getPos().y, 0));
         object.second->draw(this->_camera->getShader());
     }
     EndDrawing();
@@ -70,23 +70,21 @@ void Graphics::receiveLoadModel(Packet data)
     this->_objects.clear();
 
     while (data.checkSize(1)) {
-        int id;
-        float x, y;
-        std::string name;
+        int id = 0;
+        GameObject rect;
 
-        data >> id >> x >> y >> name;
-        this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(name, glm::vec3(x, y, 0)));
+        data >> id >> rect;
+        this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(rect.getName(), rect.getPos()));
     }
 }
 
 void Graphics::receiveLoadButton(Packet data)
 {
-    int id;
-    float x, y, w, h;
-    std::string name;
+    GameObject rect;
+    int id = 0;
 
-    data >> id >> x >> y >> w >> h >> name;
-    this->_buttons[id] = std::unique_ptr<GraphicObject>(new RectangleObj(name, glm::vec3(x, y, 0), glm::vec3(w, h, 0)));
+    data >> id >> rect;
+    this->_buttons[id] = std::unique_ptr<GraphicObject>(new RectangleObj(rect.getName(), rect.getPos(), rect.getSize()));
 }
 
 void Graphics::receiveMove(Packet data)
@@ -95,5 +93,5 @@ void Graphics::receiveMove(Packet data)
     float x, y;
 
     data >> id >> x >> y;
-    this->_objects[id]->setPos(glm::vec3(x, y, 0));
+    this->_objects[id]->setPos((Vector2){x, y});
 }

@@ -20,8 +20,8 @@ namespace neo
             std::unique_ptr<neo::Model> _model;
 
         public:
-            ModelObj(std::string name, glm::vec3 pos);
-            ModelObj(std::string name, glm::vec3 pos, glm::vec3 size);
+            ModelObj(std::string name, Vector2 pos);
+            ModelObj(std::string name, Vector2 pos, Vector2 size);
             ~ModelObj() = default;
 
             void draw(neo::Shader &shader);
