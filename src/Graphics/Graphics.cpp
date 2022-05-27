@@ -76,13 +76,13 @@ void Graphics::receiveLoad(Packet data)
 
         data >> type >> id >> obj;
         if (type == 0)
-            this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(obj.getName(), obj.getPos()));
+            this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(obj));
         else if (type == 1)
-            this->_objects[id] = std::unique_ptr<GraphicObject>(new AnimatedModelObj(obj.getName(), obj.getPos()));
+            this->_objects[id] = std::unique_ptr<GraphicObject>(new AnimatedModelObj(obj));
         else if (type == 2)
-            this->_buttons[id] = std::unique_ptr<GraphicObject>(new RectangleObj(obj.getName(), obj.getPos(), obj.getSize()));
+            this->_buttons[id] = std::unique_ptr<GraphicObject>(new RectangleObj(obj));
         else if (type == 3)
-            this->_buttons[id] = std::unique_ptr<GraphicObject>(new SpriteObj(obj.getName(), obj.getPos(), obj.getSize()));
+            this->_buttons[id] = std::unique_ptr<GraphicObject>(new SpriteObj(obj));
     }
 }
 

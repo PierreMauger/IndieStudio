@@ -9,14 +9,9 @@
 
 using namespace neo;
 
-AnimatedModelObj::AnimatedModelObj(std::string name, Vector2 pos) : GraphicObject(name, pos)
+AnimatedModelObj::AnimatedModelObj(GameObject obj) : GraphicObject(obj)
 {
-    this->_model = std::make_unique<Model>(name);
-}
-
-AnimatedModelObj::AnimatedModelObj(std::string name, Vector2 pos, Vector2 size) : GraphicObject(name, pos, size)
-{
-    this->_model = std::make_unique<Model>(name);
+    this->_model = std::make_unique<Model>(obj.getName());
 }
 
 void AnimatedModelObj::draw(neo::Shader &shader)

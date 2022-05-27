@@ -20,8 +20,7 @@ namespace neo
     {
         private:
         public:
-            RectangleObj(std::string name, Vector2 pos);
-            RectangleObj(std::string name, Vector2 pos, Vector2 size);
+            RectangleObj(GameObject obj);
             ~RectangleObj() = default;
 
             void draw(neo::Shader &shader);

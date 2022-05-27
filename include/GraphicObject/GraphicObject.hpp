@@ -9,6 +9,7 @@
     #define GRAPHICOBJECT_HPP
 
     #include "includes.hpp"
+    #include "GameObject.hpp"
     #include "Model.hpp"
     #include "Animation.hpp"
     #include "Animator.hpp"
@@ -24,8 +25,7 @@ namespace neo
             int _status;
 
         public:
-            GraphicObject(std::string name, Vector2 pos);
-            GraphicObject(std::string name, Vector2 pos, Vector2 size);
+            GraphicObject(GameObject obj);
             ~GraphicObject() = default;
 
             Vector2 getPos() const;

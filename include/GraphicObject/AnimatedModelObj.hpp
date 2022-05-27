@@ -22,8 +22,7 @@ namespace neo
             std::unique_ptr<neo::Model> _model;
 
         public:
-            AnimatedModelObj(std::string name, Vector2 pos);
-            AnimatedModelObj(std::string name, Vector2 pos, Vector2 size);
+            AnimatedModelObj(GameObject obj);
             ~AnimatedModelObj() = default;
 
             void draw(neo::Shader &shader);

@@ -9,11 +9,7 @@
 
 using namespace neo;
 
-RectangleObj::RectangleObj(std::string name, Vector2 pos) : GraphicObject(name, pos)
-{
-}
-
-RectangleObj::RectangleObj(std::string name, Vector2 pos, Vector2 size) : GraphicObject(name, pos, size)
+RectangleObj::RectangleObj(GameObject obj) : GraphicObject(obj)
 {
 }
 

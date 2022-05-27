@@ -9,19 +9,11 @@
 
 using namespace neo;
 
-GraphicObject::GraphicObject(std::string name, Vector2 pos)
+GraphicObject::GraphicObject(GameObject obj)
 {
-    this->_name = name;
-    this->_pos = pos;
-    this->_size = (Vector2){0, 0};
-    this->_status = 0;
-}
-
-GraphicObject::GraphicObject(std::string name, Vector2 pos, Vector2 size)
-{
-    this->_name = name;
-    this->_pos = pos;
-    this->_size = size;
+    this->_name = obj.getName();
+    this->_pos = obj.getPos();
+    this->_size = obj.getSize();
     this->_status = 0;
 }
 

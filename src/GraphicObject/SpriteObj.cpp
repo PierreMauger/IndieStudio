@@ -9,11 +9,7 @@
 
 using namespace neo;
 
-SpriteObj::SpriteObj(std::string name, Vector2 pos) : GraphicObject(name, pos)
-{
-}
-
-SpriteObj::SpriteObj(std::string name, Vector2 pos, Vector2 size) : GraphicObject(name, pos, size)
+SpriteObj::SpriteObj(GameObject obj) : GraphicObject(obj)
 {
 }
 
