@@ -43,8 +43,8 @@ void GameScene::loadScene(std::shared_ptr<MessageBus> messageBus)
     Packet packet;
 
     for (auto &object : this->_objects)
-        packet << object.first << object.second->getPos().x << object.second->getPos().y << object.second->getName();
-    messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD_MODEL, Module::GRAPHICS));
+        packet << 0 << object.first << *object.second;
+    messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 }
 
 void GameScene::handleKeyPressed(int playerNb, std::string action)

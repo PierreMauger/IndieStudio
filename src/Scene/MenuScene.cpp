@@ -32,13 +32,10 @@ void MenuScene::loadScene(std::shared_ptr<MessageBus> messageBus)
     Packet packet;
 
     for (auto &object : this->_objects)
-        packet << object.first << *object.second;
-    messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD_MODEL, Module::GRAPHICS));
-
-    packet.clear();
+        packet << 0 << object.first << *object.second;
     for (auto &button : this->_buttons)
-        packet << button.first << *button.second;
-    messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD_BUTTON, Module::GRAPHICS));
+        packet << 2 <<  button.first << *button.second;
+    messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 }
 
 void MenuScene::handleKeyPressed(int playerNb, std::string action)

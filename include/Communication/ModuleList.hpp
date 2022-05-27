@@ -50,8 +50,7 @@ namespace neo
     {
         public:
             enum {
-                LOAD_MODEL = BaseCommand::LAST,
-                LOAD_BUTTON,
+                LOAD = BaseCommand::LAST,
                 MOVE
             };
     };

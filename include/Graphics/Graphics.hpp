@@ -38,8 +38,7 @@ namespace neo
             // Interface functions
             void draw();
 
-            void receiveLoadModel(Packet);
-            void receiveLoadButton(Packet);
+            void receiveLoad(Packet);
             void receiveMove(Packet);
     };
 }

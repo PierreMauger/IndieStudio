@@ -21,8 +21,7 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->_camera = std::unique_ptr<Camera>(new Camera());
 
     this->_functionTab = {
-        std::bind(&Graphics::receiveLoadModel, this, std::placeholders::_1),
-        std::bind(&Graphics::receiveLoadButton, this, std::placeholders::_1),
+        std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
         std::bind(&Graphics::receiveMove, this, std::placeholders::_1),
     };
 }
@@ -65,26 +64,25 @@ void Graphics::draw()
     EndDrawing();
 }
 
-void Graphics::receiveLoadModel(Packet data)
+void Graphics::receiveLoad(Packet data)
 {
     this->_objects.clear();
 
     while (data.checkSize(1)) {
         int id = 0;
-        GameObject rect;
+        int type = 0;
+        GameObject obj;
 
-        data >> id >> rect;
-        this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(rect.getName(), rect.getPos()));
+        data >> type >> id >> obj;
+        if (type == 0)
+            this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(obj.getName(), obj.getPos()));
+        else if (type == 1)
+            this->_objects[id] = std::unique_ptr<GraphicObject>(new AnimatedModelObj(obj.getName(), obj.getPos()));
+        else if (type == 2)
+            this->_buttons[id] = std::unique_ptr<GraphicObject>(new RectangleObj(obj.getName(), obj.getPos(), obj.getSize()));
+        else if (type == 3)
+            this->_buttons[id] = std::unique_ptr<GraphicObject>(new SpriteObj(obj.getName(), obj.getPos(), obj.getSize()));
     }
-}
-
-void Graphics::receiveLoadButton(Packet data)
-{
-    GameObject rect;
-    int id = 0;
-
-    data >> id >> rect;
-    this->_buttons[id] = std::unique_ptr<GraphicObject>(new RectangleObj(rect.getName(), rect.getPos(), rect.getSize()));
 }
 
 void Graphics::receiveMove(Packet data)
