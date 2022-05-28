@@ -8,6 +8,7 @@ cross_platform
 
 #compilation/building result related
 out
+build
 lib
 bin
 _deps
