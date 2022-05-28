@@ -13,6 +13,7 @@ MenuScene::MenuScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
     this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "FloofFox", CAST(Vector2, 0, 0))));
+    this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>(1, "WalkingFox", CAST(Vector2, 2, 0))));
     this->_buttons.insert(std::make_pair(0, std::make_unique<GameObject>(0, "red", CAST(Vector2, 50, 500), CAST(Vector2, 100, 50))));
     this->_buttons.insert(std::make_pair(1, std::make_unique<GameObject>(0, "red", CAST(Vector2, 250, 500), CAST(Vector2, 100, 50))));
 
@@ -36,7 +37,7 @@ void MenuScene::loadScene()
     Packet packet;
 
     for (auto &object : this->_objects)
-        packet << 0 << object.first << *object.second;
+        packet << object.second->getType() << object.first << *object.second;
     for (auto &button : this->_buttons)
         packet << 2 <<  button.first << *button.second;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));

@@ -54,7 +54,9 @@ void Graphics::draw()
 
     this->_camera->getShader().use();
     this->_camera->setPos(glm::vec3(0.0f, 0.0f, 10.0f));
-    this->_camera->setShader(0.0f);
+    // this->_camera->setShader(0.0f);
+    this->_camera->setShader(GetTime() * 100);
+
     for (auto &object : this->_objects)
         object.second->draw(*this->_camera);
     for (auto &button : this->_buttons)
@@ -66,14 +68,16 @@ void Graphics::receiveRessourceList(Packet data)
 {
     while (data.checkSize(1)) {
         std::string file;
-        data >> file;
-        std::string fileExtension = file.substr(file.find_last_of(".") + 1);
+        int type;
+        data >> type >> file;
         std::string fileName = file.substr(0, file.find_last_of("."));
 
-        if (fileExtension == "dae")
+        if (type == 0)
             this->_models[fileName] = std::shared_ptr<neo::Model>(new Model("ressources/models/" + file));
-        else if (fileExtension == "png");
-            // this->_buttons[file] = std::shared_ptr<Texture>(new Texture("ressources/textures/" + file));
+        else if (type == 1) {
+            this->_models[fileName] = std::shared_ptr<neo::Model>(new Model("ressources/animations/" + file));
+            this->_animations[fileName] = std::shared_ptr<neo::Animation>(new Animation("ressources/animations/" + file, this->_models[fileName].get()));
+        }
     }
     Packet packet;
     this->_messageBus->sendMessage(Message(packet, CoreCommand::GRAPHICS_READY, Module::CORE));
@@ -89,12 +93,10 @@ void Graphics::receiveLoad(Packet data)
         GameObject obj;
 
         data >> type >> id >> obj;
-        if ((type == 0 || type == 1) && this->_models.find(obj.getName()) == this->_models.end())
-            continue;
-        if (type == 0)
+        if (type == 0 && this->_models.find(obj.getName()) != this->_models.end())
             this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(obj, this->_models[obj.getName()]));
-        else if (type == 1)
-            this->_objects[id] = std::unique_ptr<GraphicObject>(new AnimatedModelObj(obj, this->_models[obj.getName()]));
+        else if (type == 1 && this->_models.find(obj.getName()) != this->_models.end() && this->_animations.find(obj.getName()) != this->_animations.end())
+            this->_objects[id] = std::unique_ptr<GraphicObject>(new AnimatedModelObj(obj, this->_models[obj.getName()], this->_animations[obj.getName()]));
         else if (type == 2)
             this->_buttons[id] = std::unique_ptr<GraphicObject>(new RectangleObj(obj));
         else if (type == 3)

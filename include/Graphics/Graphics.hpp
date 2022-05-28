@@ -29,6 +29,11 @@ namespace neo
             std::map<int, std::unique_ptr<GraphicObject>> _objects;
             std::map<int, std::unique_ptr<GraphicObject>> _buttons;
             std::map<std::string, std::shared_ptr<neo::Model>> _models;
+            std::map<std::string, std::shared_ptr<neo::Animation>> _animations;
+
+            Animation *_animation;
+            Model *_model;
+            Animator *_animator;
 
         public:
             Graphics(std::shared_ptr<MessageBus> messageBus);

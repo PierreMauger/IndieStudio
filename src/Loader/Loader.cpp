@@ -36,12 +36,17 @@ void Loader::sendPlayerConfig()
 
 void Loader::sendRessourceList(void)
 {
-    std::vector<std::string> files = this->getFilesFromDir("ressources/models/");
+    std::vector<std::string> modelFiles = this->getFilesFromDir("ressources/models/");
+    std::vector<std::string> animationFiles = this->getFilesFromDir("ressources/animations/");
     Packet packet;
 
-    for (auto &file : files) {
+    for (auto &file : modelFiles) {
         std::filesystem::path path(file);
-        packet << path.filename();
+        packet << 0 << path.filename();
+    }
+    for (auto &file : animationFiles) {
+        std::filesystem::path path(file);
+        packet << 1 << path.filename();
     }
     this->postMessage(Message(packet, GraphicsCommand::RESSOURCE_LIST, Module::GRAPHICS));
 }
