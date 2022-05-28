@@ -40,6 +40,7 @@ namespace neo
             // Interface functions
             void draw();
 
+            void receiveRessourceList(Packet);
             void receiveLoad(Packet);
             void receiveMove(Packet);
             void receiveSelectButton(Packet);

@@ -19,10 +19,9 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     for (int i = 0; getMapping(i); i++)
         SetGamepadMappings(getMapping(i));
     this->_camera = std::unique_ptr<Camera>(new Camera());
-    this->_models["Cube"] = std::shared_ptr<Model>(new Model("ressources/models/Cube.dae"));
-    this->_models["FloofFox"] = std::shared_ptr<Model>(new Model("ressources/models/FloofFox.dae"));
 
     this->_functionTab = {
+        std::bind(&Graphics::receiveRessourceList, this, std::placeholders::_1),
         std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
         std::bind(&Graphics::receiveMove, this, std::placeholders::_1),
         std::bind(&Graphics::receiveSelectButton, this, std::placeholders::_1),
@@ -66,6 +65,23 @@ void Graphics::draw()
     EndDrawing();
 }
 
+void Graphics::receiveRessourceList(Packet data)
+{
+    while (data.checkSize(1)) {
+        std::string file;
+        data >> file;
+        std::string fileExtension = file.substr(file.find_last_of(".") + 1);
+        std::string fileName = file.substr(0, file.find_last_of("."));
+
+        if (fileExtension == "dae")
+            this->_models[fileName] = std::shared_ptr<neo::Model>(new Model("ressources/models/" + file));
+        else if (fileExtension == "png");
+            // this->_buttons[file] = std::shared_ptr<Texture>(new Texture("ressources/textures/" + file));
+    }
+    Packet packet;
+    this->_messageBus->sendMessage(Message(packet, CoreCommand::GRAPHICS_READY, Module::CORE));
+}
+
 void Graphics::receiveLoad(Packet data)
 {
     this->_objects.clear();
@@ -77,7 +93,7 @@ void Graphics::receiveLoad(Packet data)
 
         data >> type >> id >> obj;
         if ((type == 0 || type == 1) && this->_models.find(obj.getName()) == this->_models.end())
-            return;
+            continue;
         if (type == 0)
             this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(obj, this->_models[obj.getName()]));
         else if (type == 1)
