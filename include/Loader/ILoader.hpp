@@ -18,6 +18,8 @@ namespace neo
         public:
             virtual ~ILoader() = default;
 
+            virtual void sendPlayerConfig() = 0;
+            virtual void sendRessourceList() = 0;
             virtual std::vector<std::string> getFilesFromDir(std::string dir) = 0;
             virtual std::string loadFile(std::string fileName) = 0;
             virtual PlayerConfig loadPlayerConfig(std::string fileContent) = 0;

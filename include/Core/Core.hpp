@@ -34,6 +34,7 @@ namespace neo
 
             void receiveKeyPressed(Packet);
             void receiveKeyReleased(Packet);
+            void receiveGraphicsReady(Packet);
     };
 }
 

@@ -20,11 +20,10 @@ Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->_scenes.push_back(std::make_unique<ConfigScene>(this->_messageBus));
     this->_scenes.push_back(std::make_unique<GameScene>(this->_messageBus));
 
-    this->_scenes[this->_currentScene]->loadScene();
-
     this->_functionTab = {
         std::bind(&Core::receiveKeyPressed, this, std::placeholders::_1),
         std::bind(&Core::receiveKeyReleased, this, std::placeholders::_1),
+        std::bind(&Core::receiveGraphicsReady, this, std::placeholders::_1),
     };
 }
 
@@ -58,4 +57,9 @@ void Core::receiveKeyReleased(Packet data)
 
     data >> playerNb >> action;
     this->_scenes[this->_currentScene]->handleKeyReleased(playerNb, action);
+}
+
+void Core::receiveGraphicsReady(Packet data)
+{
+    this->_scenes[this->_currentScene]->loadScene();
 }

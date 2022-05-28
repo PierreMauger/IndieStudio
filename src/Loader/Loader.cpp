@@ -11,27 +11,39 @@ using namespace neo;
 
 Loader::Loader(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    Packet packet;
-    std::vector<std::string> files = this->getFilesFromDir("ressources/config/");
-
-    for (auto &file : files) {
-        PlayerConfig conf = this->loadPlayerConfig(this->loadFile(file));
-        conf.setMode(true);
-        packet << conf;
-        this->postMessage(Message(packet, InputCommand::KEY_CONFIG, Module::INPUT));
-        packet.clear();
-    }
-
-    // std::vector<std::string> files2 = this->getFilesFromDir("ressources/models/");
-
-    // for (auto &file : files2)
-        // packet << file;
-    // this->postMessage(Message(packet, GraphicsCommand::FILE_LIST, Module::GRAPHICS));
+    this->sendPlayerConfig();
+    this->sendRessourceList();
 }
 
 void Loader::onNotify(Message message)
 {
     Packet data = message.getData();
+}
+
+void Loader::sendPlayerConfig()
+{
+    std::vector<std::string> files = this->getFilesFromDir("ressources/config/");
+    Packet packet;
+
+    for (auto &file : files) {
+        PlayerConfig conf = this->loadPlayerConfig(this->loadFile(file));
+        conf.setMode(false);
+        packet << conf;
+        this->postMessage(Message(packet, InputCommand::KEY_CONFIG, Module::INPUT));
+        packet.clear();
+    }
+}
+
+void Loader::sendRessourceList(void)
+{
+    std::vector<std::string> files = this->getFilesFromDir("ressources/models/");
+    Packet packet;
+
+    for (auto &file : files) {
+        std::filesystem::path path(file);
+        packet << path.filename();
+    }
+    this->postMessage(Message(packet, GraphicsCommand::RESSOURCE_LIST, Module::GRAPHICS));
 }
 
 std::vector<std::string> Loader::getFilesFromDir(std::string dir)

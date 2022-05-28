@@ -12,10 +12,10 @@ using namespace neo;
 Neo::Neo() :
 _messageBus(std::make_shared<MessageBus>()),
 _audio(_messageBus),
+_loader(_messageBus),
 _core(_messageBus),
 _graphics(_messageBus),
-_input(_messageBus),
-_loader(_messageBus)
+_input(_messageBus)
 {
 }
 

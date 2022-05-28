@@ -42,7 +42,8 @@ namespace neo
         public:
             enum {
                 KEY_PRESSED = BaseCommand::LAST,
-                KEY_RELEASED
+                KEY_RELEASED,
+                GRAPHICS_READY,
             };
     };
 
@@ -50,7 +51,7 @@ namespace neo
     {
         public:
             enum {
-                // FILE_LIST = BaseCommand::LAST,
+                RESSOURCE_LIST = BaseCommand::LAST,
                 LOAD,
                 MOVE,
                 SELECT_BUTTON
