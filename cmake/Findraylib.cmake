@@ -1,8 +1,3 @@
-# Usage:
-# FIND_PACKAGE(raylib REQUIRED)
-# [...]
-# TARGET_LINK_LIBRARIES(target_name raylib)
-
 CMAKE_MINIMUM_REQUIRED(VERSION 3.11)
 if (NOT raylib_FOUND)
 	INCLUDE(FetchContent)

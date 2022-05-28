@@ -1,8 +1,30 @@
-cross_platform/
-*.o
-bomberman
+#bootstrap related
+bootstrap
+cross_platform
+
+#vscode/visual studio related
 .vscode
-build/
-bomberman
-dorian
 .vs
+
+#compilation/building result related
+out
+lib
+bin
+_deps
+
+#final executables/dependencies related
+bomberman
+*.dll
+*.exe
+
+#Cmake related
+CMakeFiles
+CMakeSettings.json
+CMakeCache.txt
+CPackConfig.cmake
+CPackSourceConfig.cmake
+cmake_install.cmake
+Makefile
+
+#dorian related
+dorian

@@ -1,17 +1,23 @@
 ################# CONFIG ##################
 
+#set cmake version required
 cmake_minimum_required(VERSION 3.16)
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-# Project name
-project(indie_project LANGUAGES CXX)
+#create project with name, language and version
+project(IndieStudio LANGUAGES CXX VERSION 1)
 
-# find packages
-find_package(GLEW REQUIRED)
-
-# Set c++ version
+#set c++ version, flags and other important variables
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fexceptions")
+if (WIN32)
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /EHsc")
+endif (WIN32)
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+set(DirectX_D3DX9_LIBRARY "")
 
+#add some color
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     add_compile_options(-fdiagnostics-color=always)
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -20,10 +26,12 @@ endif()
 
 ################## BUILD ##################
 
+#set result executable (target) name
 set(EXEC_NAME
   bomberman
 )
 
+#fetch include directories
 set(INC
   include/
   include/Communication/
@@ -37,6 +45,7 @@ set(INC
   include/GraphicObject/
 )
 
+#fetch source files
 set(SRC
   src/Communication/Packet.cpp
   src/Communication/Message.cpp
@@ -68,27 +77,37 @@ set(SRC
   src/Neo.cpp
 )
 
-set(CMAKE_EXE_LINKER_FLAGS -fexceptions)
+#fetch libraries
+find_package(assimp REQUIRED)
+find_package(glew REQUIRED)
+find_package(glm REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(raylib REQUIRED)
 
+#set includes
+include_directories(${INC} ${glew_SOURCE_DIR}/include)
+
+#set source files
 add_executable(${EXEC_NAME}
   ${SRC}
   src/main.cpp
 )
 
-target_include_directories(${EXEC_NAME} PUBLIC
-  ${INC}
-)
-
-# link with libs
-find_package(raylib REQUIRED)
-target_link_libraries(${EXEC_NAME} PUBLIC raylib)
-target_link_libraries(${EXEC_NAME} PUBLIC GLEW)
+#set libraries
 target_link_libraries(${EXEC_NAME} PUBLIC assimp)
-################## MISC ###################
+target_link_libraries(${EXEC_NAME} PUBLIC glew)
+target_link_libraries(${EXEC_NAME} PUBLIC glm)
+target_link_libraries(${EXEC_NAME} PUBLIC raylib)
 
-add_custom_command(
-  TARGET ${EXEC_NAME} POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy
-    ${CMAKE_CURRENT_BINARY_DIR}/${EXEC_NAME}
-    ${CMAKE_CURRENT_BINARY_DIR}/../${EXEC_NAME}
-)
+################## POST BUILD ##################
+
+#copy executable and its dlls to root for ressources (only on windows)
+if (WIN32)
+  add_custom_command(
+    TARGET ${EXEC_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/${EXEC_NAME}.exe ${CMAKE_SOURCE_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/_deps/assimp-build/bin/assimp-vc143-mtd.dll ${CMAKE_SOURCE_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/bin/glew32d.dll ${CMAKE_SOURCE_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/_deps/raylib-build/raylib/raylibd.dll ${CMAKE_SOURCE_DIR}
+  )
+endif (WIN32)
