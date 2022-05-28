@@ -14,7 +14,8 @@ ModelObj::ModelObj(GameObject obj, std::shared_ptr<neo::Model> model) : GraphicO
     this->_model = model;
 }
 
-void ModelObj::draw(neo::Shader &shader)
+void ModelObj::draw(neo::Camera &camera)
 {
-    this->_model->draw(shader);
+    camera.setOnModel(glm::vec3(this->_pos.x, this->_pos.y, 0));
+    this->_model->draw(camera.getShader());
 }

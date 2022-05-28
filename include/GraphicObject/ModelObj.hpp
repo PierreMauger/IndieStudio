@@ -23,7 +23,7 @@ namespace neo
             ModelObj(GameObject obj, std::shared_ptr<neo::Model> model);
             ~ModelObj() = default;
 
-            void draw(neo::Shader &shader);
+            void draw(neo::Camera &camera);
     };
 }
 

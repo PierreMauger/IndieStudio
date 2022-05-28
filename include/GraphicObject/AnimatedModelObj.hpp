@@ -25,8 +25,7 @@ namespace neo
             AnimatedModelObj(GameObject obj, std::shared_ptr<neo::Model> model);
             ~AnimatedModelObj() = default;
 
-            void setModel(std::shared_ptr<neo::Model> model);
-            void draw(neo::Shader &shader);
+            void draw(neo::Camera &camera);
     };
 }
 

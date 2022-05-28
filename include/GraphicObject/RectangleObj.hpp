@@ -10,9 +10,6 @@
 
     #include "includes.hpp"
     #include "GraphicObject.hpp"
-    #include "Model.hpp"
-    #include "Animation.hpp"
-    #include "Animator.hpp"
 
 namespace neo
 {
@@ -23,7 +20,7 @@ namespace neo
             RectangleObj(GameObject obj);
             ~RectangleObj() = default;
 
-            void draw(neo::Shader &shader);
+            void draw(neo::Camera &camera);
     };
 }
 

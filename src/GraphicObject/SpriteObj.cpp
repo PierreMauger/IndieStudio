@@ -13,7 +13,7 @@ SpriteObj::SpriteObj(GameObject obj) : GraphicObject(obj)
 {
 }
 
-void SpriteObj::draw(neo::Shader &shader)
+void SpriteObj::draw(neo::Camera &camera)
 {
     DrawRectangle(this->_pos.x, this->_pos.y, this->_size.x, this->_size.y, RED);
 }

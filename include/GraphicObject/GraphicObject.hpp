@@ -10,9 +10,7 @@
 
     #include "includes.hpp"
     #include "GameObject.hpp"
-    #include "Model.hpp"
-    #include "Animation.hpp"
-    #include "Animator.hpp"
+    #include "Camera.hpp"
 
 namespace neo
 {
@@ -32,7 +30,7 @@ namespace neo
             Vector2 getSize() const;
             void setPos(Vector2 pos);
             void setStatus(int status);
-            virtual void draw(neo::Shader &shader) = 0;
+            virtual void draw(neo::Camera &camera) = 0;
     };
 }
 

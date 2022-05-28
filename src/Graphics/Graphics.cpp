@@ -55,13 +55,10 @@ void Graphics::draw()
     this->_camera->getShader().use();
     this->_camera->setPos(glm::vec3(0.0f, 0.0f, 10.0f));
     this->_camera->setShader(0.0f);
-    for (auto &object : this->_objects) {
-        this->_camera->setOnModel(glm::vec3(object.second->getPos().x, object.second->getPos().y, 0));
-        object.second->draw(this->_camera->getShader());
-    }
-
+    for (auto &object : this->_objects)
+        object.second->draw(*this->_camera);
     for (auto &button : this->_buttons)
-        button.second->draw(this->_camera->getShader());
+        button.second->draw(*this->_camera);
     EndDrawing();
 }
 
