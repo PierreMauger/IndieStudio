@@ -50,7 +50,8 @@ namespace neo
     {
         public:
             enum {
-                LOAD = BaseCommand::LAST,
+                FILE_LIST = BaseCommand::LAST,
+                LOAD,
                 MOVE,
                 SELECT_BUTTON
             };

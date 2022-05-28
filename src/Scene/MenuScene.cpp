@@ -12,7 +12,7 @@ using namespace neo;
 MenuScene::MenuScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
-    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "fox", CAST(Vector2, 0, 0))));
+    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "FloofFox", CAST(Vector2, 0, 0))));
     this->_buttons.insert(std::make_pair(0, std::make_unique<GameObject>(0, "red", CAST(Vector2, 50, 500), CAST(Vector2, 100, 50))));
     this->_buttons.insert(std::make_pair(1, std::make_unique<GameObject>(0, "red", CAST(Vector2, 250, 500), CAST(Vector2, 100, 50))));
 

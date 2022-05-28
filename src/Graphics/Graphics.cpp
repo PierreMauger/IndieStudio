@@ -19,10 +19,9 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     for (int i = 0; getMapping(i); i++)
         SetGamepadMappings(getMapping(i));
     this->_camera = std::unique_ptr<Camera>(new Camera());
-    this->_models["cube"] = std::shared_ptr<Model>(new Model("ressources/models/Cube.dae"));
-    this->_models["fox"] = std::shared_ptr<Model>(new Model("ressources/models/FloofFox.dae"));
 
     this->_functionTab = {
+        std::bind(&Graphics::receiveFileList, this, std::placeholders::_1),
         std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
         std::bind(&Graphics::receiveMove, this, std::placeholders::_1),
         std::bind(&Graphics::receiveSelectButton, this, std::placeholders::_1),
@@ -64,6 +63,20 @@ void Graphics::draw()
     for (auto &button : this->_buttons)
         button.second->draw(this->_camera->getShader());
     EndDrawing();
+}
+
+void Graphics::receiveFileList(Packet data)
+{
+    while (data.checkSize(0)) {
+        std::string fileName;
+        data >> fileName;
+        std::string fileExtension = fileName.substr(fileName.find_last_of(".") + 1);
+
+        if (fileExtension == "dae")
+            this->_models[fileName] = std::shared_ptr<Model>(new Model("ressources/models/" + fileName));
+        else if (fileExtension == "png")
+            this->_models[fileName] = std::shared_ptr<Model>(new Model("ressources/textures/" + fileName));
+    }
 }
 
 void Graphics::receiveLoad(Packet data)
