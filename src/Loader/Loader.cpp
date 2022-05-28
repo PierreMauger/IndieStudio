@@ -22,11 +22,11 @@ Loader::Loader(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
         packet.clear();
     }
 
-    std::vector<std::string> files2 = this->getFilesFromDir("ressources/models/");
+    // std::vector<std::string> files2 = this->getFilesFromDir("ressources/models/");
 
-    for (auto &file : files2)
-        packet << file;
-    this->postMessage(Message(packet, GraphicsCommand::FILE_LIST, Module::GRAPHICS));
+    // for (auto &file : files2)
+        // packet << file;
+    // this->postMessage(Message(packet, GraphicsCommand::FILE_LIST, Module::GRAPHICS));
 }
 
 void Loader::onNotify(Message message)
