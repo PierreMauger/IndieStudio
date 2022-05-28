@@ -102,7 +102,7 @@ target_link_libraries(${EXEC_NAME} PUBLIC raylib)
 ################## POST BUILD ##################
 
 #copy executable and its dlls to root for ressources (only on windows)
-if (WIN32)
+if(WIN32)
   add_custom_command(
     TARGET ${EXEC_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/${EXEC_NAME}.exe ${CMAKE_SOURCE_DIR}
@@ -110,4 +110,9 @@ if (WIN32)
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/bin/glew32d.dll ${CMAKE_SOURCE_DIR}
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/_deps/raylib-build/raylib/raylibd.dll ${CMAKE_SOURCE_DIR}
   )
-endif (WIN32)
+else()
+  add_custom_command(
+    TARGET ${EXEC_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/${EXEC_NAME} ${CMAKE_SOURCE_DIR}
+  )
+endif()
