@@ -19,12 +19,10 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     for (int i = 0; getMapping(i); i++)
         SetGamepadMappings(getMapping(i));
     this->_camera = std::unique_ptr<Camera>(new Camera());
-
     this->_models["Cube"] = std::shared_ptr<Model>(new Model("ressources/models/Cube.dae"));
     this->_models["FloofFox"] = std::shared_ptr<Model>(new Model("ressources/models/FloofFox.dae"));
 
     this->_functionTab = {
-        // std::bind(&Graphics::receiveFileList, this, std::placeholders::_1),
         std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
         std::bind(&Graphics::receiveMove, this, std::placeholders::_1),
         std::bind(&Graphics::receiveSelectButton, this, std::placeholders::_1),
@@ -68,28 +66,8 @@ void Graphics::draw()
     EndDrawing();
 }
 
-// void Graphics::receiveFileList(Packet data)
-// {
-//     std::cout << "receiveFileList" << std::endl;
-
-//     while (data.checkSize(1)) {
-//         std::string fileName;
-//         data >> fileName;
-//         std::string fileExtension = fileName.substr(fileName.find_last_of(".") + 1);
-
-//         if (fileExtension == "dae") {
-//             this->_models[fileName] = std::shared_ptr<Model>(new Model(fileName));
-//             std::cout << "Model loaded: " << fileName << std::endl;
-//         }
-//         else if (fileExtension == "png")
-//             this->_models[fileName] = std::shared_ptr<Model>(new Model(fileName));
-//     }
-// }
-
 void Graphics::receiveLoad(Packet data)
 {
-    std::cout << "receiveLoad" << std::endl;
-
     this->_objects.clear();
 
     while (data.checkSize(1)) {
