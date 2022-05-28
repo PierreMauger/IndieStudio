@@ -18,6 +18,7 @@
     #include "SpriteObj.hpp"
     #include "Camera.hpp"
     #include "mappings.hpp"
+    #include "macros.hpp"
 
 namespace neo
 {

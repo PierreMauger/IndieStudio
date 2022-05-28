@@ -95,7 +95,7 @@ void Graphics::receiveMove(Packet data)
     float x, y;
 
     data >> id >> x >> y;
-    this->_objects[id]->setPos((Vector2){x, y});
+    this->_objects[id]->setPos(CAST(Vector2, x, y));
 }
 
 void Graphics::receiveSelectButton(Packet data)

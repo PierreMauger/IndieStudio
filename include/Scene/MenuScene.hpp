@@ -13,6 +13,7 @@
     #include "AnimatedModelObj.hpp"
     #include "RectangleObj.hpp"
     #include "SpriteObj.hpp"
+    #include "macros.hpp"
 
 namespace neo
 {

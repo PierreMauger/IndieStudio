@@ -33,7 +33,7 @@ std::vector<std::string> Loader::getFilesFromDir(std::string dir)
     std::vector<std::string> files;
 
     for (auto &file : std::filesystem::directory_iterator(dir))
-        files.push_back(file.path());
+        files.push_back(file.path().string());
     return files;
 }
 

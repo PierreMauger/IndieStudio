@@ -10,6 +10,7 @@
 
     #include "IScene.hpp"
     #include "GameObject.hpp"
+    #include "macros.hpp"
 
 namespace neo
 {
