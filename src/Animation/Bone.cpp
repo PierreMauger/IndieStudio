@@ -9,33 +9,33 @@
 
 using namespace neo;
 
-Bone::Bone(const std::string &name, int ID, const aiNodeAnim *channel)
+Bone::Bone(const std::string &name, int ID, const aiNodeAnim &channel)
 {
     this->_name = name;
     this->_ID = ID;
     this->_localTransform = glm::mat4(1.0f);
 
-    this->_numPositions = channel->mNumPositionKeys;
+    this->_numPositions = channel.mNumPositionKeys;
     for (int i = 0; i < this->_numPositions; i++) {
         KeyPosition key;
-        key.position = glm::vec3(channel->mPositionKeys[i].mValue.x, channel->mPositionKeys[i].mValue.y, channel->mPositionKeys[i].mValue.z);
-        key.timeStamp = channel->mPositionKeys[i].mTime;
+        key.position = glm::vec3(channel.mPositionKeys[i].mValue.x, channel.mPositionKeys[i].mValue.y, channel.mPositionKeys[i].mValue.z);
+        key.timeStamp = channel.mPositionKeys[i].mTime;
         this->_positions.push_back(key);
     }
 
-    this->_numRotations = channel->mNumRotationKeys;
+    this->_numRotations = channel.mNumRotationKeys;
     for (int i = 0; i < this->_numRotations; i++) {
         KeyRotation key;
-        key.orientation = glm::quat(channel->mRotationKeys[i].mValue.w, channel->mRotationKeys[i].mValue.x, channel->mRotationKeys[i].mValue.y, channel->mRotationKeys[i].mValue.z);
-        key.timeStamp = channel->mRotationKeys[i].mTime;
+        key.orientation = glm::quat(channel.mRotationKeys[i].mValue.w, channel.mRotationKeys[i].mValue.x, channel.mRotationKeys[i].mValue.y, channel.mRotationKeys[i].mValue.z);
+        key.timeStamp = channel.mRotationKeys[i].mTime;
         this->_rotations.push_back(key);
     }
 
-    this->_numScalings = channel->mNumScalingKeys;
+    this->_numScalings = channel.mNumScalingKeys;
     for (int i = 0; i < this->_numScalings; i++) {
         KeyScale key;
-        key.scale = glm::vec3(channel->mScalingKeys[i].mValue.x, channel->mScalingKeys[i].mValue.y, channel->mScalingKeys[i].mValue.z);
-        key.timeStamp = channel->mScalingKeys[i].mTime;
+        key.scale = glm::vec3(channel.mScalingKeys[i].mValue.x, channel.mScalingKeys[i].mValue.y, channel.mScalingKeys[i].mValue.z);
+        key.timeStamp = channel.mScalingKeys[i].mTime;
         this->_scales.push_back(key);
     }
 }

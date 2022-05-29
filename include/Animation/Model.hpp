@@ -38,12 +38,12 @@ namespace neo
             std::map<std::string, neo::BoneInfo> &getBoneInfoMap();
             int &getBoneCount();
 
-            void processNode(aiNode *node, const aiScene *scene);
-            Mesh processMesh(aiMesh *mesh, const aiScene *scene);
+            void processNode(aiNode &node, const aiScene &scene);
+            Mesh processMesh(aiMesh &mesh, const aiScene &scene);
 
-            void SetVertexBoneDataToDefault(Vertex &vertex);
-            void SetVertexBoneData(Vertex &vertex, int boneID, float weight);
-            void ExtractBoneWeightForVertices(std::vector<Vertex> &vertices, aiMesh *mesh, const aiScene *scene);
+            void setVertexBoneDataToDefault(Vertex &vertex);
+            void setVertexBoneData(Vertex &vertex, int boneID, float weight);
+            void extractBoneWeightForVertices(std::vector<Vertex> &vertices, aiMesh &mesh, const aiScene &scene);
 
             void load(std::string const &filename);
             void draw(neo::Shader &shader);

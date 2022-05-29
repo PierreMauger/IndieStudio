@@ -13,7 +13,7 @@ AnimatedModelObj::AnimatedModelObj(GameObject obj, std::shared_ptr<neo::Model> m
 {
     this->_model = model;
     this->_animation = animation;
-    this->_animator = std::make_unique<Animator>(this->_animation.get());
+    this->_animator = std::make_unique<Animator>(this->_animation);
 }
 
 void AnimatedModelObj::draw(neo::Camera &camera)

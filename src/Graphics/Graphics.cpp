@@ -54,7 +54,6 @@ void Graphics::draw()
 
     this->_camera->getShader().use();
     this->_camera->setPos(glm::vec3(0.0f, 0.0f, 10.0f));
-    // this->_camera->setShader(0.0f);
     this->_camera->setShader(GetTime() * 100);
 
     for (auto &object : this->_objects)
@@ -76,7 +75,7 @@ void Graphics::receiveRessourceList(Packet data)
             this->_models[fileName] = std::shared_ptr<neo::Model>(new Model("ressources/models/" + file));
         else if (type == 1) {
             this->_models[fileName] = std::shared_ptr<neo::Model>(new Model("ressources/animations/" + file));
-            this->_animations[fileName] = std::shared_ptr<neo::Animation>(new Animation("ressources/animations/" + file, this->_models[fileName].get()));
+            this->_animations[fileName] = std::shared_ptr<neo::Animation>(new Animation("ressources/animations/" + file, *this->_models[fileName]));
         }
     }
     Packet packet;

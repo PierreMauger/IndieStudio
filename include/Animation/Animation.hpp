@@ -38,7 +38,7 @@ namespace neo
 
         public:
             Animation() = default;
-            Animation(const std::string &path, neo::Model *model);
+            Animation(const std::string &path, neo::Model &model);
             ~Animation() = default;
 
             float getTicksPerSecond() const;
@@ -46,9 +46,9 @@ namespace neo
             const AssimpNodeData &getRootNode() const;
             const std::map<std::string, neo::BoneInfo> &getBoneInfoMap() const;
 
-            Bone *findBone(const std::string &name);
-            void readMissingBones(const aiAnimation *animation, neo::Model &model);
-            void readHierarchyData(AssimpNodeData &dest, const aiNode *src);
+            std::unique_ptr<Bone> findBone(const std::string &name);
+            void readMissingBones(const aiAnimation &animation, neo::Model &model);
+            void readHierarchyData(AssimpNodeData &dest, const aiNode &src);
     };
 }
 

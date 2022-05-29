@@ -48,7 +48,7 @@ namespace neo
             int _ID;
 
         public:
-            Bone(const std::string &name, int ID, const aiNodeAnim *channel);
+            Bone(const std::string &name, int ID, const aiNodeAnim &channel);
             ~Bone() = default;
 
             void update(float animationTime);

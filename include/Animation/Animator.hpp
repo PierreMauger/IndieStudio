@@ -17,17 +17,17 @@ namespace neo
     {
         private:
             std::vector<glm::mat4> _finalBoneMatrices;
-            Animation *_currentAnimation;
+            std::shared_ptr<Animation> _currentAnimation;
             float _currentTime;
             float _deltaTime;
 
         public:
-            Animator(Animation *animation);
+            Animator(std::shared_ptr<Animation> animation);
             ~Animator() = default;
 
             void update(float deltaTime);
-            void play(Animation *animation);
-            void calculateBoneTransform(const AssimpNodeData *node, const glm::mat4 &parentTransform);
+            void play(std::shared_ptr<Animation> animation);
+            void calculateBoneTransform(const AssimpNodeData &node, const glm::mat4 &parentTransform);
             std::vector<glm::mat4> getFinalBoneMatrices() const;
     };
 }

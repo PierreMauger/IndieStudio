@@ -43,20 +43,20 @@ void neo::Model::load(std::string const &filename)
 
     if (!scene)
         throw std::runtime_error(importer.GetErrorString());
-    this->processNode(scene->mRootNode, scene);
+    this->processNode(*scene->mRootNode, *scene);
 }
 
-void neo::Model::processNode(aiNode *node, const aiScene *scene)
+void neo::Model::processNode(aiNode &node, const aiScene &scene)
 {
-    for(unsigned int i = 0; i < node->mNumMeshes; i++) {
-        aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-        this->_meshes.push_back(processMesh(mesh, scene));
+    for(unsigned int i = 0; i < node.mNumMeshes; i++) {
+        aiMesh *mesh = scene.mMeshes[node.mMeshes[i]];
+        this->_meshes.push_back(processMesh(*mesh, scene));
     }
-    for(unsigned int i = 0; i < node->mNumChildren; i++)
-        this->processNode(node->mChildren[i], scene);
+    for(unsigned int i = 0; i < node.mNumChildren; i++)
+        this->processNode(*node.mChildren[i], scene);
 }
 
-void neo::Model::SetVertexBoneDataToDefault(Vertex &vertex)
+void neo::Model::setVertexBoneDataToDefault(Vertex &vertex)
 {
     for (int i = 0; i < MAX_BONE_INFLUENCE; i++) {
         vertex.BoneIDs[i] = -1;
@@ -64,7 +64,7 @@ void neo::Model::SetVertexBoneDataToDefault(Vertex &vertex)
     }
 }
 
-void neo::Model::SetVertexBoneData(Vertex &vertex, int boneID, float weight)
+void neo::Model::setVertexBoneData(Vertex &vertex, int boneID, float weight)
 {
     for (int i = 0; i < MAX_BONE_INFLUENCE; ++i) {
         if (vertex.BoneIDs[i] < 0) {
@@ -75,18 +75,18 @@ void neo::Model::SetVertexBoneData(Vertex &vertex, int boneID, float weight)
     }
 }
 
-void neo::Model::ExtractBoneWeightForVertices(std::vector<Vertex> &vertices, aiMesh *mesh, const aiScene *scene)
+void neo::Model::extractBoneWeightForVertices(std::vector<Vertex> &vertices, aiMesh &mesh, const aiScene &scene)
 {
     auto &boneInfoMap = this->_boneInfoMap;
     int &boneCount = this->_boneCounter;
 
-    for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex) {
+    for (int boneIndex = 0; boneIndex < mesh.mNumBones; ++boneIndex) {
         int boneID = -1;
-        std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
+        std::string boneName = mesh.mBones[boneIndex]->mName.C_Str();
         if (boneInfoMap.find(boneName) == boneInfoMap.end()) {
             neo::BoneInfo newBoneInfo;
             newBoneInfo.id = boneCount;
-            newBoneInfo.offset = ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix);
+            newBoneInfo.offset = ConvertMatrixToGLMFormat(mesh.mBones[boneIndex]->mOffsetMatrix);
             boneInfoMap[boneName] = newBoneInfo;
             boneID = boneCount;
             boneCount++;
@@ -95,33 +95,33 @@ void neo::Model::ExtractBoneWeightForVertices(std::vector<Vertex> &vertices, aiM
         }
         if (boneID == -1)
             continue;
-        auto weights = mesh->mBones[boneIndex]->mWeights;
-        int numWeights = mesh->mBones[boneIndex]->mNumWeights;
+        auto weights = mesh.mBones[boneIndex]->mWeights;
+        int numWeights = mesh.mBones[boneIndex]->mNumWeights;
 
         for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex) {
             int vertexId = weights[weightIndex].mVertexId;
             float weight = weights[weightIndex].mWeight;
             if (vertexId <= vertices.size())
-                SetVertexBoneData(vertices[vertexId], boneID, weight);
+                this->setVertexBoneData(vertices[vertexId], boneID, weight);
         }
     }
 }
 
-neo::Mesh neo::Model::processMesh(aiMesh *mesh, const aiScene *scene)
+neo::Mesh neo::Model::processMesh(aiMesh &mesh, const aiScene &scene)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 
-    for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
+    for (unsigned int i = 0; i < mesh.mNumVertices; i++) {
         Vertex vertex;
-        SetVertexBoneDataToDefault(vertex);
-        vertex.Position = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
-        vertex.Normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+        setVertexBoneDataToDefault(vertex);
+        vertex.Position = glm::vec3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z);
+        vertex.Normal = glm::vec3(mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z);
 
-        if(mesh->mTextureCoords[0]) {
+        if(mesh.mTextureCoords[0]) {
             glm::vec2 vec;
-            vec.x = mesh->mTextureCoords[0][i].x;
-            vec.y = mesh->mTextureCoords[0][i].y;
+            vec.x = mesh.mTextureCoords[0][i].x;
+            vec.y = mesh.mTextureCoords[0][i].y;
             vertex.TexCoords = vec;
         } else {
             vertex.TexCoords = glm::vec2(0.0f, 0.0f);
@@ -129,30 +129,30 @@ neo::Mesh neo::Model::processMesh(aiMesh *mesh, const aiScene *scene)
         vertices.push_back(vertex);
     }
 
-    for(unsigned int i = 0; i < mesh->mNumFaces; i++) {
-        aiFace face = mesh->mFaces[i];
+    for(unsigned int i = 0; i < mesh.mNumFaces; i++) {
+        aiFace face = mesh.mFaces[i];
         for(unsigned int j = 0; j < face.mNumIndices; j++)
             indices.push_back(face.mIndices[j]);
     }
 
-    aiMaterial *material_loaded = scene->mMaterials[mesh->mMaterialIndex];
+    aiMaterial *materialLoaded = scene.mMaterials[mesh.mMaterialIndex];
     aiColor3D color(0.f, 0.f, 0.f);
     float shininess;
 
-    neo::Material materialt;
+    neo::Material material;
 
-    material_loaded->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-    materialt.diffuse = glm::vec3(color.r, color.g, color.b);
-    material_loaded->Get(AI_MATKEY_COLOR_AMBIENT, color);
-    materialt.ambient = glm::vec3(color.r, color.g, color.b);
-    material_loaded->Get(AI_MATKEY_COLOR_SPECULAR, color);
-    materialt.specular = glm::vec3(color.r, color.g, color.b);
-    material_loaded->Get(AI_MATKEY_SHININESS, shininess);
-    materialt.shininess = shininess;
+    materialLoaded->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+    material.diffuse = glm::vec3(color.r, color.g, color.b);
+    materialLoaded->Get(AI_MATKEY_COLOR_AMBIENT, color);
+    material.ambient = glm::vec3(color.r, color.g, color.b);
+    materialLoaded->Get(AI_MATKEY_COLOR_SPECULAR, color);
+    material.specular = glm::vec3(color.r, color.g, color.b);
+    materialLoaded->Get(AI_MATKEY_SHININESS, shininess);
+    material.shininess = shininess;
 
-    ExtractBoneWeightForVertices(vertices, mesh, scene);
+    this->extractBoneWeightForVertices(vertices, mesh, scene);
 
-    return neo::Mesh(vertices, indices, materialt);
+    return neo::Mesh(vertices, indices, material);
 }
 
 void neo::Model::draw(neo::Shader &shader)
