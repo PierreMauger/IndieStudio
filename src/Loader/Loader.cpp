@@ -22,7 +22,7 @@ void Loader::onNotify(Message message)
 
 void Loader::sendPlayerConfig()
 {
-    std::vector<std::string> files = this->getFilesFromDir("ressources/config/");
+    std::vector<std::string> files = this->getFilesFromDir("resources/config/");
     Packet packet;
 
     for (auto &file : files) {
@@ -36,8 +36,8 @@ void Loader::sendPlayerConfig()
 
 void Loader::sendRessourceList(void)
 {
-    std::vector<std::string> modelFiles = this->getFilesFromDir("ressources/models/");
-    std::vector<std::string> animationFiles = this->getFilesFromDir("ressources/animations/");
+    std::vector<std::string> modelFiles = this->getFilesFromDir("resources/models/");
+    std::vector<std::string> animationFiles = this->getFilesFromDir("resources/animations/");
     Packet packet;
 
     for (auto &file : modelFiles) {

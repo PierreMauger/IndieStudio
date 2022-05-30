@@ -101,7 +101,7 @@ target_link_libraries(${EXEC_NAME} PUBLIC raylib)
 
 ################## POST BUILD ##################
 
-#copy executable and its dlls to root for ressources (only on windows)
+#copy executable and its dlls to root for resources (only on windows)
 if(WIN32)
   add_custom_command(
     TARGET ${EXEC_NAME} POST_BUILD
