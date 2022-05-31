@@ -19,6 +19,6 @@ AnimatedModelObj::AnimatedModelObj(GameObject obj, std::shared_ptr<neo::Model> m
 void AnimatedModelObj::draw(neo::Camera &camera)
 {
     this->_animator->update(GetFrameTime());
-    camera.setOnAnimatedModel(glm::vec3(this->_pos.x, this->_pos.y, 0), *this->_animator);
+    camera.setOnAnimatedModel(glm::vec3(this->_pos.x, 0.0f, this->_pos.y), *this->_animator);
     this->_model->draw(camera.getShader());
 }

@@ -53,7 +53,7 @@ void Graphics::draw()
     ClearBackground(RAYWHITE);
 
     this->_camera->getShader().use();
-    this->_camera->setPos(glm::vec3(0.0f, 0.0f, 10.0f));
+    this->_camera->setPos(glm::vec3(0.0f, 0.0f, 0.0f));
     this->_camera->setShader(GetTime() * 100);
 
     for (auto &object : this->_objects)

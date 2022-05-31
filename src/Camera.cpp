@@ -13,7 +13,8 @@ neo::Camera::Camera() : _shader("resources/shaders/camera.vs", "resources/shader
 {
     this->_pos = glm::vec3(0.0f, 0.0f, 0.0f);
     this->_front = glm::vec3(0.0f, 0.0f, -1.0f);
-    this->_up = glm::vec3(0.0f, 1.0f, 0.0f);
+
+    this->_up = glm::vec3(0.0f, 0.0f, 1.0f);
     this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
     this->_projection = glm::perspective(glm::radians(45.0f), 600.f / 600.f, 0.1f, 100.0f);
     this->_model = glm::mat4(1.0f);
@@ -55,6 +56,12 @@ void neo::Camera::centerOn(glm::vec3 const &pos)
 
 void neo::Camera::setShader(float time)
 {
+    float camX = static_cast<float>(std::sin(glm::radians(time)) * 1.0f);
+    float camZ = static_cast<float>(std::cos(glm::radians(time)) * 1.0f);
+    this->_front = glm::vec3(0.0f, -10.0f, 0.0f);
+    this->_pos = glm::vec3(0.0f, 10.0f, 0.0f);
+    this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, glm::normalize(this->_up));
+
     this->_shader.setMat4("view", this->_view);
     this->_shader.setMat4("projection", this->_projection);
     this->_shader.setFloat("time", time);
