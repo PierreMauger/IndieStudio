@@ -30,7 +30,7 @@ namespace neo
 
             // Interface functions
             void sendPlayerConfig();
-            void sendRessourceList();
+            void sendResourceList();
             std::vector<std::string> getFilesFromDir(std::string dir);
             std::string loadFile(std::string fileName);
             PlayerConfig loadPlayerConfig(std::string fileContent);

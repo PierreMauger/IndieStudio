@@ -51,7 +51,7 @@ namespace neo
     {
         public:
             enum {
-                RESSOURCE_LIST = BaseCommand::LAST,
+                RESOURCE_LIST = BaseCommand::LAST,
                 LOAD,
                 MOVE,
                 SELECT_BUTTON

@@ -21,7 +21,7 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->_camera = std::unique_ptr<Camera>(new Camera());
 
     this->_functionTab = {
-        std::bind(&Graphics::receiveRessourceList, this, std::placeholders::_1),
+        std::bind(&Graphics::receiveResourceList, this, std::placeholders::_1),
         std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
         std::bind(&Graphics::receiveMove, this, std::placeholders::_1),
         std::bind(&Graphics::receiveSelectButton, this, std::placeholders::_1),
@@ -63,7 +63,7 @@ void Graphics::draw()
     EndDrawing();
 }
 
-void Graphics::receiveRessourceList(Packet data)
+void Graphics::receiveResourceList(Packet data)
 {
     while (data.checkSize(1)) {
         std::string file;

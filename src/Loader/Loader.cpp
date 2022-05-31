@@ -12,7 +12,7 @@ using namespace neo;
 Loader::Loader(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
     this->sendPlayerConfig();
-    this->sendRessourceList();
+    this->sendResourceList();
 }
 
 void Loader::onNotify(Message message)
@@ -34,7 +34,7 @@ void Loader::sendPlayerConfig()
     }
 }
 
-void Loader::sendRessourceList(void)
+void Loader::sendResourceList(void)
 {
     std::vector<std::string> modelFiles = this->getFilesFromDir("resources/models/");
     std::vector<std::string> animationFiles = this->getFilesFromDir("resources/animations/");
@@ -48,7 +48,7 @@ void Loader::sendRessourceList(void)
         std::filesystem::path path(file);
         packet << 1 << path.filename().string();
     }
-    this->postMessage(Message(packet, GraphicsCommand::RESSOURCE_LIST, Module::GRAPHICS));
+    this->postMessage(Message(packet, GraphicsCommand::RESOURCE_LIST, Module::GRAPHICS));
 }
 
 std::vector<std::string> Loader::getFilesFromDir(std::string dir)
