@@ -42,11 +42,11 @@ void Loader::sendRessourceList(void)
 
     for (auto &file : modelFiles) {
         std::filesystem::path path(file);
-        packet << 0 << path.filename();
+        packet << 0 << path.filename().string();
     }
     for (auto &file : animationFiles) {
         std::filesystem::path path(file);
-        packet << 1 << path.filename();
+        packet << 1 << path.filename().string();
     }
     this->postMessage(Message(packet, GraphicsCommand::RESSOURCE_LIST, Module::GRAPHICS));
 }
