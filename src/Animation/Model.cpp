@@ -111,6 +111,7 @@ neo::Mesh neo::Model::processMesh(aiMesh &mesh, const aiScene &scene)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
+    std::vector<neo::Texture> textures;
 
     for (unsigned int i = 0; i < mesh.mNumVertices; i++) {
         Vertex vertex;
@@ -152,12 +153,65 @@ neo::Mesh neo::Model::processMesh(aiMesh &mesh, const aiScene &scene)
 
     this->extractBoneWeightForVertices(vertices, mesh, scene);
 
-    return neo::Mesh(vertices, indices, material);
+    aiMaterial *tex = scene.mMaterials[mesh.mMaterialIndex];
+
+    std::vector<Texture> diffuseMaps = loadMaterialTextures(tex, aiTextureType_DIFFUSE, "texture_diffuse");
+    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+    std::vector<Texture> specularMaps = loadMaterialTextures(tex, aiTextureType_SPECULAR, "texture_specular");
+    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    std::vector<Texture> normalMaps = loadMaterialTextures(tex, aiTextureType_HEIGHT, "texture_normal");
+    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+    std::vector<Texture> heightMaps = loadMaterialTextures(tex, aiTextureType_AMBIENT, "texture_height");
+    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+
+    return neo::Mesh(vertices, indices, material, textures);
+}
+
+std::vector<neo::Texture> neo::Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)
+{
+    std::vector<neo::Texture> textures;
+
+    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+        aiString str;
+        mat->GetTexture(type, i, &str);
+        bool skip = false;
+        for (unsigned int j = 0; j < this->_texturesLoaded.size(); j++) {
+            if (std::strcmp(this->_texturesLoaded[j].path.data(), str.C_Str()) == 0) {
+                textures.push_back(this->_texturesLoaded[j]);
+                skip = true;
+                break;
+            }
+        }
+        if (!skip) {
+            neo::Texture texture;
+            texture.id = textureFromFile(str.C_Str(), "resources/textures/");
+            texture.type = typeName;
+            texture.path = str.C_Str();
+            textures.push_back(texture);
+            this->_texturesLoaded.push_back(texture);
+        }
+    }
+    return textures;
+}
+
+unsigned int neo::Model::textureFromFile(const char* path, const std::string& directory, bool gamma)
+{
+    std::string filename = std::string(path);
+    filename = directory + filename;
+
+    unsigned int textureID;
+    glGenTextures(1, &textureID);
+
+    int width, height, nrComponents;
+
+    Image image = LoadImage(filename.c_str());
+    Texture2D texture = LoadTextureFromImage(image);
+    return texture.id;
 }
 
 void neo::Model::draw(neo::Shader &shader)
 {
-    for(unsigned int i = 0; i < this->_meshes.size(); i++)
+    for (unsigned int i = 0; i < this->_meshes.size(); i++)
         this->_meshes[i].draw(shader);
 }
 
