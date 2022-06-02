@@ -53,7 +53,6 @@ void Graphics::draw()
     ClearBackground(RAYWHITE);
 
     this->_camera->getShader().use();
-    this->_camera->setPos(glm::vec3(0.0f, 0.0f, 0.0f));
     this->_camera->setShader(GetTime() * 100);
 
     for (auto &object : this->_objects)
@@ -106,10 +105,10 @@ void Graphics::receiveLoad(Packet data)
 void Graphics::receiveMove(Packet data)
 {
     int id;
-    float x, y;
+    float x, y, z;
 
-    data >> id >> x >> y;
-    this->_objects[id]->setPos(CAST(Vector2, x, y));
+    data >> id >> x >> y >> z;
+    this->_objects[id]->setPos(glm::vec3(x, y, z));
 }
 
 void Graphics::receiveSelectButton(Packet data)

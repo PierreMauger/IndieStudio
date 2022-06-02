@@ -12,10 +12,10 @@ using namespace neo;
 MenuScene::MenuScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
-    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "FloofFox", CAST(Vector2, 0, 0))));
-    this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>(1, "WalkingFox", CAST(Vector2, 2, 0))));
-    this->_buttons.insert(std::make_pair(0, std::make_unique<GameObject>(0, "red", CAST(Vector2, 50, 500), CAST(Vector2, 100, 50))));
-    this->_buttons.insert(std::make_pair(1, std::make_unique<GameObject>(0, "red", CAST(Vector2, 250, 500), CAST(Vector2, 100, 50))));
+    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "RoboCat", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f))));
+    this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>(1, "WalkingFox", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f))));
+    this->_buttons.insert(std::make_pair(0, std::make_unique<GameObject>(2, "red", glm::vec3(50, 500, 0), glm::vec3(100, 50, 0))));
+    this->_buttons.insert(std::make_pair(1, std::make_unique<GameObject>(2, "red", glm::vec3(250, 500, 0), glm::vec3(100, 50, 0))));
 
     this->_selectedButton = -1;
 }

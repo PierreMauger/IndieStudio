@@ -28,6 +28,7 @@ namespace neo
     {
         private:
             std::vector<neo::Mesh> _meshes;
+            std::vector<neo::Texture> _texturesLoaded;
             std::map<std::string, neo::BoneInfo> _boneInfoMap;
             int _boneCounter = 0;
 
@@ -40,6 +41,8 @@ namespace neo
 
             void processNode(aiNode &node, const aiScene &scene);
             Mesh processMesh(aiMesh &mesh, const aiScene &scene);
+            std::vector<neo::Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
+            unsigned int textureFromFile(const char* path, const std::string& directory, bool gamma = false);
 
             void setVertexBoneDataToDefault(Vertex &vertex);
             void setVertexBoneData(Vertex &vertex, int boneID, float weight);

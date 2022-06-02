@@ -19,7 +19,7 @@ namespace neo
         private:
             std::shared_ptr<MessageBus> _messageBus;
             std::map<int, std::unique_ptr<GameObject>> _objects;
-            std::map<int, Vector2> _playerSpeed;
+            std::map<int, glm::vec3> _playerSpeed;
 
         public:
             GameScene(std::shared_ptr<MessageBus> messageBus);

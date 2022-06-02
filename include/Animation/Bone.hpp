@@ -19,18 +19,18 @@
 namespace neo
 {
     typedef struct {
-    	glm::vec3 position;
-    	float timeStamp;
+        glm::vec3 position;
+        float timeStamp;
     } KeyPosition;
 
     typedef struct {
-    	glm::quat orientation;
-    	float timeStamp;
+        glm::quat orientation;
+        float timeStamp;
     } KeyRotation;
 
     typedef struct {
-    	glm::vec3 scale;
-    	float timeStamp;
+        glm::vec3 scale;
+        float timeStamp;
     } KeyScale;
 
     class Bone

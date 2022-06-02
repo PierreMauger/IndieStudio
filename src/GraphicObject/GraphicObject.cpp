@@ -13,21 +13,21 @@ GraphicObject::GraphicObject(GameObject obj)
 {
     this->_name = obj.getName();
     this->_pos = obj.getPos();
-    this->_size = obj.getSize();
+    this->_scale = obj.getScale();
     this->_status = 0;
 }
 
-Vector2 GraphicObject::getPos() const
+glm::vec3 GraphicObject::getPos() const
 {
     return this->_pos;
 }
 
-Vector2 GraphicObject::getSize() const
+glm::vec3 GraphicObject::getScale() const
 {
-    return this->_size;
+    return this->_scale;
 }
 
-void GraphicObject::setPos(Vector2 pos)
+void GraphicObject::setPos(glm::vec3 pos)
 {
     this->_pos = pos;
 }

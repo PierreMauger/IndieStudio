@@ -36,18 +36,25 @@ namespace neo
         float shininess;
     } Material;
 
+    struct Texture {
+        unsigned int id;
+        std::string type;
+        std::string path;
+    };
+
     class Mesh
     {
         private:
             std::vector<Vertex> _vertices;
             std::vector<unsigned int> _indices;
+            std::vector<neo::Texture> _textures;
             neo::Material _material;
             unsigned int VAO;
             unsigned int VBO;
             unsigned int EBO;
 
         public:
-            Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, neo::Material material);
+            Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, neo::Material material, std::vector<neo::Texture> textures);
             ~Mesh() = default;
             void setupMesh();
             void draw(neo::Shader &shader);
