@@ -12,27 +12,27 @@ using namespace neo;
 GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
-    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "RoboCat", glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f))));
-    this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>(0, "RoboCat", glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f))));
+    this->_players.insert(std::make_pair(0, std::make_unique<Player>("RoboCat", glm::vec3(0, 0, 0))));
+    this->_players.insert(std::make_pair(1, std::make_unique<Player>("RoboCat", glm::vec3(0, 0, 0))));
     this->_playerSpeed.insert(std::make_pair(0, glm::vec3{0.0f}));
     this->_playerSpeed.insert(std::make_pair(1, glm::vec3{0.0f}));
 }
 
 GameScene::~GameScene()
 {
-    for (auto &object : this->_objects)
-        object.second.reset();
+    for (auto &player : this->_players)
+        player.second.reset();
 }
 
 void GameScene::update()
 {
     for (auto &playerSpeed : this->_playerSpeed) {
         if (playerSpeed.second.x != 0 || playerSpeed.second.y != 0) {
-            if (this->_objects.find(playerSpeed.first) == this->_objects.end())
+            if (this->_players.find(playerSpeed.first) == this->_players.end())
                 break;
-            this->_objects[playerSpeed.first]->move(playerSpeed.second);
+            this->_players[playerSpeed.first]->move(playerSpeed.second);
             Packet packet;
-            packet << playerSpeed.first << this->_objects[playerSpeed.first]->getPos().x << this->_objects[playerSpeed.first]->getPos().y << this->_objects[playerSpeed.first]->getPos().z;
+            packet << playerSpeed.first << this->_players[playerSpeed.first]->getPos().x << this->_players[playerSpeed.first]->getPos().y << this->_players[playerSpeed.first]->getPos().z;
             this->_messageBus->sendMessage(Message(packet, GraphicsCommand::MOVE, Module::GRAPHICS));
             packet.clear();
         }
@@ -43,8 +43,8 @@ void GameScene::loadScene()
 {
     Packet packet;
 
-    for (auto &object : this->_objects)
-        packet << 0 << object.first << *object.second;
+    for (auto &player : this->_players)
+        packet << 0 << player.first << *player.second;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 }
 

@@ -17,16 +17,15 @@ namespace neo
     class Player : public virtual GameObject
     {
     private:
-        std::vector<Bomb> _bombs;
-        Vector2 _speed;
+        glm::vec3 _speed;
         double _cooldown;
         size_t _bombUp;
         size_t _speedUp;
         size_t _fireUp;
         bool _wallPass;
     public:
-        Player(std::string name, Vector2 pos);
-        Vector2 getSpeed() const;
+        Player(std::string name, glm::vec3 pos, glm::vec3 size = CAST(glm::vec3, 1.f, 1.f, 1.f));
+        glm::vec3 getSpeed() const;
     };
 }
 
