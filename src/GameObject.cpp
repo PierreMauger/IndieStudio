@@ -9,20 +9,12 @@
 
 using namespace neo;
 
-GameObject::GameObject(int type, std::string name, Vector2 pos)
+GameObject::GameObject(int type, std::string name, glm::vec3 pos, glm::vec3 scale)
 {
     this->_type = type;
     this->_name = name;
     this->_pos = pos;
-    this->_size = {1, 1};
-}
-
-GameObject::GameObject(int type, std::string name, Vector2 pos, Vector2 size)
-{
-    this->_type = type;
-    this->_name = name;
-    this->_pos = pos;
-    this->_size = size;
+    this->_scale = scale;
 }
 
 int GameObject::getType() const
@@ -35,14 +27,14 @@ std::string GameObject::getName() const
     return this->_name;
 }
 
-Vector2 GameObject::getPos() const
+glm::vec3 GameObject::getPos() const
 {
     return this->_pos;
 }
 
-Vector2 GameObject::getSize() const
+glm::vec3 GameObject::getScale() const
 {
-    return this->_size;
+    return this->_scale;
 }
 
 void GameObject::setType(int type)
@@ -55,17 +47,17 @@ void GameObject::setName(std::string name)
     this->_name = name;
 }
 
-void GameObject::setPos(Vector2 pos)
+void GameObject::setPos(glm::vec3 pos)
 {
     this->_pos = pos;
 }
 
-void GameObject::setSize(Vector2 size)
+void GameObject::setScale(glm::vec3 scale)
 {
-    this->_size = size;
+    this->_scale = scale;
 }
 
-void GameObject::move(Vector2 speed)
+void GameObject::move(glm::vec3 speed)
 {
     this->_pos.x += speed.x;
     this->_pos.y += speed.y;

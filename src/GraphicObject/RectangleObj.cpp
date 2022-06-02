@@ -16,7 +16,7 @@ RectangleObj::RectangleObj(GameObject obj) : GraphicObject(obj)
 void RectangleObj::draw(neo::Camera &camera)
 {
     if (this->_status)
-        DrawRectangle(this->_pos.x, this->_pos.y, this->_size.x, this->_size.y, YELLOW);
+        DrawRectangle(this->_pos.x, this->_pos.y, this->_scale.x, this->_scale.y, YELLOW);
     else
-        DrawRectangle(this->_pos.x, this->_pos.y, this->_size.x, this->_size.y, RED);
+        DrawRectangle(this->_pos.x, this->_pos.y, this->_scale.x, this->_scale.y, RED);
 }

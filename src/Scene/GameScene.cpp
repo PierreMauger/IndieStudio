@@ -12,10 +12,10 @@ using namespace neo;
 GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
-    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "RoboCat", CAST(Vector2, 1, 1))));
-    this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>(0, "RoboCat", CAST(Vector2, 0, 0))));
-    this->_playerSpeed.insert(std::make_pair(0, Vector2{0, 0}));
-    this->_playerSpeed.insert(std::make_pair(1, Vector2{0, 0}));
+    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "RoboCat", glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f))));
+    this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>(0, "RoboCat", glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f))));
+    this->_playerSpeed.insert(std::make_pair(0, glm::vec3{0.0f}));
+    this->_playerSpeed.insert(std::make_pair(1, glm::vec3{0.0f}));
 }
 
 GameScene::~GameScene()
@@ -32,7 +32,7 @@ void GameScene::update()
                 break;
             this->_objects[playerSpeed.first]->move(playerSpeed.second);
             Packet packet;
-            packet << playerSpeed.first << this->_objects[playerSpeed.first]->getPos().x << this->_objects[playerSpeed.first]->getPos().y;
+            packet << playerSpeed.first << this->_objects[playerSpeed.first]->getPos().x << this->_objects[playerSpeed.first]->getPos().y << this->_objects[playerSpeed.first]->getPos().z;
             this->_messageBus->sendMessage(Message(packet, GraphicsCommand::MOVE, Module::GRAPHICS));
             packet.clear();
         }

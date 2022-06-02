@@ -10,6 +10,8 @@
 
     #include "includes.hpp"
 
+    #include <glm/glm.hpp>
+
 namespace neo
 {
     class GameObject
@@ -17,25 +19,24 @@ namespace neo
         private:
             int _type;
             std::string _name;
-            Vector2 _pos;
-            Vector2 _size;
+            glm::vec3 _pos;
+            glm::vec3 _scale;
 
         public:
             GameObject() = default;
-            GameObject(int type, std::string name, Vector2 pos);
-            GameObject(int type, std::string name, Vector2 pos, Vector2 size);
+            GameObject(int type, std::string name, glm::vec3 pos, glm::vec3 scale = glm::vec3(1.0f));
             ~GameObject() = default;
 
             int getType() const;
             std::string getName() const;
-            Vector2 getPos() const;
-            Vector2 getSize() const;
+            glm::vec3 getPos() const;
+            glm::vec3 getScale() const;
             void setType(int type);
             void setName(std::string name);
-            void setPos(Vector2 pos);
-            void setSize(Vector2 size);
+            void setPos(glm::vec3 pos);
+            void setScale(glm::vec3 scale);
 
-            void move(Vector2 speed);
+            void move(glm::vec3 speed);
     };
 }
 

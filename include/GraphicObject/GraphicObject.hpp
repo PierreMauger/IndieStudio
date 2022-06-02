@@ -18,17 +18,17 @@ namespace neo
     {
         protected:
             std::string _name;
-            Vector2 _pos;
-            Vector2 _size;
+            glm::vec3 _pos;
+            glm::vec3 _scale;
             int _status;
 
         public:
             GraphicObject(GameObject obj);
             ~GraphicObject() = default;
 
-            Vector2 getPos() const;
-            Vector2 getSize() const;
-            void setPos(Vector2 pos);
+            glm::vec3 getPos() const;
+            glm::vec3 getScale() const;
+            void setPos(glm::vec3 pos);
             void setStatus(int status);
             virtual void draw(neo::Camera &camera) = 0;
     };

@@ -77,8 +77,10 @@ Packet &Packet::operator<<(GameObject &data)
     *this << data.getName();
     *this << data.getPos().x;
     *this << data.getPos().y;
-    *this << data.getSize().x;
-    *this << data.getSize().y;
+    *this << data.getPos().z;
+    *this << data.getScale().x;
+    *this << data.getScale().y;
+    *this << data.getScale().z;
     return *this;
 }
 
@@ -151,11 +153,11 @@ Packet &Packet::operator>>(GameObject &data)
     *this >> name;
     data.setName(name);
 
-    float x, y, w, h = 0.0f;
-    *this >> x >> y >> w >> h;
+    float x, y, z, w, l, h = 0.0f;
+    *this >> x >> y >> z >> w >> l >> h;
 
-    data.setPos({x, y});
-    data.setSize({w, h});
+    data.setPos(glm::vec3(x, y, z));
+    data.setScale(glm::vec3(w, l, h));
 
     return *this;
 }

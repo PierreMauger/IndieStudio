@@ -38,8 +38,8 @@ namespace neo
             void setPos(glm::vec3 const &pos);
             void centerOn(glm::vec3 const &pos);
             void setShader(float time);
-            void setOnModel(glm::vec3 pos);
-            void setOnAnimatedModel(glm::vec3 pos, Animator &animator);
+            void setOnModel(glm::vec3 pos, glm::vec3 scale);
+            void setOnAnimatedModel(glm::vec3 pos, glm::vec3 scale, Animator &animator);
     };
 }
 

@@ -11,9 +11,9 @@ using namespace neo;
 
 neo::Camera::Camera() : _shader("resources/shaders/camera.vs", "resources/shaders/camera.fs")
 {
-    this->_pos = glm::vec3(0.0f, 10.0f, 0.0f);
-    this->_front = glm::vec3(0.0f, -10.0f, 0.0f);
-    this->_up = glm::vec3(0.0f, 0.0f, 1.0f);
+    this->_pos = glm::vec3(0.0f, 0.0f, 10.0f);
+    this->_front = glm::vec3(0.0f, 0.0f, -10.0f);
+    this->_up = glm::vec3(0.0f, 1.0f, 0.0f);
 
     this->lookAt(this->_pos, this->_front, this->_up);
 }
@@ -54,6 +54,12 @@ void neo::Camera::centerOn(glm::vec3 const &pos)
 
 void neo::Camera::setShader(float time)
 {
+    // float camX = static_cast<float>(std::sin(glm::radians(time)) * 5.0f);
+    // float camZ = static_cast<float>(std::cos(glm::radians(time)) * 5.0f);
+    // this->_pos = glm::vec3(camX, 10.0f, camZ);
+    // this->_front = glm::vec3(-camX, -10.0f, -camZ);
+    // this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, glm::normalize(this->_up));
+
     this->_shader.setMat4("view", this->_view);
     this->_shader.setMat4("projection", this->_projection);
     this->_shader.setFloat("time", time);
@@ -61,18 +67,20 @@ void neo::Camera::setShader(float time)
     this->_shader.setVec3("lightPos", glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
-void neo::Camera::setOnModel(glm::vec3 pos)
+void neo::Camera::setOnModel(glm::vec3 pos, glm::vec3 scale)
 {
     glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
+    model = glm::scale(model, scale);
     this->_shader.setMat4("model", model);
 
     for (std::size_t i = 0; i < 100; i++)
         this->_shader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", glm::mat4(1.0f));
 }
 
-void neo::Camera::setOnAnimatedModel(glm::vec3 pos, Animator &animator)
+void neo::Camera::setOnAnimatedModel(glm::vec3 pos, glm::vec3 scale, Animator &animator)
 {
     glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
+    model = glm::scale(model, scale);
     this->_shader.setMat4("model", model);
 
     auto transforms = animator.getFinalBoneMatrices();
