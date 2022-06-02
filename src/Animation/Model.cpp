@@ -48,11 +48,11 @@ void neo::Model::load(std::string const &filename)
 
 void neo::Model::processNode(aiNode &node, const aiScene &scene)
 {
-    for(unsigned int i = 0; i < node.mNumMeshes; i++) {
+    for (unsigned int i = 0; i < node.mNumMeshes; i++) {
         aiMesh *mesh = scene.mMeshes[node.mMeshes[i]];
         this->_meshes.push_back(processMesh(*mesh, scene));
     }
-    for(unsigned int i = 0; i < node.mNumChildren; i++)
+    for (unsigned int i = 0; i < node.mNumChildren; i++)
         this->processNode(*node.mChildren[i], scene);
 }
 
@@ -119,7 +119,7 @@ neo::Mesh neo::Model::processMesh(aiMesh &mesh, const aiScene &scene)
         vertex.Position = glm::vec3(mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z);
         vertex.Normal = glm::vec3(mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z);
 
-        if(mesh.mTextureCoords[0]) {
+        if (mesh.mTextureCoords[0]) {
             glm::vec2 vec;
             vec.x = mesh.mTextureCoords[0][i].x;
             vec.y = mesh.mTextureCoords[0][i].y;
@@ -130,9 +130,9 @@ neo::Mesh neo::Model::processMesh(aiMesh &mesh, const aiScene &scene)
         vertices.push_back(vertex);
     }
 
-    for(unsigned int i = 0; i < mesh.mNumFaces; i++) {
+    for (unsigned int i = 0; i < mesh.mNumFaces; i++) {
         aiFace face = mesh.mFaces[i];
-        for(unsigned int j = 0; j < face.mNumIndices; j++)
+        for (unsigned int j = 0; j < face.mNumIndices; j++)
             indices.push_back(face.mIndices[j]);
     }
 
@@ -163,6 +163,10 @@ neo::Mesh neo::Model::processMesh(aiMesh &mesh, const aiScene &scene)
     textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
     std::vector<Texture> heightMaps = loadMaterialTextures(tex, aiTextureType_AMBIENT, "texture_height");
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+
+    if (textures.size()) {
+
+    }
 
     return neo::Mesh(vertices, indices, material, textures);
 }
