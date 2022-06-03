@@ -14,8 +14,6 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
     this->_messageBus = messageBus;
     this->_players.insert(std::make_pair(0, std::make_unique<Player>("RoboCat", glm::vec3(0, 0, 0))));
     this->_players.insert(std::make_pair(1, std::make_unique<Player>("RoboCat", glm::vec3(0, 0, 0))));
-    this->_playerSpeed.insert(std::make_pair(0, glm::vec3{0.0f}));
-    this->_playerSpeed.insert(std::make_pair(1, glm::vec3{0.0f}));
 }
 
 GameScene::~GameScene()
@@ -26,13 +24,11 @@ GameScene::~GameScene()
 
 void GameScene::update()
 {
-    for (auto &playerSpeed : this->_playerSpeed) {
-        if (playerSpeed.second.x != 0 || playerSpeed.second.y != 0) {
-            if (this->_players.find(playerSpeed.first) == this->_players.end())
-                break;
-            this->_players[playerSpeed.first]->move(playerSpeed.second);
+    for (int i = 0; i < _players.size(); i++) {
+        if (!(!_players[i]->getSpeed().x && !_players[i]->getSpeed().y && !_players[i]->getSpeed().z)) {
+            this->_players[i]->move(_players[i]->getSpeed());
             Packet packet;
-            packet << playerSpeed.first << this->_players[playerSpeed.first]->getPos().x << this->_players[playerSpeed.first]->getPos().y << this->_players[playerSpeed.first]->getPos().z;
+            packet << i << this->_players[i]->getPos().x << this->_players[i]->getPos().y << this->_players[i]->getPos().z;
             this->_messageBus->sendMessage(Message(packet, GraphicsCommand::MOVE, Module::GRAPHICS));
             packet.clear();
         }
@@ -44,34 +40,30 @@ void GameScene::loadScene()
     Packet packet;
 
     for (auto &player : this->_players)
-        packet << 0 << player.first << *player.second;
+        packet << player.second->getType() << player.first << *player.second;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 }
 
 void GameScene::handleKeyPressed(int playerNb, std::string action)
 {
-    if (this->_playerSpeed.find(playerNb) == this->_playerSpeed.end())
-        return;
     if (action == "MoveRight")
-        this->_playerSpeed[playerNb].x += 0.1f;
+        this->_players[playerNb]->addX(0.1f);
     else if (action == "MoveLeft")
-        this->_playerSpeed[playerNb].x -= 0.1f;
+        this->_players[playerNb]->subX(0.1f);
     else if (action == "MoveUp")
-        this->_playerSpeed[playerNb].y += 0.1f;
+        this->_players[playerNb]->addY(0.1f);
     else if (action == "MoveDown")
-        this->_playerSpeed[playerNb].y -= 0.1f;
+        this->_players[playerNb]->subY(0.1f);
 }
 
 void GameScene::handleKeyReleased(int playerNb, std::string action)
 {
-    if (this->_playerSpeed.find(playerNb) == this->_playerSpeed.end())
-        return;
     if (action == "MoveRight")
-        this->_playerSpeed[playerNb].x -= 0.1f;
+        this->_players[playerNb]->subX(0.1f);
     else if (action == "MoveLeft")
-        this->_playerSpeed[playerNb].x += 0.1f;
+        this->_players[playerNb]->addX(0.1f);
     else if (action == "MoveUp")
-        this->_playerSpeed[playerNb].y -= 0.1f;
+        this->_players[playerNb]->subY(0.1f);
     else if (action == "MoveDown")
-        this->_playerSpeed[playerNb].y += 0.1f;
+        this->_players[playerNb]->addY(0.1f);
 }

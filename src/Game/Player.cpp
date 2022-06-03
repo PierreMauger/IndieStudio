@@ -16,3 +16,23 @@ glm::vec3 neo::Player::getSpeed() const
 {
 	return this->_speed;
 }
+
+void neo::Player::addX(float val)
+{
+	_speed.x += val;
+}
+
+void neo::Player::addY(float val)
+{
+	_speed.y += val;
+}
+
+void neo::Player::subX(float val)
+{
+	_speed.x -= val;
+}
+
+void neo::Player::subY(float val)
+{
+	_speed.y -= val;
+}

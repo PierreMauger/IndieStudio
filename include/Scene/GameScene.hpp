@@ -21,7 +21,6 @@ namespace neo
         private:
             std::shared_ptr<MessageBus> _messageBus;
             std::map<int, std::unique_ptr<Player>> _players;
-            std::map<int, glm::vec3> _playerSpeed;
 
         public:
             GameScene(std::shared_ptr<MessageBus> messageBus);
