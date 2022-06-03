@@ -105,10 +105,11 @@ void Graphics::receiveLoad(Packet data)
 void Graphics::receiveMove(Packet data)
 {
     int id;
-    float x, y, z;
+    float x, y, z, rotation;
 
-    data >> id >> x >> y >> z;
+    data >> id >> x >> y >> z >> rotation;
     this->_objects[id]->setPos(glm::vec3(x, y, z));
+    this->_objects[id]->setRotation(rotation);
 }
 
 void Graphics::receiveSelectButton(Packet data)

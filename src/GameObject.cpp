@@ -15,6 +15,7 @@ GameObject::GameObject(int type, std::string name, glm::vec3 pos, glm::vec3 scal
     this->_name = name;
     this->_pos = pos;
     this->_scale = scale;
+    this->_rotation = 0.0f;
 }
 
 int GameObject::getType() const
@@ -35,6 +36,11 @@ glm::vec3 GameObject::getPos() const
 glm::vec3 GameObject::getScale() const
 {
     return this->_scale;
+}
+
+float GameObject::getRotation() const
+{
+    return this->_rotation;
 }
 
 void GameObject::setType(int type)
@@ -61,4 +67,9 @@ void GameObject::move(glm::vec3 speed)
 {
     this->_pos.x += speed.x;
     this->_pos.y += speed.y;
+}
+
+void GameObject::setRotation(float rotation)
+{
+    this->_rotation = rotation;
 }

@@ -32,7 +32,7 @@ void GameScene::update()
                 break;
             this->_objects[playerSpeed.first]->move(playerSpeed.second);
             Packet packet;
-            packet << playerSpeed.first << this->_objects[playerSpeed.first]->getPos().x << this->_objects[playerSpeed.first]->getPos().y << this->_objects[playerSpeed.first]->getPos().z;
+            packet << playerSpeed.first << this->_objects[playerSpeed.first]->getPos().x << this->_objects[playerSpeed.first]->getPos().y << this->_objects[playerSpeed.first]->getPos().z << this->_objects[playerSpeed.first]->getRotation();
             this->_messageBus->sendMessage(Message(packet, GraphicsCommand::MOVE, Module::GRAPHICS));
             packet.clear();
         }
@@ -44,7 +44,7 @@ void GameScene::loadScene()
     Packet packet;
 
     for (auto &object : this->_objects)
-        packet << 0 << object.first << *object.second;
+        packet << object.second->getType() << object.first << *object.second;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 }
 
@@ -52,14 +52,19 @@ void GameScene::handleKeyPressed(int playerNb, std::string action)
 {
     if (this->_playerSpeed.find(playerNb) == this->_playerSpeed.end())
         return;
-    if (action == "MoveRight")
+    if (action == "MoveRight") {
         this->_playerSpeed[playerNb].x += 0.1f;
-    else if (action == "MoveLeft")
+        this->_objects[playerNb]->setRotation(90.f);
+    } else if (action == "MoveLeft") {
         this->_playerSpeed[playerNb].x -= 0.1f;
-    else if (action == "MoveUp")
+        this->_objects[playerNb]->setRotation(270.f);
+    } else if (action == "MoveUp") {
         this->_playerSpeed[playerNb].y += 0.1f;
-    else if (action == "MoveDown")
+        this->_objects[playerNb]->setRotation(180.f);
+    } else if (action == "MoveDown") {
         this->_playerSpeed[playerNb].y -= 0.1f;
+        this->_objects[playerNb]->setRotation(0.f);
+    }
 }
 
 void GameScene::handleKeyReleased(int playerNb, std::string action)
