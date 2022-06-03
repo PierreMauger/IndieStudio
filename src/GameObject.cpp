@@ -65,6 +65,10 @@ void GameObject::setScale(glm::vec3 scale)
 
 void GameObject::move(glm::vec3 speed)
 {
+    if (speed.x && speed.y) {
+        speed.x /= 1.414f;
+        speed.y /= 1.414f;
+    }
     this->_pos.x += speed.x;
     this->_pos.y += speed.y;
 }
