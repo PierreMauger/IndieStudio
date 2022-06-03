@@ -27,7 +27,7 @@ void Loader::sendPlayerConfig()
 
     for (auto &file : files) {
         PlayerConfig conf = this->loadPlayerConfig(this->loadFile(file));
-        conf.setMode(true);
+        conf.setMode(false);
         packet << conf;
         this->postMessage(Message(packet, InputCommand::KEY_CONFIG, Module::INPUT));
         packet.clear();

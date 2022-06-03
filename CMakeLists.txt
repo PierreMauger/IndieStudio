@@ -43,6 +43,7 @@ set(INC
   include/Animation/
   include/Scene/
   include/GraphicObject/
+  include/Game/
 )
 
 #fetch source files
@@ -75,6 +76,8 @@ set(SRC
   src/Animation/Animation.cpp
   src/Animation/Animator.cpp
   src/Neo.cpp
+  src/Game/Player.cpp
+  src/Game/Bomb.cpp
 )
 
 #fetch libraries
