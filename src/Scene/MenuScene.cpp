@@ -39,7 +39,7 @@ void MenuScene::loadScene()
     for (auto &object : this->_objects)
         packet << object.second->getType() << object.first << *object.second;
     for (auto &button : this->_buttons)
-        packet << 2 <<  button.first << *button.second;
+        packet << button.second->getType() <<  button.first << *button.second;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 }
 

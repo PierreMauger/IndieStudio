@@ -28,7 +28,7 @@ void GameScene::update()
         if (!(!_players[i]->getSpeed().x && !_players[i]->getSpeed().y && !_players[i]->getSpeed().z)) {
             this->_players[i]->move(_players[i]->getSpeed());
             Packet packet;
-            packet << i << this->_players[i]->getPos().x << this->_players[i]->getPos().y << this->_players[i]->getPos().z;
+            packet << i << this->_players[i]->getPos().x << this->_players[i]->getPos().y << this->_players[i]->getPos().z << this->_players[i]->getRotation();
             this->_messageBus->sendMessage(Message(packet, GraphicsCommand::MOVE, Module::GRAPHICS));
             packet.clear();
         }
@@ -46,24 +46,31 @@ void GameScene::loadScene()
 
 void GameScene::handleKeyPressed(int playerNb, std::string action)
 {
-    if (action == "MoveRight")
+    // if (this->_playerSpeed.find(playerNb) == this->_playerSpeed.end())
+    //     return;
+    if (action == "MoveRight") {
         this->_players[playerNb]->addX(0.1f);
-    else if (action == "MoveLeft")
-        this->_players[playerNb]->subX(0.1f);
-    else if (action == "MoveUp")
+        this->_objects[playerNb]->setRotation(90.f);
+    } else if (action == "MoveLeft") {
+        this->_players[playerNb]->addX(-0.1f);
+        this->_objects[playerNb]->setRotation(270.f);
+    } else if (action == "MoveUp") {
         this->_players[playerNb]->addY(0.1f);
-    else if (action == "MoveDown")
-        this->_players[playerNb]->subY(0.1f);
+        this->_objects[playerNb]->setRotation(180.f);
+    } else if (action == "MoveDown") {
+        this->_players[playerNb]->addY(-0.1f);
+        this->_objects[playerNb]->setRotation(0.f);
+    }
 }
 
 void GameScene::handleKeyReleased(int playerNb, std::string action)
 {
     if (action == "MoveRight")
-        this->_players[playerNb]->subX(0.1f);
+        this->_players[playerNb]->addX(-0.1f);
     else if (action == "MoveLeft")
         this->_players[playerNb]->addX(0.1f);
     else if (action == "MoveUp")
-        this->_players[playerNb]->subY(0.1f);
+        this->_players[playerNb]->addY(-0.1f);
     else if (action == "MoveDown")
         this->_players[playerNb]->addY(0.1f);
 }

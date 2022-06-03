@@ -20,6 +20,7 @@ namespace neo
             std::string _name;
             glm::vec3 _pos;
             glm::vec3 _scale;
+            float _rotation;
             int _status;
 
         public:
@@ -28,7 +29,9 @@ namespace neo
 
             glm::vec3 getPos() const;
             glm::vec3 getScale() const;
+            float getRotation() const;
             void setPos(glm::vec3 pos);
+            void setRotation(float rotation);
             void setStatus(int status);
             virtual void draw(neo::Camera &camera) = 0;
     };

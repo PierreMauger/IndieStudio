@@ -16,6 +16,6 @@ ModelObj::ModelObj(GameObject obj, std::shared_ptr<neo::Model> model) : GraphicO
 
 void ModelObj::draw(neo::Camera &camera)
 {
-    camera.setOnModel(this->_pos, this->_scale);
+    camera.setOnModel(this->_pos, this->_scale, this->_rotation);
     this->_model->draw(camera.getShader());
 }

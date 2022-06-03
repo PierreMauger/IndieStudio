@@ -21,6 +21,7 @@ namespace neo
             std::string _name;
             glm::vec3 _pos;
             glm::vec3 _scale;
+            float _rotation;
 
         public:
             GameObject() = default;
@@ -31,10 +32,12 @@ namespace neo
             std::string getName() const;
             glm::vec3 getPos() const;
             glm::vec3 getScale() const;
+            float getRotation() const;
             void setType(int type);
             void setName(std::string name);
             void setPos(glm::vec3 pos);
             void setScale(glm::vec3 scale);
+            void setRotation(float rotation);
 
             void move(glm::vec3 speed);
     };
