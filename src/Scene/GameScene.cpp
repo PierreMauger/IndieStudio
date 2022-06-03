@@ -24,9 +24,9 @@ GameScene::~GameScene()
 
 void GameScene::update()
 {
-    for (int i = 0; i < _players.size(); i++) {
-        if (!(!_players[i]->getSpeed().x && !_players[i]->getSpeed().y && !_players[i]->getSpeed().z)) {
-            this->_players[i]->move(_players[i]->getSpeed());
+    for (int i = 0; i < this->_players.size(); i++) {
+        if (this->_players[i]->getSpeed() != glm::vec3(0.0f)) {
+            this->_players[i]->move(this->_players[i]->getSpeed());
             Packet packet;
             packet << i << this->_players[i]->getPos().x << this->_players[i]->getPos().y << this->_players[i]->getPos().z << this->_players[i]->getRotation();
             this->_messageBus->sendMessage(Message(packet, GraphicsCommand::MOVE, Module::GRAPHICS));
