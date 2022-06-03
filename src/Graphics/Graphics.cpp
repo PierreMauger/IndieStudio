@@ -23,6 +23,7 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->_functionTab = {
         std::bind(&Graphics::receiveResourceList, this, std::placeholders::_1),
         std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
+        std::bind(&Graphics::receiveSetupCamera, this, std::placeholders::_1),
         std::bind(&Graphics::receiveMove, this, std::placeholders::_1),
         std::bind(&Graphics::receiveSelectButton, this, std::placeholders::_1),
     };
@@ -109,6 +110,14 @@ void Graphics::receiveLoad(Packet data)
         else if (type == 3)
             this->_buttons[id] = std::unique_ptr<GraphicObject>(new SpriteObj(obj));
     }
+}
+
+void Graphics::receiveSetupCamera(Packet data)
+{
+    float x, y, z;
+    data >> x >> y >> z;
+
+    // this->_camera->
 }
 
 void Graphics::receiveMove(Packet data)
