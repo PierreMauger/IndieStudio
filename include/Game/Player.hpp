@@ -24,12 +24,10 @@ namespace neo
         size_t _fireUp;
         bool _wallPass;
     public:
-        Player(std::string name, glm::vec3 pos, glm::vec3 size = CAST(glm::vec3, 1, 1, 1));
+        Player(std::string name, glm::vec3 pos, glm::vec3 scale = CAST(glm::vec3, 1, 1, 1));
         glm::vec3 getSpeed() const;
         void addX(float val);
         void addY(float val);
-        void subX(float val);
-        void subY(float val);
     };
 }
 

@@ -50,16 +50,16 @@ void GameScene::handleKeyPressed(int playerNb, std::string action)
     //     return;
     if (action == "MoveRight") {
         this->_players[playerNb]->addX(0.1f);
-        this->_objects[playerNb]->setRotation(90.f);
+        this->_players[playerNb]->setRotation(90.f);
     } else if (action == "MoveLeft") {
         this->_players[playerNb]->addX(-0.1f);
-        this->_objects[playerNb]->setRotation(270.f);
+        this->_players[playerNb]->setRotation(270.f);
     } else if (action == "MoveUp") {
         this->_players[playerNb]->addY(0.1f);
-        this->_objects[playerNb]->setRotation(180.f);
+        this->_players[playerNb]->setRotation(180.f);
     } else if (action == "MoveDown") {
         this->_players[playerNb]->addY(-0.1f);
-        this->_objects[playerNb]->setRotation(0.f);
+        this->_players[playerNb]->setRotation(0.f);
     }
 }
 
