@@ -18,6 +18,7 @@ namespace neo
         double _timer;
         size_t _fireUp;
         size_t _playerId;
+
     public:
         Bomb(double timer, size_t fireUp, size_t playerId);
     };

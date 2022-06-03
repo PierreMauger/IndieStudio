@@ -23,6 +23,7 @@ namespace neo
         size_t _speedUp;
         size_t _fireUp;
         bool _wallPass;
+
     public:
         Player(std::string name, glm::vec3 pos, glm::vec3 scale = CAST(glm::vec3, 1, 1, 1));
         glm::vec3 getSpeed() const;

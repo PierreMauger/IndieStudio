@@ -7,9 +7,14 @@
 
 #include "Player.hpp"
 
-neo::Player::Player(std::string name, glm::vec3 pos, glm::vec3 scale)
-: GameObject(0, name, pos, scale), _speed(glm::vec3(0.0f)), _cooldown(5), _bombUp(0), _speedUp(0), _fireUp(0), _wallPass(false)
+neo::Player::Player(std::string name, glm::vec3 pos, glm::vec3 scale) : GameObject(0, name, pos, scale)
 {
+    this->_speed = glm::vec3(0.0f);
+    this->_cooldown = 5;
+    this->_bombUp = 0;
+    this->_speedUp = 0;
+    this->_fireUp = 0;
+    this->_wallPass = false;
 }
 
 glm::vec3 neo::Player::getSpeed() const
