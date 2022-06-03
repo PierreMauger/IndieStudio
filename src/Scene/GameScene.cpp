@@ -12,8 +12,8 @@ using namespace neo;
 GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
-    this->_players.insert(std::make_pair(0, std::make_unique<Player>("RoboCat", glm::vec3(0, 0, 0))));
-    this->_players.insert(std::make_pair(1, std::make_unique<Player>("RoboCat", glm::vec3(0, 0, 0))));
+    this->_players.insert(std::make_pair(0, std::make_unique<Player>("RoboCat", glm::vec3(0.0f), glm::vec3(0.5f))));
+    this->_players.insert(std::make_pair(1, std::make_unique<Player>("RoboCat", glm::vec3(0.0f), glm::vec3(0.5f))));
 }
 
 GameScene::~GameScene()

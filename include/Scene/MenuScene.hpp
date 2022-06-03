@@ -35,6 +35,11 @@ namespace neo
 
             void handleKeyPressed(int playerNb, std::string action);
             void handleKeyReleased(int playerNb, std::string action);
+
+        private:
+            void handleMainPressed(int playerNb, std::string action);
+            void handleBackPressed(int playerNb, std::string action);
+            void handleMovePressed(int playerNb, std::string action);
     };
 }
 

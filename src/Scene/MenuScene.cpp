@@ -48,6 +48,17 @@ void MenuScene::handleKeyPressed(int playerNb, std::string action)
 {
     if (playerNb != 0)
         return;
+    this->handleBackPressed(playerNb, action);
+    this->handleMainPressed(playerNb, action);
+    this->handleMovePressed(playerNb, action);
+}
+
+void MenuScene::handleKeyReleased(int playerNb, std::string action)
+{
+}
+
+void MenuScene::handleMainPressed(int playerNb, std::string action)
+{
     if (action == "Back") {
         Packet packet;
         packet << this->_selectedButton << 0;
@@ -55,6 +66,10 @@ void MenuScene::handleKeyPressed(int playerNb, std::string action)
         this->_selectedButton = -1;
         return;
     }
+}
+
+void MenuScene::handleBackPressed(int playerNb, std::string action)
+{
     if (action == "Main") {
         if (this->_selectedButton == -1)
             return;
@@ -65,6 +80,10 @@ void MenuScene::handleKeyPressed(int playerNb, std::string action)
         this->_messageBus->sendMessage(Message(packet, CoreCommand::CHANGE_SCENE, Module::CORE));
         this->_selectedButton = -1;
     }
+}
+
+void MenuScene::handleMovePressed(int playerNb, std::string action)
+{
     if (action == "MoveRight" || action == "MoveLeft") {
         Packet packet;
         packet << this->_selectedButton << 0;
@@ -80,8 +99,4 @@ void MenuScene::handleKeyPressed(int playerNb, std::string action)
         packet << this->_selectedButton << 1;
         this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT_BUTTON, Module::GRAPHICS));
     }
-}
-
-void MenuScene::handleKeyReleased(int playerNb, std::string action)
-{
 }
