@@ -44,6 +44,7 @@ namespace neo
                 KEY_PRESSED = BaseCommand::LAST,
                 KEY_RELEASED,
                 GRAPHICS_READY,
+                CHANGE_SCENE,
             };
     };
 

@@ -16,7 +16,7 @@ std::vector<std::byte> Packet::getData() const
 
 bool Packet::checkSize(size_t size) const
 {
-    return (this->_data.size() >= size);
+    return this->_data.size() >= size;
 }
 
 void Packet::clear()

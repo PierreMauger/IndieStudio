@@ -11,6 +11,7 @@ using namespace neo;
 
 ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
 {
+    this->_messageBus = messageBus;
 }
 
 ConfigScene::~ConfigScene()
@@ -21,10 +22,14 @@ ConfigScene::~ConfigScene()
 
 void ConfigScene::update()
 {
+    Packet packet;
+
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 }
 
 void ConfigScene::loadScene()
 {
+
 }
 
 void ConfigScene::handleKeyPressed(int playerNb, std::string action)

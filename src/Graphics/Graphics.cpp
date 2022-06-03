@@ -35,6 +35,14 @@ Graphics::~Graphics()
         object.second.reset();
     for (auto &button : this->_buttons)
         button.second.reset();
+    for (auto &model : this->_models)
+        model.second.reset();
+    for (auto &animation : this->_animations)
+        animation.second.reset();
+    this->_objects.clear();
+    this->_buttons.clear();
+    this->_models.clear();
+    this->_animations.clear();
     this->_camera.reset();
 }
 
@@ -84,6 +92,7 @@ void Graphics::receiveResourceList(Packet data)
 void Graphics::receiveLoad(Packet data)
 {
     this->_objects.clear();
+    this->_buttons.clear();
 
     while (data.checkSize(1)) {
         int id = 0;

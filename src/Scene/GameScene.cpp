@@ -46,8 +46,8 @@ void GameScene::loadScene()
 
 void GameScene::handleKeyPressed(int playerNb, std::string action)
 {
-    // if (this->_playerSpeed.find(playerNb) == this->_playerSpeed.end())
-    //     return;
+    if (this->_players.find(playerNb) == this->_players.end())
+        return;
     if (action == "MoveRight") {
         this->_players[playerNb]->addX(0.1f);
         this->_players[playerNb]->setRotation(90.f);

@@ -7,6 +7,9 @@
 
 #include "Bomb.hpp"
 
-neo::Bomb::Bomb(double timer, size_t fireUp, size_t playerId) : _timer(timer), _fireUp(fireUp), _playerId(playerId)
+neo::Bomb::Bomb(double timer, size_t fireUp, size_t playerId)
 {
+    this->_timer = timer;
+    this->_fireUp = fireUp;
+    this->_playerId = playerId;
 }
