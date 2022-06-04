@@ -101,7 +101,6 @@ void Graphics::receiveLoad(Packet data)
         GameObject obj;
 
         data >> type >> id >> obj;
-        printf("%d %s\n", id, obj.getName().c_str());
         if (type == 0 && this->_models.find(obj.getName()) != this->_models.end())
             this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(obj, this->_models[obj.getName()]));
         else if (type == 1 && this->_models.find(obj.getName()) != this->_models.end() && this->_animations.find(obj.getName()) != this->_animations.end())

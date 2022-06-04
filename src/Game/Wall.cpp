@@ -7,7 +7,7 @@
 
 #include "Wall.hpp"
 
-neo::Wall::Wall(std::string name, glm::vec3 pos, bool isDestructible, glm::vec3 scale) : GameObject(1, name, pos, scale)
+neo::Wall::Wall(std::string name, glm::vec3 pos, bool isDestructible, glm::vec3 scale) : GameObject(0, name, pos, scale)
 {
     this->_isDestructible = isDestructible;
 }
