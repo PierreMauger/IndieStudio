@@ -7,9 +7,8 @@
 
 #include "Bomb.hpp"
 
-neo::Bomb::Bomb(double timer, size_t fireUp, size_t playerId)
+neo::Bomb::Bomb(std::string name, glm::vec3 pos, size_t fireUp, glm::vec3 scale) : GameObject(0, name, pos, scale)
 {
-    this->_timer = timer;
+    this->_timer = 3.0;
     this->_fireUp = fireUp;
-    this->_playerId = playerId;
 }

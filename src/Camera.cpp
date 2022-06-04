@@ -54,11 +54,11 @@ void neo::Camera::centerOn(glm::vec3 const &pos)
 
 void neo::Camera::setShader(float time)
 {
-    // float camX = static_cast<float>(std::sin(glm::radians(time)) * 5.0f);
-    // float camY = static_cast<float>(std::cos(glm::radians(time)) * 5.0f);
-    // this->_pos = glm::vec3(camX, camY, 10.0f);
-    // this->_front = glm::vec3(-camX, -camY, -10.0f);
-    // this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, glm::normalize(this->_up));
+     /*float camX = static_cast<float>(std::sin(glm::radians(time)) * 5.0f);
+     float camY = static_cast<float>(std::cos(glm::radians(time)) * 5.0f);
+     this->_pos = glm::vec3(camX, camY, 10.0f);
+     this->_front = glm::vec3(-camX, -camY, -10.0f);
+     this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, glm::normalize(this->_up));*/
 
     this->_shader.setMat4("view", this->_view);
     this->_shader.setMat4("projection", this->_projection);

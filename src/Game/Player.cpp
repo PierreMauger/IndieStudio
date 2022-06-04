@@ -10,7 +10,6 @@
 neo::Player::Player(std::string name, glm::vec3 pos, glm::vec3 scale) : GameObject(0, name, pos, scale)
 {
     this->_speed = glm::vec3(0.0f);
-    this->_cooldown = 5;
     this->_bombUp = 0;
     this->_speedUp = 0;
     this->_fireUp = 0;

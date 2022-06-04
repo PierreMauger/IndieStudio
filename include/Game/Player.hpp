@@ -10,7 +10,6 @@
 
     #include "GameObject.hpp"
     #include "Bomb.hpp"
-    #include "macros.hpp"
 
 namespace neo
 {
@@ -18,14 +17,13 @@ namespace neo
     {
     private:
         glm::vec3 _speed;
-        double _cooldown;
         size_t _bombUp;
         size_t _speedUp;
         size_t _fireUp;
         bool _wallPass;
 
     public:
-        Player(std::string name, glm::vec3 pos, glm::vec3 scale = CAST(glm::vec3, 1, 1, 1));
+        Player(std::string name, glm::vec3 pos, glm::vec3 scale = glm::vec3(1.f));
         glm::vec3 getSpeed() const;
         void addX(float val);
         void addY(float val);

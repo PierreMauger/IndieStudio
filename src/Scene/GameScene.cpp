@@ -11,15 +11,37 @@ using namespace neo;
 
 GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 {
+    const std::vector<std::string> tmpMap = {
+                {"###########"},
+                {"#1 WWWWW  #"},
+                {"#  #W#W#  #"},
+                {"#WWWWWWWWW#"},
+                {"##W#W#W#W##"},
+                {"#WWWWWWWWW#"},
+                {"##W#####W##"},
+                {"#WWWWWWWWW#"},
+                {"#  #W#W#  #"},
+                {"#  WWWWW 2#"},
+                {"###########"}
+    };
+
     this->_messageBus = messageBus;
-    this->_players.insert(std::make_pair(0, std::make_unique<Player>("RoboCat", glm::vec3(0.0f), glm::vec3(0.5f))));
-    this->_players.insert(std::make_pair(1, std::make_unique<Player>("RoboCat", glm::vec3(0.0f), glm::vec3(0.5f))));
+    this->_players.insert(std::make_pair(0, std::make_unique<Player>("RoboCat", glm::vec3(0.f), glm::vec3(0.2f))));
+    this->_players.insert(std::make_pair(1, std::make_unique<Player>("RoboCat", glm::vec3(0.f), glm::vec3(0.2f))));
+    for (int i = 0, mapId = 0; i < tmpMap.size(); i++) {
+        for (int j = 0; j < tmpMap[i].size(); j++) {
+            if (tmpMap[i][j] == '#')
+                _map.insert(std::make_pair(mapId, std::make_unique<Wall>("Cube", glm::vec3(i * 0.2f, j * 0.2f, 0), false, glm::vec3(0.2f))));
+        }
+    }
 }
 
 GameScene::~GameScene()
 {
-    for (auto &player : this->_players)
+    for (auto& player : this->_players)
         player.second.reset();
+    for (auto& wall : this->_map)
+        wall.second.reset();
 }
 
 void GameScene::update()
@@ -38,10 +60,18 @@ void GameScene::update()
 void GameScene::loadScene()
 {
     Packet packet;
+    int i = 0;
 
-    for (auto &player : this->_players)
-        packet << player.second->getType() << player.first << *player.second;
-    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
+    for (auto& player : this->_players) {
+        packet << player.second->getType() << i++ << *player.second;
+        this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
+        packet.clear();
+    }
+    for (auto& wall : this->_map) {
+        packet << wall.second->getType() << i++ << *wall.second;
+        this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
+        packet.clear();
+    }
 }
 
 void GameScene::handleKeyPressed(int playerNb, std::string action)

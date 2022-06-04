@@ -78,6 +78,7 @@ set(SRC
   src/Neo.cpp
   src/Game/Player.cpp
   src/Game/Bomb.cpp
+  src/Game/Wall.cpp
 )
 
 #fetch libraries
