@@ -42,6 +42,10 @@ void MenuScene::loadScene()
     for (auto &button : this->_buttons)
         packet << button.second->getType() <<  button.first << *button.second;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
+
+    packet.clear();
+    packet << 0 << 0 << 10;
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA, Module::GRAPHICS));
 }
 
 void MenuScene::handleKeyPressed(int playerNb, std::string action)

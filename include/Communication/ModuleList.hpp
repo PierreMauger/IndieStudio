@@ -54,7 +54,7 @@ namespace neo
             enum {
                 RESOURCE_LIST = BaseCommand::LAST,
                 LOAD,
-                SETUP_CAMERA,
+                SET_CAMERA,
                 MOVE,
                 SELECT_BUTTON
             };

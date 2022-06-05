@@ -23,7 +23,7 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->_functionTab = {
         std::bind(&Graphics::receiveResourceList, this, std::placeholders::_1),
         std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
-        std::bind(&Graphics::receiveSetupCamera, this, std::placeholders::_1),
+        std::bind(&Graphics::receiveSetCamera, this, std::placeholders::_1),
         std::bind(&Graphics::receiveMove, this, std::placeholders::_1),
         std::bind(&Graphics::receiveSelectButton, this, std::placeholders::_1),
     };
@@ -112,12 +112,12 @@ void Graphics::receiveLoad(Packet data)
     }
 }
 
-void Graphics::receiveSetupCamera(Packet data)
+void Graphics::receiveSetCamera(Packet data)
 {
     float x, y, z;
     data >> x >> y >> z;
 
-    // this->_camera->
+    this->_camera->setPos(glm::vec3(x, y, z));
 }
 
 void Graphics::receiveMove(Packet data)

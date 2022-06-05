@@ -42,6 +42,10 @@ void GameScene::loadScene()
     for (auto &player : this->_players)
         packet << player.second->getType() << player.first << *player.second;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
+
+    packet.clear();
+    packet << 0 << 0 << 10;
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA, Module::GRAPHICS));
 }
 
 void GameScene::handleKeyPressed(int playerNb, std::string action)
