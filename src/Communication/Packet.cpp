@@ -82,12 +82,8 @@ Packet &Packet::operator<<(GameObject &data)
 {
     *this << data.getType();
     *this << data.getName();
-    *this << data.getPos().x;
-    *this << data.getPos().y;
-    *this << data.getPos().z;
-    *this << data.getScale().x;
-    *this << data.getScale().y;
-    *this << data.getScale().z;
+    *this << data.getPos();
+    *this << data.getScale();
     return *this;
 }
 
@@ -163,18 +159,15 @@ Packet &Packet::operator>>(PlayerConfig &data)
 Packet &Packet::operator>>(GameObject &data)
 {
     int type = 0;
+    std::string name;
+    glm::vec3 pos, scale;
+
     *this >> type;
     data.setType(type);
-
-    std::string name;
     *this >> name;
     data.setName(name);
-
-    float x, y, z, w, l, h = 0.0f;
-    *this >> x >> y >> z >> w >> l >> h;
-
-    data.setPos(glm::vec3(x, y, z));
-    data.setScale(glm::vec3(w, l, h));
-
+    *this >> pos >> scale;
+    data.setPos(pos);
+    data.setScale(scale);
     return *this;
 }
