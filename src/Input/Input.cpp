@@ -113,6 +113,8 @@ void Input::receiveKeyConfig(Packet data)
 {
     PlayerConfig config;
 
-    data >> config;
-    this->_configs.push_back(config);
+    while (data.checkSize(1)) {
+        data >> config;
+        this->_configs.push_back(config);
+    }
 }

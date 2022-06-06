@@ -29,9 +29,8 @@ void Loader::sendPlayerConfig()
         PlayerConfig conf = this->loadPlayerConfig(this->loadFile(file));
         conf.setMode(false);
         packet << conf;
-        this->postMessage(Message(packet, InputCommand::KEY_CONFIG, Module::INPUT));
-        packet.clear();
     }
+    this->postMessage(Message(packet, InputCommand::KEY_CONFIG, Module::INPUT));
 }
 
 void Loader::sendResourceList(void)
