@@ -18,6 +18,7 @@ namespace neo
     {
         private:
             std::map<std::string, std::shared_ptr<Sound>> _sounds;
+            std::map<std::string, std::shared_ptr<Sound>> _musics;
 
         public:
             Audio(std::shared_ptr<MessageBus> messageBus);
@@ -27,12 +28,15 @@ namespace neo
             void onNotify(Message);
 
             // Interface functions
-            void receivedLoad(Packet);
+            void receivedLoadSounds(Packet);
+            void receivedLoadMusics(Packet);
 
-            void receivedPlay(Packet);
-            void receivedPause(Packet);
-            void receivedResume(Packet);
-            void receivedStop(Packet);
+            void receivedPlaySound(Packet);
+
+            void receivedPlayMusic(Packet);
+            void receivedPauseMusic(Packet);
+            void receivedResumeMusic(Packet);
+            void receivedStopMusic(Packet);
 
     };
 };

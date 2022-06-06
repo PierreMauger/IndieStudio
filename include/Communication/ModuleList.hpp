@@ -33,11 +33,13 @@ namespace neo
     {
         public:
             enum {
-                LOAD = BaseCommand::LAST,
-                PLAY,
-                PAUSE,
-                RESUME,
-                STOP,
+                LOAD_SOUNDS = BaseCommand::LAST,
+                LOAD_MUSICS,
+                PLAY_SOUND,
+                PLAY_MUSIC,
+                PAUSE_MUSIC,
+                RESUME_MUSIC,
+                STOP_MUSIC,
             };
     };
 
