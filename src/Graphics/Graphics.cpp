@@ -115,8 +115,14 @@ void Graphics::receiveLoad(Packet data)
 void Graphics::receiveSetCamera(Packet data)
 {
     float x, y, z;
-    data >> x >> y >> z;
+    int type;
+    data >> type >> x >> y >> z;
 
+    if (type == 0) {
+        this->_camera->setRotating(false);
+    } else {
+        this->_camera->setRotating(true);
+    }
     this->_camera->setPos(glm::vec3(x, y, z));
 }
 

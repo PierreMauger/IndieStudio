@@ -44,7 +44,7 @@ void GameScene::loadScene()
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
     packet.clear();
-    packet << 0 << 0 << 10;
+    packet << 0 << 0.f << 0.f << 10.f;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA, Module::GRAPHICS));
 }
 

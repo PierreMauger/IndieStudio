@@ -28,6 +28,7 @@ namespace neo
             glm::mat4 _projection;
             glm::mat4 _model;
             neo::Shader _shader;
+            bool _rotating;
 
         public:
             Camera();
@@ -37,6 +38,7 @@ namespace neo
             void move(glm::vec3 const &dir);
             void setPos(glm::vec3 const &pos);
             void centerOn(glm::vec3 const &pos);
+            void setRotating(bool rotating);
             void setShader(float time);
             void setOnModel(glm::vec3 pos, glm::vec3 scale, float rotation);
             void setOnAnimatedModel(glm::vec3 pos, glm::vec3 scale, float rotation, Animator &animator);

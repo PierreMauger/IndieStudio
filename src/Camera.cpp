@@ -43,6 +43,7 @@ void neo::Camera::move(glm::vec3 const &dir)
 void neo::Camera::setPos(glm::vec3 const &pos)
 {
     this->_pos = pos;
+    this->_front = glm::vec3(-pos.x, -pos.y, -pos.z);
     this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
 }
 
@@ -52,13 +53,25 @@ void neo::Camera::centerOn(glm::vec3 const &pos)
     this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
 }
 
+void neo::Camera::setRotating(bool rotating)
+{
+    this->_rotating = rotating;
+    if (this->_rotating) {
+        this->_up = glm::vec3(0.0f, 0.0f, 1.0f);
+    } else {
+        this->_up = glm::vec3(0.0f, 1.0f, 0.0f);
+    }
+}
+
 void neo::Camera::setShader(float time)
 {
-    // float camX = static_cast<float>(std::sin(glm::radians(time)) * 5.0f);
-    // float camY = static_cast<float>(std::cos(glm::radians(time)) * 5.0f);
-    // this->_pos = glm::vec3(camX, camY, 10.0f);
-    // this->_front = glm::vec3(-camX, -camY, -10.0f);
-    // this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, glm::normalize(this->_up));
+    if (this->_rotating) {
+        float camX = static_cast<float>(std::sin(glm::radians(time)) * 5.0f);
+        float camY = static_cast<float>(std::cos(glm::radians(time)) * 5.0f);
+        this->_pos = glm::vec3(camX, camY, this->_pos.z);
+        this->_front = glm::vec3(-camX, -camY, -this->_pos.z);
+        this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
+    }
 
     this->_shader.setMat4("view", this->_view);
     this->_shader.setMat4("projection", this->_projection);
