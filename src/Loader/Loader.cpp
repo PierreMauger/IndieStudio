@@ -37,6 +37,7 @@ void Loader::sendResourceList(void)
 {
     std::vector<std::string> modelFiles = this->getFilesFromDir("resources/models/");
     std::vector<std::string> animationFiles = this->getFilesFromDir("resources/animations/");
+    std::vector<std::string> audioFiles = this->getFilesFromDir("resources/audio/");
     Packet packet;
 
     for (auto &file : modelFiles) {
@@ -48,6 +49,12 @@ void Loader::sendResourceList(void)
         packet << 1 << path.filename().string();
     }
     this->postMessage(Message(packet, GraphicsCommand::RESOURCE_LIST, Module::GRAPHICS));
+    packet.clear();
+    for (auto &file : audioFiles) {
+        std::filesystem::path path(file);
+        packet << path.filename().string();
+    }
+    this->postMessage(Message(packet, AudioCommand::LOAD, Module::AUDIO));
 }
 
 std::vector<std::string> Loader::getFilesFromDir(std::string dir)

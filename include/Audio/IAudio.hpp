@@ -16,10 +16,6 @@ namespace neo
     {
         public:
             virtual ~IAudio() = default;
-
-            virtual void playSound() = 0;
-            virtual void playMusic() = 0;
-            virtual void pauseMusic() = 0;
     };
 }
 
