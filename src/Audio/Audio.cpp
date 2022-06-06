@@ -17,11 +17,13 @@ Audio::Audio(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     // if (IsAudioDeviceReady() == false)
         // TODO
     this->_functionTab = {
-        std::bind(&Audio::receivedLoad, this, std::placeholders::_1),
-        std::bind(&Audio::receivedPlay, this, std::placeholders::_1),
-        std::bind(&Audio::receivedPause, this, std::placeholders::_1),
-        std::bind(&Audio::receivedResume, this, std::placeholders::_1),
-        std::bind(&Audio::receivedStop, this, std::placeholders::_1),
+        std::bind(&Audio::receivedLoadSounds, this, std::placeholders::_1),
+        std::bind(&Audio::receivedLoadMusics, this, std::placeholders::_1),
+        std::bind(&Audio::receivedPlaySound, this, std::placeholders::_1),
+        std::bind(&Audio::receivedPlayMusic, this, std::placeholders::_1),
+        std::bind(&Audio::receivedPauseMusic, this, std::placeholders::_1),
+        std::bind(&Audio::receivedResumeMusic, this, std::placeholders::_1),
+        std::bind(&Audio::receivedStopMusic, this, std::placeholders::_1),
     };
 }
 
@@ -41,50 +43,84 @@ void Audio::onNotify(Message message)
         this->_functionTab[status](data);
 }
 
-void Audio::receivedLoad(Packet packet)
+void Audio::receivedLoadSounds(Packet packet)
 {
     std::string fileName;
     Sound sound;
 
     while (packet.checkSize(1)) {
         packet >> fileName;
-        sound = LoadSound(("resources/audio/" + fileName).c_str());
+        sound = LoadSound(("resources/audio/sounds/" + fileName).c_str());
         if (sound.frameCount == 0) {
-            std::cerr << "[ERROR] loading sound" << fileName << std::endl;
+            std::cerr << "[ERROR] cannot load " << fileName << std::endl;
             continue;
         }
         this->_sounds[fileName] = std::make_shared<Sound>(sound);
     }
 }
 
-void Audio::receivedPlay(Packet packet)
+void Audio::receivedLoadMusics(Packet packet)
 {
-    std::string soundName;
+    std::string fileName;
+    Sound sound;
 
-    packet >> soundName;
-    PlaySound(*this->_sounds[soundName]);
+    while (packet.checkSize(1)) {
+        packet >> fileName;
+        sound = LoadSound(("resources/audio/musics/" + fileName).c_str());
+        if (sound.frameCount == 0) {
+            std::cerr << "[ERROR] cannot load " << fileName << std::endl;
+            continue;
+        }
+        this->_musics[fileName] = std::make_shared<Sound>(sound);
+    }
 }
 
-void Audio::receivedPause(Packet packet)
+void Audio::receivedPlaySound(Packet packet)
 {
     std::string soundName;
 
     packet >> soundName;
-    PauseSound(*this->_sounds[soundName]);
+    if (this->_sounds.find(soundName) == this->_sounds.end())
+        return;
+    PlaySoundMulti(*this->_sounds[soundName]);
 }
 
-void Audio::receivedResume(Packet packet)
+void Audio::receivedPlayMusic(Packet packet)
 {
-    std::string soundName;
+    std::string musicName;
 
-    packet >> soundName;
-    ResumeSound(*this->_sounds[soundName]);
+    packet >> musicName;
+    if (this->_musics.find(musicName) == this->_musics.end())
+        return;
+    PlaySound(*this->_musics[musicName]);
 }
 
-void Audio::receivedStop(Packet packet)
+void Audio::receivedPauseMusic(Packet packet)
 {
-    std::string soundName;
+    std::string musicName;
 
-    packet >> soundName;
-    StopSound(*this->_sounds[soundName]);
+    packet >> musicName;
+    if (this->_musics.find(musicName) == this->_musics.end())
+        return;
+    PauseSound(*this->_musics[musicName]);
+}
+
+void Audio::receivedResumeMusic(Packet packet)
+{
+    std::string musicName;
+
+    packet >> musicName;
+    if (this->_musics.find(musicName) == this->_musics.end())
+        return;
+    ResumeSound(*this->_musics[musicName]);
+}
+
+void Audio::receivedStopMusic(Packet packet)
+{
+    std::string musicName;
+
+    packet >> musicName;
+    if (this->_musics.find(musicName) == this->_musics.end())
+        return;
+    StopSound(*this->_musics[musicName]);
 }
