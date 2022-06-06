@@ -41,7 +41,7 @@
   </library_effects>
   <library_images>
     <image id="untitled_png" name="untitled_png">
-      <init_from>untitled.png</init_from>
+      <init_from>Space.png</init_from>
     </image>
   </library_images>
   <library_materials>
