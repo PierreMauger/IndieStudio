@@ -13,7 +13,7 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
     SetTraceLogLevel(LOG_NONE);
     SetConfigFlags(FLAG_MSAA_4X_HINT);
-    InitWindow(600, 600, "Neo");
+    InitWindow(1920, 1080, "Neo");
     SetTargetFPS(60);
     glEnable(GL_DEPTH_TEST);
     for (int i = 0; getMapping(i); i++)
@@ -114,9 +114,9 @@ void Graphics::receiveLoad(Packet data)
 
 void Graphics::receiveSetCamera(Packet data)
 {
-    glm::vec3 pos, dir;
+    glm::vec3 pos, nextPos;
     int type;
-    data >> type >> pos >> dir;
+    data >> type >> pos >> nextPos;
 
     if (type == 0) {
         this->_camera->setRotating(false);
@@ -124,7 +124,7 @@ void Graphics::receiveSetCamera(Packet data)
         this->_camera->setRotating(true);
     }
     this->_camera->setPos(pos);
-    this->_camera->setMovement(dir);
+    this->_camera->setMovement(nextPos, -nextPos);
 }
 
 void Graphics::receiveMove(Packet data)

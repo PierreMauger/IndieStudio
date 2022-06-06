@@ -11,10 +11,11 @@ using namespace neo;
 
 neo::Camera::Camera() : _shader("resources/shaders/camera.vs", "resources/shaders/camera.fs")
 {
-    this->_pos = glm::vec3(0.0f, 0.0f, 10.0f);
-    this->_front = glm::vec3(0.0f, 0.0f, -10.0f);
+    this->_pos = glm::vec3(0.0f);
+    this->_front = glm::vec3(0.0f);
     this->_up = glm::vec3(0.0f, 1.0f, 0.0f);
-    this->_dir = glm::vec3(0.0f, 0.0f, 0.0f);
+    this->_nextPos = glm::vec3(0.0f);
+    this->_nextFront = glm::vec3(0.0f);
 
     this->lookAt(this->_pos, this->_front, this->_up);
 }
@@ -31,13 +32,14 @@ void neo::Camera::lookAt(glm::vec3 const &pos, glm::vec3 const &front, glm::vec3
     this->_front = front;
     this->_up = up;
     this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
-    this->_projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
+    this->_projection = glm::perspective(glm::radians(45.0f), (float)GetScreenWidth() / (float)GetScreenHeight(), 0.1f, 100.0f);
     this->_model = glm::mat4(1.0f);
 }
 
-void neo::Camera::setMovement(glm::vec3 const &dir)
+void neo::Camera::setMovement(glm::vec3 const &nextPos, glm::vec3 const &nextFront)
 {
-    this->_dir = dir;
+    this->_nextPos = nextPos;
+    this->_nextFront = nextFront;
 }
 
 void neo::Camera::setPos(glm::vec3 const &pos)
@@ -66,22 +68,26 @@ void neo::Camera::setRotating(bool rotating)
 void neo::Camera::setShader(float time)
 {
     if (this->_rotating) {
-        float camX = static_cast<float>(std::sin(glm::radians(time)) * 5.0f);
-        float camY = static_cast<float>(std::cos(glm::radians(time)) * 5.0f);
+        float camX = static_cast<float>(std::sin(glm::radians(time / 10)) * 5.0f);
+        float camY = static_cast<float>(std::cos(glm::radians(time / 10)) * 5.0f);
         this->_pos = glm::vec3(camX, camY, this->_pos.z);
         this->_front = glm::vec3(-camX, -camY, -this->_pos.z);
         this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
     }
-    if (this->_dir != glm::vec3(0.0f) && this->_pos != this->_dir) {
-        glm::vec3 dir = this->_dir - this->_pos;
-        float dist = glm::length(dir);
-        if (dist > 0.1f) {
-            dir = glm::normalize(dir);
-            this->_pos += dir * 0.1f;
+    if (this->_nextPos != glm::vec3(0.0f) && this->_pos != this->_nextPos) {
+        float distance = glm::distance(this->_pos, this->_nextPos);
+        float speed = 0.05f;
+        if (distance < speed) {
+            this->_pos = this->_nextPos;
+            this->_nextPos = glm::vec3(0.0f);
         } else {
-            this->_pos = this->_dir;
+            if (this->_rotating) {
+                this->_pos.z += (this->_nextPos.z - this->_pos.z) * speed;
+            } else {
+                this->_pos += (this->_nextPos - this->_pos) * speed;
+            }
         }
-        this->_front = glm::vec3(-this->_pos.x, -this->_pos.y, -this->_pos.z);
+        this->_front = -this->_pos;
         this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
     }
 
