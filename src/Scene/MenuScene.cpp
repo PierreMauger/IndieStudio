@@ -106,18 +106,18 @@ void MenuScene::handleMovePressed(int playerNb, std::string action)
     if (action == "MoveRight") {
         Packet packet;
         packet << "explosion.mp3";
-        this->_messageBus->sendMessage(Message(packet, AudioCommand::PLAY, Module::AUDIO));
+        this->_messageBus->sendMessage(Message(packet, AudioCommand::PLAY_SOUND, Module::AUDIO));
     } else if (action == "MoveLeft") {
         Packet packet;
         packet << "bomb_drop.mp3";
-        this->_messageBus->sendMessage(Message(packet, AudioCommand::PLAY, Module::AUDIO));
+        this->_messageBus->sendMessage(Message(packet, AudioCommand::PLAY_SOUND, Module::AUDIO));
     } else if (action == "MoveUp") {
         Packet packet;
-        packet << "1";
-        this->_messageBus->sendMessage(Message(packet, AudioCommand::PLAY, Module::AUDIO));
+        packet << "game_music.mp3";
+        this->_messageBus->sendMessage(Message(packet, AudioCommand::PLAY_MUSIC, Module::AUDIO));
     } else if (action == "MoveDown") {
         Packet packet;
-        packet << "1";
-        this->_messageBus->sendMessage(Message(packet, AudioCommand::PLAY, Module::AUDIO));
+        packet << "menu_music.mp3";
+        this->_messageBus->sendMessage(Message(packet, AudioCommand::PLAY_MUSIC, Module::AUDIO));
     }
 }

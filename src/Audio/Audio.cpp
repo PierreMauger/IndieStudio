@@ -77,13 +77,11 @@ void Audio::receivedLoadMusics(Packet packet)
 void Audio::receivedPlaySound(Packet packet)
 {
     std::string soundName;
-    Sound temp;
 
     packet >> soundName;
     if (this->_sounds.find(soundName) == this->_sounds.end())
         return;
-    temp = *this->_sounds[soundName];
-    PlaySound(temp);
+    PlaySoundMulti(*this->_sounds[soundName]);
 }
 
 void Audio::receivedPlayMusic(Packet packet)
