@@ -52,6 +52,13 @@ Packet &Packet::operator<<(const std::string &data)
     return *this;
 }
 
+Packet &Packet::operator<<(const glm::vec3 &data)
+{
+    *this << data.x << data.y << data.z;
+
+    return *this;
+}
+
 Packet &Packet::operator<<(std::map<std::string, int> &data)
 {
     *this << static_cast<int>(data.size());
@@ -112,6 +119,16 @@ Packet &Packet::operator>>(std::string &data)
         data.resize(size);
         std::memcpy(&data[0], &this->_data[0], size);
         this->_data.erase(this->_data.begin(), this->_data.begin() + size);
+    }
+    return *this;
+}
+
+Packet &Packet::operator>>(glm::vec3 &data)
+{
+    if (this->checkSize(sizeof(float) * 3)) {
+        float x, y, z = 0.0f;
+        *this >> x >> y >> z;
+        data = glm::vec3(x, y, z);
     }
     return *this;
 }

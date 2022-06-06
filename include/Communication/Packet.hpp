@@ -32,6 +32,7 @@ namespace neo
             Packet &operator<<(int data);
             Packet &operator<<(float data);
             Packet &operator<<(const std::string &data);
+            Packet &operator<<(const glm::vec3 &data);
             Packet &operator<<(std::map<std::string, int> &data);
             Packet &operator<<(PlayerConfig &data);
             Packet &operator<<(GameObject &data);
@@ -39,6 +40,7 @@ namespace neo
             Packet &operator>>(int &data);
             Packet &operator>>(float &data);
             Packet &operator>>(std::string &data);
+            Packet &operator>>(glm::vec3 &data);
             Packet &operator>>(std::map<std::string, int> &data);
             Packet &operator>>(PlayerConfig &data);
             Packet &operator>>(GameObject &data);

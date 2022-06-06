@@ -114,16 +114,17 @@ void Graphics::receiveLoad(Packet data)
 
 void Graphics::receiveSetCamera(Packet data)
 {
-    float x, y, z;
+    glm::vec3 pos, dir;
     int type;
-    data >> type >> x >> y >> z;
+    data >> type >> pos >> dir;
 
     if (type == 0) {
         this->_camera->setRotating(false);
     } else {
         this->_camera->setRotating(true);
     }
-    this->_camera->setPos(glm::vec3(x, y, z));
+    this->_camera->setPos(pos);
+    this->_camera->setMovement(dir);
 }
 
 void Graphics::receiveMove(Packet data)

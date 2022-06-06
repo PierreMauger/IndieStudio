@@ -44,7 +44,7 @@ void MenuScene::loadScene()
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
     packet.clear();
-    packet << 1 << 5.f << 5.f << 3.f;
+    packet << 1 << glm::vec3(5.f, 5.f, 10.f) << glm::vec3(5.f, 5.f, 3.f);
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA, Module::GRAPHICS));
 }
 

@@ -14,6 +14,7 @@ neo::Camera::Camera() : _shader("resources/shaders/camera.vs", "resources/shader
     this->_pos = glm::vec3(0.0f, 0.0f, 10.0f);
     this->_front = glm::vec3(0.0f, 0.0f, -10.0f);
     this->_up = glm::vec3(0.0f, 1.0f, 0.0f);
+    this->_dir = glm::vec3(0.0f, 0.0f, 0.0f);
 
     this->lookAt(this->_pos, this->_front, this->_up);
 }
@@ -34,10 +35,9 @@ void neo::Camera::lookAt(glm::vec3 const &pos, glm::vec3 const &front, glm::vec3
     this->_model = glm::mat4(1.0f);
 }
 
-void neo::Camera::move(glm::vec3 const &dir)
+void neo::Camera::setMovement(glm::vec3 const &dir)
 {
-    this->_pos += dir;
-    this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
+    this->_dir = dir;
 }
 
 void neo::Camera::setPos(glm::vec3 const &pos)
@@ -70,6 +70,18 @@ void neo::Camera::setShader(float time)
         float camY = static_cast<float>(std::cos(glm::radians(time)) * 5.0f);
         this->_pos = glm::vec3(camX, camY, this->_pos.z);
         this->_front = glm::vec3(-camX, -camY, -this->_pos.z);
+        this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
+    }
+    if (this->_dir != glm::vec3(0.0f) && this->_pos != this->_dir) {
+        glm::vec3 dir = this->_dir - this->_pos;
+        float dist = glm::length(dir);
+        if (dist > 0.1f) {
+            dir = glm::normalize(dir);
+            this->_pos += dir * 0.1f;
+        } else {
+            this->_pos = this->_dir;
+        }
+        this->_front = glm::vec3(-this->_pos.x, -this->_pos.y, -this->_pos.z);
         this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
     }
 
