@@ -29,8 +29,8 @@ void ConfigScene::loadScene()
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
     packet.clear();
-    packet << 0 << glm::vec3(0.f, 0.f, 10.f) << glm::vec3(0.f, 0.f, 0.f);
-    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA, Module::GRAPHICS));
+    packet << 0 << glm::vec3(0.f, 0.f, 10.f);
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
 }
 
 void ConfigScene::handleKeyPressed(int playerNb, std::string action)

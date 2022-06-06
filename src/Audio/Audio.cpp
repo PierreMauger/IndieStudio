@@ -11,6 +11,7 @@ using namespace neo;
 
 Audio::Audio(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
+    SetTraceLogLevel(LOG_NONE);
     InitAudioDevice();
 
     // if (IsAudioDeviceReady() == false)

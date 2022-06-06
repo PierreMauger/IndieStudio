@@ -28,7 +28,7 @@ void GameScene::update()
         if (this->_players[i]->getSpeed() != glm::vec3(0.0f)) {
             this->_players[i]->move(this->_players[i]->getSpeed());
             Packet packet;
-            packet << i << this->_players[i]->getPos().x << this->_players[i]->getPos().y << this->_players[i]->getPos().z << this->_players[i]->getRotation();
+            packet << i << this->_players[i]->getPos().x << this->_players[i]->getPos().y << this->_players[i]->getPos().z;
             this->_messageBus->sendMessage(Message(packet, GraphicsCommand::MOVE, Module::GRAPHICS));
             packet.clear();
         }
@@ -44,37 +44,32 @@ void GameScene::loadScene()
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
     packet.clear();
-    packet << 0 << glm::vec3(0.f, 0.f, 30.f) << glm::vec3(0.f, 0.f, 10.f);
-    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA, Module::GRAPHICS));
+    packet << 0 << glm::vec3(0.f, 0.f, 10.f);
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
 }
 
 void GameScene::handleKeyPressed(int playerNb, std::string action)
 {
     if (this->_players.find(playerNb) == this->_players.end())
         return;
-    if (action == "MoveRight") {
+    if (action == "MoveRight")
         this->_players[playerNb]->addX(0.1f);
-        this->_players[playerNb]->setRotation(90.f);
-    } else if (action == "MoveLeft") {
+    else if (action == "MoveLeft")
         this->_players[playerNb]->addX(-0.1f);
-        this->_players[playerNb]->setRotation(270.f);
-    } else if (action == "MoveUp") {
+    else if (action == "MoveUp")
         this->_players[playerNb]->addY(0.1f);
-        this->_players[playerNb]->setRotation(180.f);
-    } else if (action == "MoveDown") {
+    else if (action == "MoveDown")
         this->_players[playerNb]->addY(-0.1f);
-        this->_players[playerNb]->setRotation(0.f);
-    }
 }
 
 void GameScene::handleKeyReleased(int playerNb, std::string action)
 {
-    if (action == "MoveRight" && this->_players[playerNb]->getSpeed().x > 0.f)
+    if (action == "MoveRight")
         this->_players[playerNb]->addX(-0.1f);
-    else if (action == "MoveLeft" && this->_players[playerNb]->getSpeed().x < 0.f)
+    else if (action == "MoveLeft")
         this->_players[playerNb]->addX(0.1f);
-    else if (action == "MoveUp" && this->_players[playerNb]->getSpeed().y > 0.f)
+    else if (action == "MoveUp")
         this->_players[playerNb]->addY(-0.1f);
-    else if (action == "MoveDown" && this->_players[playerNb]->getSpeed().y < 0.f)
+    else if (action == "MoveDown")
         this->_players[playerNb]->addY(0.1f);
 }
