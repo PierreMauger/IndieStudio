@@ -48,8 +48,10 @@ void Audio::receivedLoad(Packet packet)
     while (packet.checkSize(1)) {
         packet >> fileName;
         sound = LoadSound(("resources/audio/" + fileName).c_str());
-        if (sound.frameCount == 0)
+        if (sound.frameCount == 0) {
+            std::cerr << "[ERROR] loading sound" << fileName << std::endl;
             continue;
+        }
         this->_sounds[fileName] = std::make_shared<Sound>(sound);
     }
 }
