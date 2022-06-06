@@ -88,19 +88,36 @@ void MenuScene::handleBackPressed(int playerNb, std::string action)
 
 void MenuScene::handleMovePressed(int playerNb, std::string action)
 {
-    if (action == "MoveRight" || action == "MoveLeft") {
+    // if (action == "MoveRight" || action == "MoveLeft") {
+    //     Packet packet;
+    //     packet << this->_selectedButton << 0;
+    //     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT_BUTTON, Module::GRAPHICS));
+    //     packet.clear();
+    //     if (action == "MoveRight")
+    //         this->_selectedButton = (this->_selectedButton + 1) % this->_buttons.size();
+    //     else {
+    //         if (this->_selectedButton == 0)
+    //             this->_selectedButton = this->_buttons.size();
+    //         this->_selectedButton = (this->_selectedButton - 1) % this->_buttons.size();
+    //     }
+    //     packet << this->_selectedButton << 1;
+    //     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT_BUTTON, Module::GRAPHICS));
+    // }
+    if (action == "MoveRight") {
         Packet packet;
-        packet << this->_selectedButton << 0;
-        this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT_BUTTON, Module::GRAPHICS));
-        packet.clear();
-        if (action == "MoveRight")
-            this->_selectedButton = (this->_selectedButton + 1) % this->_buttons.size();
-        else {
-            if (this->_selectedButton == 0)
-                this->_selectedButton = this->_buttons.size();
-            this->_selectedButton = (this->_selectedButton - 1) % this->_buttons.size();
-        }
-        packet << this->_selectedButton << 1;
-        this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT_BUTTON, Module::GRAPHICS));
+        packet << "explosion.mp3";
+        this->_messageBus->sendMessage(Message(packet, AudioCommand::PLAY, Module::AUDIO));
+    } else if (action == "MoveLeft") {
+        Packet packet;
+        packet << "bomb_drop.mp3";
+        this->_messageBus->sendMessage(Message(packet, AudioCommand::PLAY, Module::AUDIO));
+    } else if (action == "MoveUp") {
+        Packet packet;
+        packet << "1";
+        this->_messageBus->sendMessage(Message(packet, AudioCommand::PLAY, Module::AUDIO));
+    } else if (action == "MoveDown") {
+        Packet packet;
+        packet << "1";
+        this->_messageBus->sendMessage(Message(packet, AudioCommand::PLAY, Module::AUDIO));
     }
 }
