@@ -13,7 +13,7 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
     SetTraceLogLevel(LOG_NONE);
     SetConfigFlags(FLAG_MSAA_4X_HINT);
-    InitWindow(1920, 1080, "Neo");
+    InitWindow(1280, 720, "Neo");
     SetTargetFPS(60);
     glEnable(GL_DEPTH_TEST);
     for (int i = 0; getMapping(i); i++)

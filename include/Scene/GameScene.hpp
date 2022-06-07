@@ -13,6 +13,7 @@
     #include "macros.hpp"
     #include "Bomb.hpp"
     #include "Player.hpp"
+    #include "Wall.hpp"
 
 namespace neo
 {
@@ -21,6 +22,8 @@ namespace neo
         private:
             std::shared_ptr<MessageBus> _messageBus;
             std::map<int, std::unique_ptr<Player>> _players;
+            std::map<int, std::unique_ptr<Bomb>> _bombs;
+            std::map<int, std::unique_ptr<Wall>> _map;
 
         public:
             GameScene(std::shared_ptr<MessageBus> messageBus);

@@ -11,8 +11,8 @@ using namespace neo;
 
 neo::Camera::Camera() : _shader("resources/shaders/camera.vs", "resources/shaders/camera.fs")
 {
-    this->_pos = glm::vec3(0.0f);
-    this->_front = glm::vec3(0.0f);
+    this->_pos = glm::vec3(0.0f, 0.0f, 20.0f);
+    this->_front = glm::vec3(0.0f, 0.0f, -10.0f);
     this->_up = glm::vec3(0.0f, 1.0f, 0.0f);
     this->_nextPos = glm::vec3(0.0f);
     this->_nextFront = glm::vec3(0.0f);

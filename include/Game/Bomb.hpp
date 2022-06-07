@@ -17,10 +17,8 @@ namespace neo
     private:
         double _timer;
         size_t _fireUp;
-        size_t _playerId;
-
     public:
-        Bomb(double timer, size_t fireUp, size_t playerId);
+        Bomb(std::string name, glm::vec3 pos, size_t fireUp, glm::vec3 scale = glm::vec3(1.f));
     };
 }
 
