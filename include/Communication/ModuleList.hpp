@@ -33,7 +33,13 @@ namespace neo
     {
         public:
             enum {
-                // TODO
+                LOAD_SOUNDS = BaseCommand::LAST,
+                LOAD_MUSICS,
+                PLAY_SOUND,
+                PLAY_MUSIC,
+                PAUSE_MUSIC,
+                RESUME_MUSIC,
+                STOP_MUSIC,
             };
     };
 
@@ -54,7 +60,8 @@ namespace neo
             enum {
                 RESOURCE_LIST = BaseCommand::LAST,
                 LOAD,
-                SETUP_CAMERA,
+                SET_CAMERA_POS,
+                SET_CAMERA_NEXT_POS,
                 MOVE,
                 SELECT_BUTTON
             };

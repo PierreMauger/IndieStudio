@@ -23,7 +23,8 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->_functionTab = {
         std::bind(&Graphics::receiveResourceList, this, std::placeholders::_1),
         std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
-        std::bind(&Graphics::receiveSetupCamera, this, std::placeholders::_1),
+        std::bind(&Graphics::receiveSetCameraPos, this, std::placeholders::_1),
+        std::bind(&Graphics::receiveSetCameraNextPos, this, std::placeholders::_1),
         std::bind(&Graphics::receiveMove, this, std::placeholders::_1),
         std::bind(&Graphics::receiveSelectButton, this, std::placeholders::_1),
     };
@@ -62,7 +63,7 @@ void Graphics::draw()
     ClearBackground(RAYWHITE);
 
     this->_camera->getShader().use();
-    this->_camera->setShader(GetTime() * 100);
+    this->_camera->setShader(GetTime() * 10);
 
     for (auto &object : this->_objects)
         object.second->draw(*this->_camera);
@@ -79,9 +80,9 @@ void Graphics::receiveResourceList(Packet data)
         data >> type >> file;
         std::string fileName = file.substr(0, file.find_last_of("."));
 
-        if (type == 0)
+        if (type == 0) {
             this->_models[fileName] = std::shared_ptr<neo::Model>(new Model("resources/models/" + file));
-        else if (type == 1) {
+        } else if (type == 1) {
             this->_models[fileName] = std::shared_ptr<neo::Model>(new Model("resources/animations/" + file));
             this->_animations[fileName] = std::shared_ptr<neo::Animation>(new Animation("resources/animations/" + file, *this->_models[fileName]));
         }
@@ -112,22 +113,43 @@ void Graphics::receiveLoad(Packet data)
     }
 }
 
-void Graphics::receiveSetupCamera(Packet data)
+void Graphics::receiveSetCameraPos(Packet data)
 {
-    float x, y, z;
-    data >> x >> y >> z;
+    glm::vec3 pos;
+    int type;
+    data >> type >> pos;
 
-    // this->_camera->
+    if (type == 0) {
+        this->_camera->setRotating(false);
+    } else {
+        this->_camera->setRotating(true);
+    }
+    this->_camera->setPos(pos);
+}
+
+void Graphics::receiveSetCameraNextPos(Packet data)
+{
+    glm::vec3 nextPos, nextFront;
+    data >> nextPos >> nextFront;
+
+    this->_camera->setMovement(nextPos, nextFront);
 }
 
 void Graphics::receiveMove(Packet data)
 {
     int id;
-    float x, y, z, rotation;
+    float x, y, z;
 
-    data >> id >> x >> y >> z >> rotation;
+    data >> id >> x >> y >> z;
+    if (this->_objects[id]->getPos().x < x)
+        this->_objects[id]->setRotation(90);
+    else if (this->_objects[id]->getPos().x > x)
+        this->_objects[id]->setRotation(270);
+    else if (this->_objects[id]->getPos().y < y)
+        this->_objects[id]->setRotation(180);
+    else if (this->_objects[id]->getPos().y > y)
+        this->_objects[id]->setRotation(0);
     this->_objects[id]->setPos(glm::vec3(x, y, z));
-    this->_objects[id]->setRotation(rotation);
 }
 
 void Graphics::receiveSelectButton(Packet data)

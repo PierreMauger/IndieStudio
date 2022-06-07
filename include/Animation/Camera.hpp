@@ -28,15 +28,19 @@ namespace neo
             glm::mat4 _projection;
             glm::mat4 _model;
             neo::Shader _shader;
+            bool _rotating;
+            glm::vec3 _nextPos;
+            glm::vec3 _nextFront;
 
         public:
             Camera();
             ~Camera() = default;
             neo::Shader &getShader();
             void lookAt(glm::vec3 const &pos, glm::vec3 const &front, glm::vec3 const &up);
-            void move(glm::vec3 const &dir);
+            void setMovement(glm::vec3 const &nextPos, glm::vec3 const &nextFront);
             void setPos(glm::vec3 const &pos);
             void centerOn(glm::vec3 const &pos);
+            void setRotating(bool rotating);
             void setShader(float time);
             void setOnModel(glm::vec3 pos, glm::vec3 scale, float rotation);
             void setOnAnimatedModel(glm::vec3 pos, glm::vec3 scale, float rotation, Animator &animator);

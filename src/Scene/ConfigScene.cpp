@@ -16,20 +16,21 @@ ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
 
 ConfigScene::~ConfigScene()
 {
-    // for (auto &object : this->_objects)
-        // object.second.reset();
 }
 
 void ConfigScene::update()
 {
-    Packet packet;
-
-    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 }
 
 void ConfigScene::loadScene()
 {
+    Packet packet;
 
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
+
+    packet.clear();
+    packet << 0 << glm::vec3(0.f, 0.f, 10.f);
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
 }
 
 void ConfigScene::handleKeyPressed(int playerNb, std::string action)

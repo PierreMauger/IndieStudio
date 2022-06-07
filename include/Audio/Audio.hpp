@@ -17,19 +17,28 @@ namespace neo
     class Audio : public virtual Node, public virtual IAudio
     {
         private:
+            std::map<std::string, std::shared_ptr<Sound>> _sounds;
+            std::map<std::string, std::shared_ptr<Sound>> _musics;
 
         public:
             Audio(std::shared_ptr<MessageBus> messageBus);
-            ~Audio() = default;
+            ~Audio();
 
             // Node functions
             void onNotify(Message);
 
             // Interface functions
-            void playSound();
-            void playMusic();
-            void pauseMusic();
+            void receivedLoadSounds(Packet);
+            void receivedLoadMusics(Packet);
+
+            void receivedPlaySound(Packet);
+
+            void receivedPlayMusic(Packet);
+            void receivedPauseMusic(Packet);
+            void receivedResumeMusic(Packet);
+            void receivedStopMusic(Packet);
+
     };
-}
+};
 
 #endif // AUDIO_HPP
