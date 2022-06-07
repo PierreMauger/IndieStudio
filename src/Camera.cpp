@@ -11,7 +11,7 @@ using namespace neo;
 
 neo::Camera::Camera() : _shader("resources/shaders/camera.vs", "resources/shaders/camera.fs")
 {
-    this->_pos = glm::vec3(0.0f, 0.0f, 3000.0f);
+    this->_pos = glm::vec3(0.0f, 0.0f, 20.0f);
     this->_front = glm::vec3(0.0f, 0.0f, -10.0f);
     this->_up = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -30,7 +30,7 @@ void neo::Camera::lookAt(glm::vec3 const &pos, glm::vec3 const &front, glm::vec3
     this->_front = front;
     this->_up = up;
     this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
-    this->_projection = glm::perspective(glm::radians(45.0f), (float)(GetScreenWidth() / GetScreenHeight()), 0.1f, 3500.0f);
+    this->_projection = glm::perspective(glm::radians(45.0f), (float)GetScreenWidth() / (float)GetScreenHeight(), 0.1f, 100.0f);
     this->_model = glm::mat4(1.0f);
 }
 
