@@ -44,10 +44,10 @@ void MenuScene::loadScene()
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
     packet.clear();
-    packet << 1 << glm::vec3(5.f, 5.f, 10.f);
+    packet << 1 << glm::vec3(5.0f, 5.0f, 10.0f);
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
     packet.clear();
-    packet << 1 << glm::vec3(5.f, 5.f, 3.f);
+    packet << 1 << glm::vec3(5.0f, 5.0f, 3.0f);
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_NEXT_POS, Module::GRAPHICS));
 }
 
@@ -66,7 +66,7 @@ void MenuScene::handleKeyReleased(int playerNb, std::string action)
 
 void MenuScene::handleMainPressed(int playerNb, std::string action)
 {
-    if (action == "Back") {
+    if (action == "Main") {
         Packet packet;
         packet << this->_selectedButton << 0;
         this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT_BUTTON, Module::GRAPHICS));
@@ -77,18 +77,12 @@ void MenuScene::handleMainPressed(int playerNb, std::string action)
 
 void MenuScene::handleBackPressed(int playerNb, std::string action)
 {
-    if (action == "Main") {
+    if (action == "Back") {
         if (this->_selectedButton == -1)
             return;
         if (this->_selectedButton == 0)
             return;
         Packet packet;
-        packet << 0 << glm::vec3(0.f, 0.f, 30.f);
-        this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
-        packet.clear();
-        packet << glm::vec3(0.f, 0.f, 10.f);
-        this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_NEXT_POS, Module::GRAPHICS));
-        packet.clear();
         packet << this->_selectedButton;
         this->_messageBus->sendMessage(Message(packet, CoreCommand::CHANGE_SCENE, Module::CORE));
         this->_selectedButton = -1;

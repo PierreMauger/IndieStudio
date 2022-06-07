@@ -137,7 +137,7 @@ neo::Mesh neo::Model::processMesh(aiMesh &mesh, const aiScene &scene)
     }
 
     aiMaterial *materialLoaded = scene.mMaterials[mesh.mMaterialIndex];
-    aiColor3D color(0.f, 0.f, 0.f);
+    aiColor3D color(0.0f, 0.0f, 0.0f);
     float shininess;
 
     neo::Material material;

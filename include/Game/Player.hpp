@@ -23,7 +23,7 @@ namespace neo
         bool _wallPass;
 
     public:
-        Player(std::string name, glm::vec3 pos, glm::vec3 scale = glm::vec3(1.f));
+        Player(std::string name, glm::vec3 pos, glm::vec3 scale = glm::vec3(1.0f));
         glm::vec3 getSpeed() const;
         void addX(float val);
         void addY(float val);
