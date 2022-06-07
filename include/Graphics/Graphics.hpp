@@ -40,6 +40,7 @@ namespace neo
 
             // Interface functions
             void draw();
+            float getHeightOnMap();
 
             void receiveResourceList(Packet);
             void receiveLoad(Packet);

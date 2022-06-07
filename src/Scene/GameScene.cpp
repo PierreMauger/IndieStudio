@@ -56,11 +56,11 @@ void GameScene::loadScene()
     for (int i = 0, mapId = 0; i < tmpMap.size(); i++) {
         for (int j = 0; j < tmpMap[i].size(); j++) {
             if (tmpMap[i][j] == '#')
-                this->_map[mapId++] = std::make_unique<Wall>("Block", glm::vec3(i - (float)tmpMap[i].size() / 2, -j + (float)tmpMap.size() / 2, 0.0f), false, glm::vec3(0.5f));
+                this->_map[mapId++] = std::make_unique<Wall>("Block", glm::vec3(i - ((float)tmpMap.size() - 1) / 2, -j + ((float)tmpMap[i].size() - 1) / 2, 0.0f), false, glm::vec3(0.5f));
             if (tmpMap[i][j] == 'W')
-                this->_map[mapId++] = std::make_unique<Wall>("Wall", glm::vec3(i - (float)tmpMap[i].size() / 2, -j + (float)tmpMap.size() / 2, 0.0f), true, glm::vec3(0.5f));
+                this->_map[mapId++] = std::make_unique<Wall>("Wall", glm::vec3(i - ((float)tmpMap.size() - 1) / 2, -j + ((float)tmpMap[i].size() - 1) / 2, 0.0f), true, glm::vec3(0.5f));
             if (tmpMap[i][j] >= '0' && tmpMap[i][j] <= '9')
-                this->_players[tmpMap[i][j] - '0'] = std::make_unique<Player>("RoboCat", glm::vec3(i - (float)tmpMap[i].size() / 2, -j + (float)tmpMap.size() / 2, 0.0f), glm::vec3(0.5f));
+                this->_players[tmpMap[i][j] - '0'] = std::make_unique<Player>("RoboCat", glm::vec3(i - ((float)tmpMap.size() - 1) / 2, -j + ((float)tmpMap[i].size() - 1) / 2, 0.0f), glm::vec3(0.5f));
         }
     }
     for (auto& player : this->_players)
@@ -73,7 +73,7 @@ void GameScene::loadScene()
     packet << 0 << glm::vec3(0.0f, 0.0f, 50.0f);
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
     packet.clear();
-    packet << glm::vec3(0.0f, 0.0f, 20.0f);
+    packet << 1;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_NEXT_POS, Module::GRAPHICS));
 }
 

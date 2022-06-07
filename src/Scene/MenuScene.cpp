@@ -47,7 +47,7 @@ void MenuScene::loadScene()
     packet << 1 << glm::vec3(5.0f, 5.0f, 10.0f);
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
     packet.clear();
-    packet << 1 << glm::vec3(5.0f, 5.0f, 3.0f);
+    packet << 0 << glm::vec3(5.0f, 5.0f, 3.0f);
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_NEXT_POS, Module::GRAPHICS));
 }
 

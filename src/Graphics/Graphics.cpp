@@ -72,6 +72,21 @@ void Graphics::draw()
     EndDrawing();
 }
 
+float Graphics::getHeightOnMap()
+{
+    float x = 0.0f;
+    float y = 0.0f;
+
+    for (auto &object : this->_objects) {
+        if (object.second->getPos().x > x)
+            x = object.second->getPos().x;
+        if (object.second->getPos().y > y)
+            y = object.second->getPos().y;
+    }
+    y *= (float)GetScreenHeight() / (float)GetScreenWidth();
+    return ((x > y ? x : y) + 1) / glm::tan(glm::radians(45.0f / 2.0f));
+}
+
 void Graphics::receiveResourceList(Packet data)
 {
     while (data.checkSize(1)) {
@@ -119,20 +134,25 @@ void Graphics::receiveSetCameraPos(Packet data)
     int type;
     data >> type >> pos;
 
-    if (type == 0) {
+    if (type == 0)
         this->_camera->setRotating(false);
-    } else {
+    else
         this->_camera->setRotating(true);
-    }
     this->_camera->setPos(pos);
 }
 
 void Graphics::receiveSetCameraNextPos(Packet data)
 {
     glm::vec3 nextPos, nextFront;
-    data >> nextPos >> nextFront;
+    int type;
 
-    this->_camera->setMovement(nextPos, nextFront);
+    data >> type;
+    if (type == 0) {
+        data >> nextPos >> nextFront;
+        this->_camera->setMovement(nextPos, nextFront);
+    } else {
+        this->_camera->setMovement(glm::vec3(0.0f, 0.0f, this->getHeightOnMap()), glm::vec3(0.0f));
+    }
 }
 
 void Graphics::receiveMove(Packet data)
