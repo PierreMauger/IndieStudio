@@ -25,15 +25,23 @@ GameScene::~GameScene()
 void GameScene::update()
 {
     for (int i = 0; i < this->_players.size(); i++) {
-        if (this->_players[i]->getDirection(0))
-            this->_players[i]->getSpeed().x += 0.1f;
-        if (this->_players[i]->getDirection(1))
-            this->_players[i]->getSpeed().x += -0.1f;
-        if (this->_players[i]->getDirection(2))
-            this->_players[i]->getSpeed().y += 0.1f;
-        if (this->_players[i]->getDirection(3))
-            this->_players[i]->getSpeed().y += -0.1f;
-
+        if (this->_players[i]->getDirection(RIGHT))
+            this->_players[i]->getSpeed().x += 0.3f;
+        if (this->_players[i]->getDirection(LEFT))
+            this->_players[i]->getSpeed().x += -0.3f;
+        if (this->_players[i]->getDirection(UP))
+            this->_players[i]->getSpeed().y += 0.3f;
+        if (this->_players[i]->getDirection(DOWN))
+            this->_players[i]->getSpeed().y += -0.3f;
+        for (size_t j = 0; j < _map.size(); j++) {
+            if (CheckCollisionRecs(
+                CAST(Rectangle, _players[i]->getPos().x - 0.5f + (_players[i]->getDirection(RIGHT) ? 0.3f : _players[i]->getDirection(LEFT) ? -0.3f : 0.f),
+                    _players[i]->getPos().y - 0.5f + (_players[i]->getDirection(UP) ? 0.3f : _players[i]->getDirection(DOWN) ? -0.3f : 0.f), 1.f, 1.f),
+                CAST(Rectangle, _map[j]->getPos().x - 0.5f, _map[j]->getPos().y - 0.5f, 1.f, 1.f))) {
+                _players[i]->setSpeed(glm::vec3(0.f));
+                break;
+            }
+        }
         if (this->_players[i]->getSpeed() != glm::vec3(0.0f)) {
             this->_players[i]->move(this->_players[i]->getSpeed());
             Packet packet;
@@ -84,72 +92,27 @@ void GameScene::loadScene()
     packet << 0 << glm::vec3(0.f, 0.f, 20.f);
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
 }
-//printf("%f %f %f %f\n", _map[i]->getPos().x, _map[i]->getPos().y, _players[playerNb]->getPos().x, _players[playerNb]->getPos().y);
-bool GameScene::checkCollision(int playerNb, std::string direction, float ammount)
-{
-    if (direction == "MoveRight") {
-        for (size_t i = 0; i < _map.size(); i++) {
-            if (_players[playerNb]->getPos().x + ammount > _map[i]->getPos().x - 1.f &&
-                _players[playerNb]->getPos().x + ammount < _map[i]->getPos().x &&
-                _players[playerNb]->getPos().y > _map[i]->getPos().y - 1.f &&
-                _players[playerNb]->getPos().y < _map[i]->getPos().y + 1.f) {
-                return true;
-            }
-        }
-    }
-    else if (direction == "MoveLeft") {
-        for (size_t i = 0; i < _map.size(); i++) {
-        if (_players[playerNb]->getPos().x - ammount < _map[i]->getPos().x + 1.f &&
-            _players[playerNb]->getPos().x - ammount > _map[i]->getPos().x &&
-            _players[playerNb]->getPos().y > _map[i]->getPos().y - 1.f &&
-            _players[playerNb]->getPos().y < _map[i]->getPos().y + 1.f) {
-            return true;
-            }
-        }
-    }
-    else if (direction == "MoveUp") {
-        for (size_t i = 0; i < _map.size(); i++) {
-            if (_players[playerNb]->getPos().x > _map[i]->getPos().x - 1.f &&
-                _players[playerNb]->getPos().x < _map[i]->getPos().x + 1.f &&
-                _players[playerNb]->getPos().y + ammount > _map[i]->getPos().y - 1.f &&
-                _players[playerNb]->getPos().y + ammount < _map[i]->getPos().y) {
-                return true;
-            }
-        }
-    }
-    else if (direction == "MoveDown") {
-        for (size_t i = 0; i < _map.size(); i++) {
-            if (_players[playerNb]->getPos().x > _map[i]->getPos().x - 1.f &&
-                _players[playerNb]->getPos().x < _map[i]->getPos().x + 1.f &&
-                _players[playerNb]->getPos().y - ammount < _map[i]->getPos().y + 1.f &&
-                _players[playerNb]->getPos().y - ammount > _map[i]->getPos().y) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
 
 void GameScene::handleKeyPressed(int playerNb, std::string action)
 {
-    if (action == "MoveRight" && !checkCollision(playerNb, action, 0.1f))
-        this->_players[playerNb]->setDirection(0, true);
-    else if (action == "MoveLeft" && !checkCollision(playerNb, action, 0.1f))
-        this->_players[playerNb]->setDirection(1, true);
-    else if (action == "MoveUp" && !checkCollision(playerNb, action, 0.1f))
-        this->_players[playerNb]->setDirection(2, true);
-    else if (action == "MoveDown" && !checkCollision(playerNb, action, 0.1f))
-        this->_players[playerNb]->setDirection(3, true);
+    if (action == "MoveRight")
+        this->_players[playerNb]->setDirection(RIGHT, true);
+    else if (action == "MoveLeft")
+        this->_players[playerNb]->setDirection(LEFT, true);
+    else if (action == "MoveUp")
+        this->_players[playerNb]->setDirection(UP, true);
+    else if (action == "MoveDown")
+        this->_players[playerNb]->setDirection(DOWN, true);
 }
 
 void GameScene::handleKeyReleased(int playerNb, std::string action)
 {
     if (action == "MoveRight")
-        this->_players[playerNb]->setDirection(0, false);
+        this->_players[playerNb]->setDirection(RIGHT, false);
     else if (action == "MoveLeft")
-        this->_players[playerNb]->setDirection(1, false);
+        this->_players[playerNb]->setDirection(LEFT, false);
     else if (action == "MoveUp")
-        this->_players[playerNb]->setDirection(2, false);
+        this->_players[playerNb]->setDirection(UP, false);
     else if (action == "MoveDown")
-        this->_players[playerNb]->setDirection(3, false);
+        this->_players[playerNb]->setDirection(DOWN, false);
 }

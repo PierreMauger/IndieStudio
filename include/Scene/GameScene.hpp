@@ -19,12 +19,18 @@ namespace neo
 {
     class GameScene : public virtual IScene
     {
+        enum directions {
+            RIGHT,
+            LEFT,
+            UP,
+            DOWN
+        };
+
         private:
             std::shared_ptr<MessageBus> _messageBus;
             std::map<int, std::unique_ptr<Player>> _players;
             std::map<int, std::unique_ptr<Bomb>> _bombs;
             std::map<int, std::unique_ptr<Wall>> _map;
-            bool checkCollision(int playerNb, std::string direction, float ammount);
 
         public:
             GameScene(std::shared_ptr<MessageBus> messageBus);
