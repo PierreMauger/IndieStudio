@@ -14,19 +14,30 @@ neo::Player::Player(std::string name, glm::vec3 pos, glm::vec3 scale) : GameObje
     this->_speedUp = 0;
     this->_fireUp = 0;
     this->_wallPass = false;
+    for (int i = 0; i < 4; i++)
+        this->_direction[i] = false;
 }
 
-glm::vec3 neo::Player::getSpeed() const
+glm::vec3 &neo::Player::getSpeed()
 {
 	return this->_speed;
 }
 
-void neo::Player::addX(float val)
+void neo::Player::setSpeed(glm::vec3 speed)
 {
-	this->_speed.x += val;
+    this->_speed = speed;
 }
 
-void neo::Player::addY(float val)
+bool neo::Player::getDirection(int axis) const
 {
-	this->_speed.y += val;
+    if (axis < 0 || axis > 3)
+        return false;
+    return this->_direction[axis];
+}
+
+void neo::Player::setDirection(int axis, bool val)
+{
+    if (axis < 0 || axis > 3)
+        return;
+    this->_direction[axis] = val;
 }
