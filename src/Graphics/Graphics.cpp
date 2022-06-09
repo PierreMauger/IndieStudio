@@ -13,6 +13,7 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
     this->_functionTab.push_back(std::bind(&Graphics::receiveResourceList, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveLoad, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Graphics::receiveAdd, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveSetCameraPos, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveSetCameraNextPos, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveMove, this, std::placeholders::_1));
@@ -111,6 +112,25 @@ void Graphics::receiveLoad(Packet data)
     this->_objects.clear();
     this->_buttons.clear();
 
+    while (data.checkSize(1)) {
+        int id = 0;
+        int type = 0;
+        GameObject obj;
+
+        data >> type >> id >> obj;
+        if (type == 0 && this->_models.find(obj.getName()) != this->_models.end())
+            this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(obj, this->_models[obj.getName()]));
+        else if (type == 1 && this->_models.find(obj.getName()) != this->_models.end() && this->_animations.find(obj.getName()) != this->_animations.end())
+            this->_objects[id] = std::unique_ptr<GraphicObject>(new AnimatedModelObj(obj, this->_models[obj.getName()], this->_animations[obj.getName()]));
+        else if (type == 2)
+            this->_buttons[id] = std::unique_ptr<GraphicObject>(new RectangleObj(obj));
+        else if (type == 3)
+            this->_buttons[id] = std::unique_ptr<GraphicObject>(new SpriteObj(obj));
+    }
+}
+
+void Graphics::receiveAdd(Packet data)
+{
     while (data.checkSize(1)) {
         int id = 0;
         int type = 0;

@@ -44,6 +44,7 @@ namespace neo
 
             void receiveResourceList(Packet);
             void receiveLoad(Packet);
+            void receiveAdd(Packet);
             void receiveSetCameraPos(Packet);
             void receiveSetCameraNextPos(Packet);
             void receiveMove(Packet);
