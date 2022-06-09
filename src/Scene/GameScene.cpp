@@ -36,10 +36,15 @@ void GameScene::update()
         for (size_t j = 0; j < _map.size(); j++) {
             if (CheckCollisionRecs(
                 CAST(Rectangle, _players[i]->getPos().x - 0.5f + (_players[i]->getDirection(RIGHT) ? 0.3f : _players[i]->getDirection(LEFT) ? -0.3f : 0.f),
-                    _players[i]->getPos().y - 0.5f + (_players[i]->getDirection(UP) ? 0.3f : _players[i]->getDirection(DOWN) ? -0.3f : 0.f), 1.f, 1.f),
-                CAST(Rectangle, _map[j]->getPos().x - 0.5f, _map[j]->getPos().y - 0.5f, 1.f, 1.f))) {
-                _players[i]->setSpeed(glm::vec3(0.f));
-                break;
+                    _players[i]->getPos().y - 0.5f, 1.0f, 1.0f),
+                CAST(Rectangle, _map[j]->getPos().x - 0.5f, _map[j]->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                _players[i]->getSpeed().x = 0.0f;
+            }
+            if (CheckCollisionRecs(
+                CAST(Rectangle, _players[i]->getPos().x - 0.5f,
+                    _players[i]->getPos().y - 0.5f + (_players[i]->getDirection(UP) ? 0.3f : _players[i]->getDirection(DOWN) ? -0.3f : 0.f), 1.0f, 1.0f),
+                CAST(Rectangle, _map[j]->getPos().x - 0.5f, _map[j]->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                _players[i]->getSpeed().y = 0.0f;
             }
         }
         if (this->_players[i]->getSpeed() != glm::vec3(0.0f)) {
