@@ -18,8 +18,6 @@ Input::Input(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 
 void Input::run()
 {
-    SetTargetFPS(60);
-
     while (this->_running) {
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
         this->update();
@@ -53,28 +51,40 @@ void Input::checkInputStatus(int key, std::string action, int playerNb)
 
 void Input::checkKeyStatus(int key, std::string action, int playerNb)
 {
-    if (IsKeyPressed(key)) {
-        Packet data;
-        data << playerNb << action;
-        this->postMessage(Message(data, CoreCommand::KEY_PRESSED, Module::CORE));
+    if (IsKeyDown(key)) {
+        if (this->_configs[playerNb].getButtonInputs()[action] == false) {
+            Packet data;
+            data << playerNb << action;
+            this->postMessage(Message(data, CoreCommand::KEY_PRESSED, Module::CORE));
+            this->_configs[playerNb].getButtonInputs()[action] = true;
+        }
     }
-    if (IsKeyReleased(key)) {
-        Packet data;
-        data << playerNb << action;
-        this->postMessage(Message(data, CoreCommand::KEY_RELEASED, Module::CORE));
+    if (IsKeyUp(key)) {
+        if (this->_configs[playerNb].getButtonInputs()[action] == true) {
+            Packet data;
+            data << playerNb << action;
+            this->postMessage(Message(data, CoreCommand::KEY_RELEASED, Module::CORE));
+            this->_configs[playerNb].getButtonInputs()[action] = false;
+        }
     }
 }
 
 void Input::checkButtonStatus(int key, std::string action, int playerNb)
 {
     if (IsGamepadButtonPressed(0, key)) {
-        Packet data;
-        data << playerNb << action;
-        this->postMessage(Message(data, CoreCommand::KEY_PRESSED, Module::CORE));
+        if (this->_configs[playerNb].getButtonInputs()[action] == false) {
+            Packet data;
+            data << playerNb << action;
+            this->postMessage(Message(data, CoreCommand::KEY_PRESSED, Module::CORE));
+            this->_configs[playerNb].getButtonInputs()[action] = true;
+        }
     } else if (IsGamepadButtonReleased(0, key)) {
-        Packet data;
-        data << playerNb << action;
-        this->postMessage(Message(data, CoreCommand::KEY_RELEASED, Module::CORE));
+        if (this->_configs[playerNb].getButtonInputs()[action] == true) {
+            Packet data;
+            data << playerNb << action;
+            this->postMessage(Message(data, CoreCommand::KEY_RELEASED, Module::CORE));
+            this->_configs[playerNb].getButtonInputs()[action] = false;
+        }
     }
 }
 
@@ -99,15 +109,21 @@ void Input::checkJoystickStatus(int key, std::string action, int playerNb)
     if (i < 0)
         return;
     if (this->checkAxisStatus(0, key, action) && !this->_configs[playerNb].getAxisInputs()[i]) {
-        Packet data;
-        data << playerNb << action;
-        this->postMessage(Message(data, CoreCommand::KEY_PRESSED, Module::CORE));
-        this->_configs[playerNb].getAxisInputs()[i] = true;
+        if (this->_configs[playerNb].getButtonInputs()[action] == false) {
+            Packet data;
+            data << playerNb << action;
+            this->postMessage(Message(data, CoreCommand::KEY_PRESSED, Module::CORE));
+            this->_configs[playerNb].getButtonInputs()[action] = true;
+            this->_configs[playerNb].getAxisInputs()[i] = true;
+        }
     } else if (!this->checkAxisStatus(0, key, action) && this->_configs[playerNb].getAxisInputs()[i]) {
-        Packet data;
-        data << playerNb << action;
-        this->postMessage(Message(data, CoreCommand::KEY_RELEASED, Module::CORE));
-        this->_configs[playerNb].getAxisInputs()[i] = false;
+        if (this->_configs[playerNb].getButtonInputs()[action] == true) {
+            Packet data;
+            data << playerNb << action;
+            this->postMessage(Message(data, CoreCommand::KEY_RELEASED, Module::CORE));
+            this->_configs[playerNb].getButtonInputs()[action] = false;
+            this->_configs[playerNb].getAxisInputs()[i] = false;
+        }
     }
 }
 
