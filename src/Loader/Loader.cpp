@@ -15,9 +15,12 @@ Loader::Loader(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->sendResourceList();
 }
 
-void Loader::onNotify(Message message)
+void Loader::run()
 {
-    Packet data = message.getData();
+    while (this->_running) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        this->_messageBus->notify(Module::LOADER);
+    }
 }
 
 void Loader::sendPlayerConfig()

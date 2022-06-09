@@ -11,15 +11,6 @@ using namespace neo;
 
 Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    SetTraceLogLevel(LOG_NONE);
-    SetConfigFlags(FLAG_MSAA_4X_HINT);
-    InitWindow(1280, 720, "Neo");
-    SetTargetFPS(60);
-    glEnable(GL_DEPTH_TEST);
-    for (int i = 0; getMapping(i); i++)
-        SetGamepadMappings(getMapping(i));
-    this->_camera = std::unique_ptr<Camera>(new Camera());
-
     this->_functionTab = {
         std::bind(&Graphics::receiveResourceList, this, std::placeholders::_1),
         std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
@@ -32,29 +23,40 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 
 Graphics::~Graphics()
 {
-    CloseWindow();
-    for (auto &object : this->_objects)
-        object.second.reset();
-    for (auto &button : this->_buttons)
-        button.second.reset();
-    for (auto &model : this->_models)
-        model.second.reset();
-    for (auto &animation : this->_animations)
-        animation.second.reset();
-    this->_objects.clear();
-    this->_buttons.clear();
-    this->_models.clear();
-    this->_animations.clear();
-    this->_camera.reset();
+//     CloseWindow();
+//     for (auto &object : this->_objects)
+//         object.second.reset();
+//     for (auto &button : this->_buttons)
+//         button.second.reset();
+//     for (auto &model : this->_models)
+//         model.second.reset();
+//     for (auto &animation : this->_animations)
+//         animation.second.reset();
+//     this->_objects.clear();
+//     this->_buttons.clear();
+//     this->_models.clear();
+//     this->_animations.clear();
+//     this->_camera.reset();
 }
 
-void Graphics::onNotify(Message message)
+void Graphics::run()
 {
-    Packet data = message.getData();
-    int status = message.getStatus();
+    SetTraceLogLevel(LOG_NONE);
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
+    InitWindow(1280, 720, "Neo");
+    SetTargetFPS(60);
+    glEnable(GL_DEPTH_TEST);
+    for (int i = 0; getMapping(i); i++)
+        SetGamepadMappings(getMapping(i));
+    this->_camera = std::unique_ptr<Camera>(new Camera());
 
-    if (status >= 0 && status < this->_functionTab.size())
-        this->_functionTab[status](data);
+    while (this->_running) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        this->draw();
+        this->_messageBus->notify(Module::GRAPHICS);
+        // if (WindowShouldClose())
+            // this->_running = false;
+    }
 }
 
 void Graphics::draw()

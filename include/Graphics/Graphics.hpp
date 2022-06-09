@@ -36,7 +36,7 @@ namespace neo
             ~Graphics();
 
             // Node functions
-            void onNotify(Message);
+            void run();
 
             // Interface functions
             void draw();

@@ -16,13 +16,15 @@ Input::Input(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     };
 }
 
-void Input::onNotify(Message message)
+void Input::run()
 {
-    Packet data = message.getData();
-    int status = message.getStatus();
+    SetTargetFPS(60);
 
-    if (status >= 0 && status < this->_functionTab.size())
-        this->_functionTab[status](data);
+    while (this->_running) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        this->update();
+        this->_messageBus->notify(Module::INPUT);
+    }
 }
 
 void Input::update()

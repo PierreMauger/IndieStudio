@@ -48,6 +48,7 @@ set(INC
 
 #fetch source files
 set(SRC
+  src/Communication/SafeQueue.cpp
   src/Communication/Packet.cpp
   src/Communication/Message.cpp
   src/Communication/MessageBus.cpp

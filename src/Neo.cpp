@@ -17,15 +17,20 @@ _core(_messageBus),
 _graphics(_messageBus),
 _input(_messageBus)
 {
+    this->_running = true;
 }
 
 void Neo::run()
 {
-    while (!WindowShouldClose()) {
-        this->_input.update();
-        this->_core.update();
-        this->_graphics.draw();
+    std::thread audioThread(&Audio::run, &this->_audio);
+    std::thread loaderThread(&Loader::run, &this->_loader);
+    std::thread coreThread(&Core::run, &this->_core);
+    std::thread graphicsThread(&Graphics::run, &this->_graphics);
+    std::thread inputThread(&Input::run, &this->_input);
 
-        this->_messageBus->notify();
-    }
+    audioThread.join();
+    loaderThread.join();
+    coreThread.join();
+    graphicsThread.join();
+    inputThread.join();
 }

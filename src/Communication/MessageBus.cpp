@@ -12,25 +12,28 @@ using namespace neo;
 void MessageBus::addReceiver(std::function<void(Message)> messageReceiver)
 {
     this->_functionList.push_back(messageReceiver);
+    this->_queue.push_back(SafeQueue());
 }
 
 void MessageBus::sendMessage(Message message)
 {
-    this->_messageQueue.push(message);
+    this->_queue[message.getTarget()].push(message);
 }
 
-void MessageBus::notify()
+void MessageBus::notify(Module module)
 {
-    while (!this->_messageQueue.empty()) {
-        int target = this->_messageQueue.front().getTarget();
+    SafeQueue &queue = this->_queue[(int)module];
+    auto &function = this->_functionList[(int)module];
+
+    while (queue.size() != 0) {
+        int target = queue.front().getTarget();
         // Broadcast message, else send to target
         if (target == -1) {
-            for (auto &function : this->_functionList)
-                function(this->_messageQueue.front());
+            function(queue.front());
+            queue.pop();
         } else {
-            if (target < this->_functionList.size())
-                this->_functionList[target](this->_messageQueue.front());
+            function(queue.front());
+            queue.pop();
         }
-        this->_messageQueue.pop();
     }
 }

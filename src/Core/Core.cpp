@@ -28,13 +28,13 @@ Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     };
 }
 
-void Core::onNotify(Message message)
+void Core::run()
 {
-    Packet data = message.getData();
-    int status = message.getStatus();
-
-    if (status >= 0 && status < this->_functionTab.size())
-        this->_functionTab[status](data);
+    while (this->_running) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        this->update();
+        this->_messageBus->notify(Module::CORE);
+    }
 }
 
 void Core::update()

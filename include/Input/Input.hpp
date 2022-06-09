@@ -24,7 +24,7 @@ namespace neo
             ~Input() = default;
 
             // Node functions
-            void onNotify(Message);
+            void run();
 
             // Interface functions
             void update();

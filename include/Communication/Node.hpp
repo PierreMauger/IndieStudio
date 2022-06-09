@@ -20,10 +20,12 @@ namespace neo
         protected:
             std::shared_ptr<MessageBus> _messageBus;
             std::vector<std::function<void(Packet)>> _functionTab;
+            bool _running;
 
             std::function<void(Message)> getNotify();
             void postMessage(Message);
-            virtual void onNotify(Message) = 0;
+            void onNotify(Message);
+            virtual void run() = 0;
 
         public:
             Node(std::shared_ptr<MessageBus> messageBus);
