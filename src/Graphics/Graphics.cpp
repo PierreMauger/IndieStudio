@@ -141,10 +141,16 @@ void Graphics::receiveAdd(Packet data)
             this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(obj, this->_models[obj.getName()]));
         else if (type == 1 && this->_models.find(obj.getName()) != this->_models.end() && this->_animations.find(obj.getName()) != this->_animations.end())
             this->_objects[id] = std::unique_ptr<GraphicObject>(new AnimatedModelObj(obj, this->_models[obj.getName()], this->_animations[obj.getName()]));
-        else if (type == 2)
-            this->_buttons[id] = std::unique_ptr<GraphicObject>(new RectangleObj(obj));
-        else if (type == 3)
-            this->_buttons[id] = std::unique_ptr<GraphicObject>(new SpriteObj(obj));
+    }
+}
+
+void Graphics::receiveDelete(Packet data)
+{
+    while (data.checkSize(1)) {
+        int id = 0;
+        data >> id;
+        if (this->_objects.find(id) != this->_objects.end())
+            this->_objects.erase(id);
     }
 }
 
