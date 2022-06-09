@@ -33,18 +33,24 @@ void GameScene::update()
             this->_players[i]->getSpeed().y += 0.3f;
         if (this->_players[i]->getDirection(DOWN))
             this->_players[i]->getSpeed().y += -0.3f;
-        for (size_t j = 0; j < _map.size(); j++) {
+        for (size_t j = 0; j < this->_map.size(); j++) {
             if (CheckCollisionRecs(
-                CAST(Rectangle, _players[i]->getPos().x - 0.5f + (_players[i]->getDirection(RIGHT) ? 0.3f : _players[i]->getDirection(LEFT) ? -0.3f : 0.f),
-                    _players[i]->getPos().y - 0.5f, 1.0f, 1.0f),
-                CAST(Rectangle, _map[j]->getPos().x - 0.5f, _map[j]->getPos().y - 0.5f, 1.0f, 1.0f))) {
-                _players[i]->getSpeed().x = 0.0f;
+                CAST(Rectangle, this->_players[i]->getPos().x - 0.5f + this->_players[i]->getSpeed().x,
+                    this->_players[i]->getPos().y - 0.5f, 1.0f, 1.0f),
+                CAST(Rectangle, this->_map[j]->getPos().x - 0.5f, this->_map[j]->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                this->_players[i]->getSpeed().x = 0.0f;
             }
             if (CheckCollisionRecs(
-                CAST(Rectangle, _players[i]->getPos().x - 0.5f,
-                    _players[i]->getPos().y - 0.5f + (_players[i]->getDirection(UP) ? 0.3f : _players[i]->getDirection(DOWN) ? -0.3f : 0.f), 1.0f, 1.0f),
-                CAST(Rectangle, _map[j]->getPos().x - 0.5f, _map[j]->getPos().y - 0.5f, 1.0f, 1.0f))) {
-                _players[i]->getSpeed().y = 0.0f;
+                CAST(Rectangle, this->_players[i]->getPos().x - 0.5f,
+                    this->_players[i]->getPos().y - 0.5f + this->_players[i]->getSpeed().y, 1.0f, 1.0f),
+                CAST(Rectangle, this->_map[j]->getPos().x - 0.5f, this->_map[j]->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                this->_players[i]->getSpeed().y = 0.0f;
+            }
+            if (_players[i]->getSpeed().x && this->_players[i]->getSpeed().y && CheckCollisionRecs(
+                CAST(Rectangle, this->_players[i]->getPos().x - 0.5f + this->_players[i]->getSpeed().x,
+                    this->_players[i]->getPos().y - 0.5f + this->_players[i]->getSpeed().y, 1.0f, 1.0f),
+                CAST(Rectangle, this->_map[j]->getPos().x - 0.5f, this->_map[j]->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                this->_players[i]->getSpeed().y = 0.0f;
             }
         }
         if (this->_players[i]->getSpeed() != glm::vec3(0.0f)) {
