@@ -14,6 +14,9 @@ Node::Node(std::shared_ptr<MessageBus> messageBus)
     this->_messageBus = messageBus;
     this->_messageBus->addReceiver(this->getNotify());
     this->_running = true;
+    this->_functionTab = {
+        std::bind(&Node::receiveQuit, this, std::placeholders::_1),
+    };
 }
 
 std::function<void(Message)> Node::getNotify()
@@ -36,4 +39,9 @@ void Node::onNotify(Message message)
 
     if (status >= 0 && status < this->_functionTab.size())
         this->_functionTab[status](data);
+}
+
+void Node::receiveQuit(Packet data)
+{
+    this->_running = false;
 }

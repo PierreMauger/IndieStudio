@@ -25,6 +25,7 @@ namespace neo
     {
         public:
             enum {
+                QUIT,
                 LAST
             };
     };

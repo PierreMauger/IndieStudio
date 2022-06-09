@@ -27,6 +27,13 @@ namespace neo
         };
 
         private:
+            std::vector<std::string> generateProceduralMap(std::size_t nb_player, std::size_t x, std::size_t y);
+            std::vector<std::string> generateCornerMap(std::size_t x, std::size_t y);
+            std::vector<std::string> copySymmetrical(std::size_t nb_player, std::vector<std::string>);
+            void forcePathX(std::vector<std::string> &map, std::pair<int, int> curr, std::size_t y, std::size_t x);
+            void forcePathY(std::vector<std::string> &map, std::pair<int, int> curr, std::size_t y, std::size_t x);
+            bool findPathX(std::vector<std::string> map, std::pair<int, int> curr, std::size_t y, std::size_t x);
+            bool findPathY(std::vector<std::string> map, std::pair<int, int> curr, std::size_t y, std::size_t x);
             std::shared_ptr<MessageBus> _messageBus;
             std::map<int, std::unique_ptr<Player>> _players;
             std::map<int, std::unique_ptr<Bomb>> _bombs;
@@ -35,6 +42,9 @@ namespace neo
         public:
             GameScene(std::shared_ptr<MessageBus> messageBus);
             ~GameScene();
+
+            // Overload operator
+            friend std::string operator*(const std::string &chr, const std::size_t size);
 
             // Interface functions
             void update();
