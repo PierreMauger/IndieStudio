@@ -19,6 +19,13 @@ namespace neo
 {
     class GameScene : public virtual IScene
     {
+        enum directions {
+            RIGHT,
+            LEFT,
+            UP,
+            DOWN
+        };
+
         private:
             std::shared_ptr<MessageBus> _messageBus;
             std::map<int, std::unique_ptr<Player>> _players;
