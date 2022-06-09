@@ -60,19 +60,7 @@ void GameScene::update()
 
 void GameScene::loadScene()
 {
-    const std::vector<std::string> tmpMap = {
-                {"###########"},
-                {"#0 WWWWW  #"},
-                {"# W#W#W#W #"},
-                {"#WWWWWWWWW#"},
-                {"##W#W#W#W##"},
-                {"#WWWWWWWWW#"},
-                {"##W#W#W#W##"},
-                {"#WWWWWWWWW#"},
-                {"# W#W#W#W #"},
-                {"#  WWWWW 1#"},
-                {"###########"}
-    };
+    const std::vector<std::string> tmpMap = generateProceduralMap(3, 20, 20);
     Packet packet;
     int incrementor = 0;
 
@@ -127,4 +115,118 @@ void GameScene::handleKeyReleased(int playerNb, std::string action)
         this->_players[playerNb]->setDirection(UP, false);
     else if (action == "MoveDown")
         this->_players[playerNb]->setDirection(DOWN, false);
+}
+
+std::string operator*(std::string const &chr, const std::size_t size)
+{
+    std::string str = chr;
+
+    for (size_t i = 1; i != size; i++)
+        str += chr;
+    return str;
+}
+
+std::vector<std::string> GameScene::copySymmetrical(std::size_t nb_player, std::vector<std::string> map)
+{
+    std::size_t max_y = map.size();
+
+    for (auto &m : map)
+        m += std::string(m.rbegin(), m.rend());
+    for (std::size_t i = max_y - 1; i != -1; i--)
+        map.push_back(map[i]);
+    return map;
+}
+
+bool GameScene::findPathX(std::vector<std::string> map, std::pair<int, int> curr, std::size_t y, std::size_t x)
+{
+    if (curr.first == x - 1 && map[curr.second][curr.first] == 'W')
+        return true;
+    if (map[curr.second][curr.first] == '#' || map[curr.second][curr.first] == 't')
+        return false;
+    map[curr.second][curr.first] = 't';
+    if (curr.first != x - 1)
+        if (findPathX(map, {curr.first + 1, curr.second}, y, x) == 1)
+            return true;
+    if (curr.second != y - 1)
+        if (findPathX(map, {curr.first, curr.second + 1}, y, x) == 1)
+            return true;
+    if (curr.first != 0)
+        if (findPathX(map, {curr.first - 1, curr.second}, y, x) == 1)
+            return true;
+    if (curr.second != 0)
+        if (findPathX(map, {curr.first, curr.second - 1}, y, x) == 1)
+            return true;
+    return false;
+}
+
+bool GameScene::findPathY(std::vector<std::string> map, std::pair<int, int> curr, std::size_t y, std::size_t x)
+{
+    if (curr.second == y - 1 && map[curr.second][curr.first] == 'W')
+        return true;
+    if (map[curr.second][curr.first] == '#' || map[curr.second][curr.first] == 't')
+        return false;
+    map[curr.second][curr.first] = 't';
+    if (curr.first != x - 1)
+        if (findPathY(map, {curr.first + 1, curr.second}, y, x) == 1)
+            return true;
+    if (curr.second != y - 1)
+        if (findPathY(map, {curr.first, curr.second + 1}, y, x) == 1)
+            return true;
+    if (curr.first != 0)
+        if (findPathY(map, {curr.first - 1, curr.second}, y, x) == 1)
+            return true;
+    if (curr.second != 0)
+        if (findPathY(map, {curr.first, curr.second - 1}, y, x) == 1)
+            return true;
+    return false;
+}
+
+std::vector<std::string> GameScene::generateCornerMap(std::size_t x, std::size_t y)
+{
+    std::vector<std::string> new_map;
+    float random = 0;
+
+    new_map.resize(x);
+    for (size_t i = 0; i != x; i++) {
+        new_map[i].resize(y);
+        for (size_t n = 0; n != y; n++) {
+            random = std::rand() % 10;
+            if (random <= 6)
+                new_map[i][n] = 'W';
+            else
+                new_map[i][n] = '#';
+        }
+        new_map[i][y] = '\0';
+    }
+    new_map[0][0] = 'W';
+    new_map[0][1] = 'W';
+    new_map[1][0] = 'W';
+    if (!findPathY(new_map, {0, 0}, y, x))
+        return (generateCornerMap(x, y));
+    if (!findPathX(new_map, {0, 0}, y, x))
+        return (generateCornerMap(x, y));
+    new_map[0][0] = ' ';
+    new_map[0][1] = ' ';
+    new_map[1][0] = ' ';
+    return new_map;
+}
+
+std::vector<std::string> GameScene::generateProceduralMap(std::size_t nb_player, std::size_t x, std::size_t y)
+{
+    std::vector<std::string> map = generateCornerMap(x / 2 - 1, y / 2 - 1);
+
+    map = copySymmetrical(nb_player, map);
+    for (auto &m : map) {
+        m.insert(m.begin(), '#');
+        m.push_back('#');
+    }
+    map.insert(map.begin(), std::string("#") * x);
+    map.push_back(std::string("#") * x);
+    map[1][1] = 0 + '0';
+    map[x - 2][y - 2] = 1 + '0';
+    if (nb_player > 2)
+        map[1][y - 2] = 2 + '0';
+    if (nb_player > 3)
+        map[x - 2][1] = 3 + '0';
+    return map;
 }

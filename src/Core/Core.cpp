@@ -14,7 +14,7 @@ using namespace neo;
 
 Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    this->_currentScene = 0;
+    this->_currentScene = 2;
 
     this->_scenes.push_back(std::make_unique<MenuScene>(this->_messageBus));
     this->_scenes.push_back(std::make_unique<ConfigScene>(this->_messageBus));

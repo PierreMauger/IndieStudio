@@ -134,7 +134,7 @@ void getPlayers(std::vector<player_t> &players)
 void draw(std::vector<player_t> &players, std::vector<bomb_t> &bombs)
 {
     Vector2 pos = { 0, 0 };
-    
+
     for (size_t i = 0; i < map.size(); i++) {
         for (size_t j = 0; j < map[i].size(); j++) {
             checkEntities(i, j, pos, players, bombs);
@@ -182,6 +182,7 @@ int main(int argc, char **argv)
 {
     neo::Neo neo;
 
+    std::srand(std::time(nullptr));
     neo.run();
     //test();
     return 0;
