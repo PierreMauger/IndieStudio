@@ -46,7 +46,7 @@ void GameScene::update()
                 CAST(Rectangle, this->_map[j]->getPos().x - 0.5f, this->_map[j]->getPos().y - 0.5f, 1.0f, 1.0f))) {
                 this->_players[i]->getSpeed().y = 0.0f;
             }
-            if (_players[i]->getSpeed().x && this->_players[i]->getSpeed().y && CheckCollisionRecs(
+            if (this->_players[i]->getSpeed().x && this->_players[i]->getSpeed().y && CheckCollisionRecs(
                 CAST(Rectangle, this->_players[i]->getPos().x - 0.5f + this->_players[i]->getSpeed().x,
                     this->_players[i]->getPos().y - 0.5f + this->_players[i]->getSpeed().y, 1.0f, 1.0f),
                 CAST(Rectangle, this->_map[j]->getPos().x - 0.5f, this->_map[j]->getPos().y - 0.5f, 1.0f, 1.0f))) {
