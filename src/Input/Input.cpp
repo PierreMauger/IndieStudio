@@ -11,9 +11,7 @@ using namespace neo;
 
 Input::Input(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    this->_functionTab = {
-        std::bind(&Input::receiveKeyConfig, this, std::placeholders::_1),
-    };
+    this->_functionTab.push_back(std::bind(&Input::receiveKeyConfig, this, std::placeholders::_1));
 }
 
 void Input::run()

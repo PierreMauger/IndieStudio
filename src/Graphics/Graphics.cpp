@@ -11,32 +11,29 @@ using namespace neo;
 
 Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    this->_functionTab = {
-        std::bind(&Graphics::receiveResourceList, this, std::placeholders::_1),
-        std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
-        std::bind(&Graphics::receiveSetCameraPos, this, std::placeholders::_1),
-        std::bind(&Graphics::receiveSetCameraNextPos, this, std::placeholders::_1),
-        std::bind(&Graphics::receiveMove, this, std::placeholders::_1),
-        std::bind(&Graphics::receiveSelectButton, this, std::placeholders::_1),
-    };
+    this->_functionTab.push_back(std::bind(&Graphics::receiveResourceList, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Graphics::receiveLoad, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Graphics::receiveSetCameraPos, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Graphics::receiveSetCameraNextPos, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Graphics::receiveMove, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Graphics::receiveSelectButton, this, std::placeholders::_1));
 }
 
 Graphics::~Graphics()
 {
-//     CloseWindow();
-//     for (auto &object : this->_objects)
-//         object.second.reset();
-//     for (auto &button : this->_buttons)
-//         button.second.reset();
-//     for (auto &model : this->_models)
-//         model.second.reset();
-//     for (auto &animation : this->_animations)
-//         animation.second.reset();
-//     this->_objects.clear();
-//     this->_buttons.clear();
-//     this->_models.clear();
-//     this->_animations.clear();
-//     this->_camera.reset();
+    for (auto &object : this->_objects)
+        object.second.reset();
+    for (auto &button : this->_buttons)
+        button.second.reset();
+    for (auto &model : this->_models)
+        model.second.reset();
+    for (auto &animation : this->_animations)
+        animation.second.reset();
+    this->_objects.clear();
+    this->_buttons.clear();
+    this->_models.clear();
+    this->_animations.clear();
+    this->_camera.reset();
 }
 
 void Graphics::run()
@@ -54,9 +51,10 @@ void Graphics::run()
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
         this->draw();
         this->_messageBus->notify(Module::GRAPHICS);
-        // if (WindowShouldClose())
-            // this->_running = false;
+        if (WindowShouldClose())
+            this->_messageBus->sendMessage(Message(Packet(), BaseCommand::QUIT, Module::BROADCAST));
     }
+    CloseWindow();
 }
 
 void Graphics::draw()

@@ -17,7 +17,12 @@ void MessageBus::addReceiver(std::function<void(Message)> messageReceiver)
 
 void MessageBus::sendMessage(Message message)
 {
-    this->_queue[message.getTarget()].push(message);
+    if (message.getTarget() == (int)Module::BROADCAST) {
+        for (auto &queue : this->_queue)
+            queue.push(message);
+    } else {
+        this->_queue[message.getTarget()].push(message);
+    }
 }
 
 void MessageBus::notify(Module module)

@@ -27,6 +27,8 @@ namespace neo
             void onNotify(Message);
             virtual void run() = 0;
 
+            void receiveQuit(Packet);
+
         public:
             Node(std::shared_ptr<MessageBus> messageBus);
             virtual ~Node() = default;

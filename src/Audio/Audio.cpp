@@ -13,22 +13,18 @@ Audio::Audio(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
     // if (IsAudioDeviceReady() == false)
         // TODO
-    this->_functionTab = {
-        std::bind(&Audio::receivedLoadSounds, this, std::placeholders::_1),
-        std::bind(&Audio::receivedLoadMusics, this, std::placeholders::_1),
-        std::bind(&Audio::receivedPlaySound, this, std::placeholders::_1),
-        std::bind(&Audio::receivedPlayMusic, this, std::placeholders::_1),
-        std::bind(&Audio::receivedPauseMusic, this, std::placeholders::_1),
-        std::bind(&Audio::receivedResumeMusic, this, std::placeholders::_1),
-        std::bind(&Audio::receivedStopMusic, this, std::placeholders::_1),
-    };
+    this->_functionTab.push_back(std::bind(&Audio::receivedLoadSounds, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Audio::receivedLoadMusics, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Audio::receivedPlaySound, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Audio::receivedPlayMusic, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Audio::receivedPauseMusic, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Audio::receivedResumeMusic, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Audio::receivedStopMusic, this, std::placeholders::_1));
 }
 
 Audio::~Audio()
 {
     this->_sounds.clear();
-    if (IsAudioDeviceReady() == true)
-        CloseAudioDevice();
 }
 
 void Audio::run()
@@ -40,6 +36,8 @@ void Audio::run()
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
         this->_messageBus->notify(Module::AUDIO);
     }
+    if (IsAudioDeviceReady() == true)
+        CloseAudioDevice();
 }
 
 void Audio::receivedLoadSounds(Packet packet)
