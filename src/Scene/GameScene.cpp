@@ -75,11 +75,11 @@ void GameScene::loadScene()
         for (int j = 0; j < tmpMap[i].size(); j++) {
             glm::vec3 pos(i - ((float)tmpMap[i].size() - 1) / 2, -j + ((float)tmpMap.size() - 1) / 2, 0.f);
             if (tmpMap[i][j] == '#')
-                _map[mapId++] = std::make_unique<Wall>("Block", pos, false, glm::vec3(0.5f));
+                this->_map[mapId++] = std::make_unique<Wall>("Block", pos, false, glm::vec3(0.5f));
             if (tmpMap[i][j] == 'W')
-                _map[mapId++] = std::make_unique<Wall>("Wall", pos, true, glm::vec3(0.5f));
+                this->_map[mapId++] = std::make_unique<Wall>("Wall", pos, true, glm::vec3(0.5f));
             if (tmpMap[i][j] >= '0' && tmpMap[i][j] <= '9')
-                _players[tmpMap[i][j] - '0'] = std::make_unique<Player>("RoboCat", pos, glm::vec3(0.5f));
+                this->_players[tmpMap[i][j] - '0'] = std::make_unique<Player>("RoboCat", pos, glm::vec3(0.5f));
         }
     }
     for (auto& player : this->_players)
@@ -89,12 +89,17 @@ void GameScene::loadScene()
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
     packet.clear();
-    packet << 0 << glm::vec3(0.f, 0.f, 20.f);
+    packet << 0 << glm::vec3(0.0f, 0.0f, 50.0f);
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
+    packet.clear();
+    packet << 1;
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_NEXT_POS, Module::GRAPHICS));
 }
 
 void GameScene::handleKeyPressed(int playerNb, std::string action)
 {
+    if (this->_players.find(playerNb) == this->_players.end())
+        return;
     if (action == "MoveRight")
         this->_players[playerNb]->setDirection(RIGHT, true);
     else if (action == "MoveLeft")
@@ -107,6 +112,8 @@ void GameScene::handleKeyPressed(int playerNb, std::string action)
 
 void GameScene::handleKeyReleased(int playerNb, std::string action)
 {
+    if (this->_players.find(playerNb) == this->_players.end())
+        return;
     if (action == "MoveRight")
         this->_players[playerNb]->setDirection(RIGHT, false);
     else if (action == "MoveLeft")

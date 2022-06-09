@@ -34,6 +34,11 @@ std::map<std::string, int> &PlayerConfig::getControllerConfig()
     return this->_controllerConfig;
 }
 
+std::map<std::string, bool> &PlayerConfig::getButtonInputs()
+{
+    return this->_buttonInputs;
+}
+
 std::vector<bool> &PlayerConfig::getAxisInputs()
 {
     return this->_axisInputs;
@@ -47,6 +52,8 @@ bool PlayerConfig::getMode() const
 void PlayerConfig::setKeyboardConfig(std::map<std::string, int> config)
 {
     this->_keyboardConfig = config;
+    for (auto &conf : this->_keyboardConfig)
+        this->_buttonInputs[conf.first] = false;
 }
 
 void PlayerConfig::setControllerConfig(std::map<std::string, int> config)

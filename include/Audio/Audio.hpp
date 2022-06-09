@@ -25,7 +25,7 @@ namespace neo
             ~Audio();
 
             // Node functions
-            void onNotify(Message);
+            void run();
 
             // Interface functions
             void receivedLoadSounds(Packet);

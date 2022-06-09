@@ -27,7 +27,7 @@ namespace neo
             ~Core() = default;
 
             // Node functions
-            void onNotify(Message);
+            void run();
 
             // Interface functions
             void update();

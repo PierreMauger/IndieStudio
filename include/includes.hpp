@@ -19,6 +19,9 @@
     #include <string>
     #include <cstring>
     #include <cstddef>
-    #include "raylib.h"
+    #include <thread>
+    #include <mutex>
+    #include <chrono>
+    #include <raylib.h>
 
 #endif // INCLUDES_HPP

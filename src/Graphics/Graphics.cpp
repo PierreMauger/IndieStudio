@@ -11,15 +11,6 @@ using namespace neo;
 
 Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    SetTraceLogLevel(LOG_NONE);
-    SetConfigFlags(FLAG_MSAA_4X_HINT);
-    InitWindow(1280, 720, "Neo");
-    SetTargetFPS(60);
-    glEnable(GL_DEPTH_TEST);
-    for (int i = 0; getMapping(i); i++)
-        SetGamepadMappings(getMapping(i));
-    this->_camera = std::unique_ptr<Camera>(new Camera());
-
     this->_functionTab = {
         std::bind(&Graphics::receiveResourceList, this, std::placeholders::_1),
         std::bind(&Graphics::receiveLoad, this, std::placeholders::_1),
@@ -32,29 +23,40 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 
 Graphics::~Graphics()
 {
-    CloseWindow();
-    for (auto &object : this->_objects)
-        object.second.reset();
-    for (auto &button : this->_buttons)
-        button.second.reset();
-    for (auto &model : this->_models)
-        model.second.reset();
-    for (auto &animation : this->_animations)
-        animation.second.reset();
-    this->_objects.clear();
-    this->_buttons.clear();
-    this->_models.clear();
-    this->_animations.clear();
-    this->_camera.reset();
+//     CloseWindow();
+//     for (auto &object : this->_objects)
+//         object.second.reset();
+//     for (auto &button : this->_buttons)
+//         button.second.reset();
+//     for (auto &model : this->_models)
+//         model.second.reset();
+//     for (auto &animation : this->_animations)
+//         animation.second.reset();
+//     this->_objects.clear();
+//     this->_buttons.clear();
+//     this->_models.clear();
+//     this->_animations.clear();
+//     this->_camera.reset();
 }
 
-void Graphics::onNotify(Message message)
+void Graphics::run()
 {
-    Packet data = message.getData();
-    int status = message.getStatus();
+    SetTraceLogLevel(LOG_NONE);
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
+    InitWindow(1280, 720, "Neo");
+    SetTargetFPS(60);
+    glEnable(GL_DEPTH_TEST);
+    for (int i = 0; getMapping(i); i++)
+        SetGamepadMappings(getMapping(i));
+    this->_camera = std::unique_ptr<Camera>(new Camera());
 
-    if (status >= 0 && status < this->_functionTab.size())
-        this->_functionTab[status](data);
+    while (this->_running) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        this->draw();
+        this->_messageBus->notify(Module::GRAPHICS);
+        // if (WindowShouldClose())
+            // this->_running = false;
+    }
 }
 
 void Graphics::draw()
@@ -70,6 +72,21 @@ void Graphics::draw()
     for (auto &button : this->_buttons)
         button.second->draw(*this->_camera);
     EndDrawing();
+}
+
+float Graphics::getHeightOnMap()
+{
+    float x = 0.0f;
+    float y = 0.0f;
+
+    for (auto &object : this->_objects) {
+        if (object.second->getPos().x > x)
+            x = object.second->getPos().x;
+        if (object.second->getPos().y > y)
+            y = object.second->getPos().y;
+    }
+    y *= (float)GetScreenHeight() / (float)GetScreenWidth();
+    return ((x > y ? x : y) + 1) / glm::tan(glm::radians(45.0f / 2.0f));
 }
 
 void Graphics::receiveResourceList(Packet data)
@@ -119,20 +136,25 @@ void Graphics::receiveSetCameraPos(Packet data)
     int type;
     data >> type >> pos;
 
-    if (type == 0) {
+    if (type == 0)
         this->_camera->setRotating(false);
-    } else {
+    else
         this->_camera->setRotating(true);
-    }
     this->_camera->setPos(pos);
 }
 
 void Graphics::receiveSetCameraNextPos(Packet data)
 {
     glm::vec3 nextPos, nextFront;
-    data >> nextPos >> nextFront;
+    int type;
 
-    this->_camera->setMovement(nextPos, nextFront);
+    data >> type;
+    if (type == 0) {
+        data >> nextPos >> nextFront;
+        this->_camera->setMovement(nextPos, nextFront);
+    } else {
+        this->_camera->setMovement(glm::vec3(0.0f, 0.0f, this->getHeightOnMap()), glm::vec3(0.0f));
+    }
 }
 
 void Graphics::receiveMove(Packet data)

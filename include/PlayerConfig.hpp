@@ -19,6 +19,7 @@ namespace neo
             std::map<std::string, int> _keyboardConfig;
             std::map<std::string, int> _controllerConfig;
             std::vector<bool> _axisInputs;
+            std::map<std::string, bool> _buttonInputs;
 
         public:
             PlayerConfig();
@@ -27,6 +28,7 @@ namespace neo
             std::map<std::string, int> &getActConfig();
             std::map<std::string, int> &getKeyboardConfig();
             std::map<std::string, int> &getControllerConfig();
+            std::map<std::string, bool> &getButtonInputs();
             std::vector<bool> &getAxisInputs();
             bool getMode() const;
 

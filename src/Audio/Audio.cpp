@@ -11,9 +11,6 @@ using namespace neo;
 
 Audio::Audio(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    SetTraceLogLevel(LOG_NONE);
-    InitAudioDevice();
-
     // if (IsAudioDeviceReady() == false)
         // TODO
     this->_functionTab = {
@@ -34,13 +31,15 @@ Audio::~Audio()
         CloseAudioDevice();
 }
 
-void Audio::onNotify(Message message)
+void Audio::run()
 {
-    Packet data = message.getData();
-    int status = message.getStatus();
+    SetTraceLogLevel(LOG_NONE);
+    InitAudioDevice();
 
-    if (status >= 0 && status < this->_functionTab.size())
-        this->_functionTab[status](data);
+    while (this->_running) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        this->_messageBus->notify(Module::AUDIO);
+    }
 }
 
 void Audio::receivedLoadSounds(Packet packet)
