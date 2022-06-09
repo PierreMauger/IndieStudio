@@ -10,6 +10,7 @@
 
     #include "includes.hpp"
     #include "Message.hpp"
+    #include "SafeQueue.hpp"
 
 namespace neo
 {
@@ -17,11 +18,12 @@ namespace neo
     {
         private:
             std::vector<std::function<void(Message)>> _functionList;
-            std::queue<Message> _messageQueue;
+            std::vector<SafeQueue> _queue;
 
         public:
             void addReceiver(std::function<void(Message)>);
-            void notify();
+            // void notify();
+            void notify(Module module);
             void sendMessage(Message);
     };
 }

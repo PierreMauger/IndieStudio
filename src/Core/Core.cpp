@@ -14,7 +14,7 @@ using namespace neo;
 
 Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    this->_currentScene = 2;
+    this->_currentScene = 0;
 
     this->_scenes.push_back(std::make_unique<MenuScene>(this->_messageBus));
     this->_scenes.push_back(std::make_unique<ConfigScene>(this->_messageBus));
@@ -28,13 +28,13 @@ Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     };
 }
 
-void Core::onNotify(Message message)
+void Core::run()
 {
-    Packet data = message.getData();
-    int status = message.getStatus();
-
-    if (status >= 0 && status < this->_functionTab.size())
-        this->_functionTab[status](data);
+    while (this->_running) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        this->update();
+        this->_messageBus->notify(Module::CORE);
+    }
 }
 
 void Core::update()
