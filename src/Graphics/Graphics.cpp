@@ -14,6 +14,7 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->_functionTab.push_back(std::bind(&Graphics::receiveResourceList, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveLoad, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveAdd, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Graphics::receiveDelete, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveSetCameraPos, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveSetCameraNextPos, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveMove, this, std::placeholders::_1));
@@ -43,7 +44,6 @@ void Graphics::run()
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(1280, 720, "Neo");
     SetTargetFPS(60);
-    glEnable(GL_DEPTH_TEST);
     for (int i = 0; getMapping(i); i++)
         SetGamepadMappings(getMapping(i));
     this->_camera = std::unique_ptr<Camera>(new Camera());
@@ -66,8 +66,10 @@ void Graphics::draw()
     this->_camera->getShader().use();
     this->_camera->setShader(GetTime() * 10);
 
+    glEnable(GL_DEPTH_TEST);
     for (auto &object : this->_objects)
         object.second->draw(*this->_camera);
+    glDisable(GL_DEPTH_TEST);
     for (auto &button : this->_buttons)
         button.second->draw(*this->_camera);
     EndDrawing();
