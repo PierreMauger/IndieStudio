@@ -26,7 +26,6 @@ namespace neo
             Graphics _graphics;
             Input _input;
             Loader _loader;
-            bool _running;
 
         public:
             Neo();
