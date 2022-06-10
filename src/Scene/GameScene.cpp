@@ -40,20 +40,20 @@ void GameScene::update()
             this->_players[i]->getSpeed().y += -0.1f;
         for (size_t j = 0; j < this->_map.size(); j++) {
             if (CheckCollisionRecs(
-                CAST(Rectangle, this->_players[i]->getPos().x - 0.5f + this->_players[i]->getSpeed().x,
-                    this->_players[i]->getPos().y - 0.5f, 1.0f, 1.0f),
+                CAST(Rectangle, this->_players[i]->getPos().x - 0.3f + this->_players[i]->getSpeed().x,
+                    this->_players[i]->getPos().y - 0.3f, 0.6f, 0.6f),
                 CAST(Rectangle, this->_map[j]->getPos().x - 0.5f, this->_map[j]->getPos().y - 0.5f, 1.0f, 1.0f))) {
                 this->_players[i]->getSpeed().x = 0.0f;
             }
             if (CheckCollisionRecs(
-                CAST(Rectangle, this->_players[i]->getPos().x - 0.5f,
-                    this->_players[i]->getPos().y - 0.5f + this->_players[i]->getSpeed().y, 1.0f, 1.0f),
+                CAST(Rectangle, this->_players[i]->getPos().x - 0.3f,
+                    this->_players[i]->getPos().y - 0.3f + this->_players[i]->getSpeed().y, 0.6f, 0.6f),
                 CAST(Rectangle, this->_map[j]->getPos().x - 0.5f, this->_map[j]->getPos().y - 0.5f, 1.0f, 1.0f))) {
                 this->_players[i]->getSpeed().y = 0.0f;
             }
             if (this->_players[i]->getSpeed().x && this->_players[i]->getSpeed().y && CheckCollisionRecs(
-                CAST(Rectangle, this->_players[i]->getPos().x - 0.5f + this->_players[i]->getSpeed().x,
-                    this->_players[i]->getPos().y - 0.5f + this->_players[i]->getSpeed().y, 1.0f, 1.0f),
+                CAST(Rectangle, this->_players[i]->getPos().x - 0.3f + this->_players[i]->getSpeed().x,
+                    this->_players[i]->getPos().y - 0.3f + this->_players[i]->getSpeed().y, 0.6f, 0.6f),
                 CAST(Rectangle, this->_map[j]->getPos().x - 0.5f, this->_map[j]->getPos().y - 0.5f, 1.0f, 1.0f))) {
                 this->_players[i]->getSpeed().y = 0.0f;
             }
@@ -83,7 +83,7 @@ void GameScene::loadScene()
             if (tmpMap[i][j] == 'W')
                 this->_map[mapId++] = std::make_unique<Wall>("Wall", pos, true, glm::vec3(0.5f));
             if (tmpMap[i][j] >= '0' && tmpMap[i][j] <= '9')
-                this->_players[tmpMap[i][j] - '0'] = std::make_unique<Player>("RoboCat", pos, glm::vec3(0.5f));
+                this->_players[tmpMap[i][j] - '0'] = std::make_unique<Player>("RoboCat", pos, glm::vec3(0.4f));
         }
     }
     for (auto& player : this->_players)
