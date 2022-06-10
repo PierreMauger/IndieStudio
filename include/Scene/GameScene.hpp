@@ -43,8 +43,7 @@ namespace neo
             GameScene(std::shared_ptr<MessageBus> messageBus);
             ~GameScene();
 
-            // Overload operator
-            friend std::string operator*(const std::string &chr, const std::size_t size);
+            std::string multiplier(std::string chr, std::size_t size);
 
             // Interface functions
             void update();
