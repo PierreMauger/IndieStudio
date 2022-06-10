@@ -11,6 +11,8 @@ using namespace neo;
 
 Audio::Audio(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
+    // if (IsAudioDeviceReady() == false)
+        // TODO
     this->_functionTab.push_back(std::bind(&Audio::receivedLoadSounds, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Audio::receivedLoadMusics, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Audio::receivedPlaySound, this, std::placeholders::_1));
@@ -36,7 +38,7 @@ void Audio::run()
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
         this->_messageBus->notify(Module::AUDIO);
     }
-    if (IsAudioDeviceReady())
+    if (IsAudioDeviceReady() == true)
         CloseAudioDevice();
 }
 
