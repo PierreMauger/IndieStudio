@@ -27,6 +27,8 @@ MenuScene::~MenuScene()
         object.second.reset();
     for (auto &button : this->_buttons)
         button.second.reset();
+    this->_objects.clear();
+    this->_buttons.clear();
 }
 
 void MenuScene::update()

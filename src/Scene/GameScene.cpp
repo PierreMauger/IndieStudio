@@ -16,23 +16,28 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 
 GameScene::~GameScene()
 {
-    for (auto& player : this->_players)
+    for (auto &player : this->_players)
         player.second.reset();
-    for (auto& wall : this->_map)
+    for (auto &wall : this->_map)
         wall.second.reset();
+    for (auto &bomb : this->_bombs)
+        bomb.second.reset();
+    this->_players.clear();
+    this->_map.clear();
+    this->_bombs.clear();
 }
 
 void GameScene::update()
 {
     for (int i = 0; i < this->_players.size(); i++) {
         if (this->_players[i]->getDirection(RIGHT))
-            this->_players[i]->getSpeed().x += 0.3f;
+            this->_players[i]->getSpeed().x += 0.1f;
         if (this->_players[i]->getDirection(LEFT))
-            this->_players[i]->getSpeed().x += -0.3f;
+            this->_players[i]->getSpeed().x += -0.1f;
         if (this->_players[i]->getDirection(UP))
-            this->_players[i]->getSpeed().y += 0.3f;
+            this->_players[i]->getSpeed().y += 0.1f;
         if (this->_players[i]->getDirection(DOWN))
-            this->_players[i]->getSpeed().y += -0.3f;
+            this->_players[i]->getSpeed().y += -0.1f;
         for (size_t j = 0; j < this->_map.size(); j++) {
             if (CheckCollisionRecs(
                 CAST(Rectangle, this->_players[i]->getPos().x - 0.5f + this->_players[i]->getSpeed().x,
