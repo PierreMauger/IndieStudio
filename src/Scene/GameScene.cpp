@@ -117,7 +117,7 @@ void GameScene::handleKeyReleased(int playerNb, std::string action)
         this->_players[playerNb]->setDirection(DOWN, false);
 }
 
-std::string multiplier(std::string chr, std::size_t size)
+std::string GameScene::multiplier_str(std::string chr, std::size_t size)
 {
     std::string str = chr;
 
@@ -220,8 +220,8 @@ std::vector<std::string> GameScene::generateProceduralMap(std::size_t nb_player,
         m.insert(m.begin(), '#');
         m.push_back('#');
     }
-    map.insert(map.begin(), multiplier(std::string("x"), x));
-    map.push_back(multiplier(std::string("x"), x));
+    map.insert(map.begin(), multiplier_str(std::string("#"), x));
+    map.push_back(multiplier_str(std::string("#"), x));
     map[1][1] = 0 + '0';
     map[x - 2][y - 2] = 1 + '0';
     if (nb_player > 2)
