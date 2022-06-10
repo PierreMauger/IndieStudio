@@ -31,6 +31,8 @@ void Audio::run()
 {
     SetTraceLogLevel(LOG_NONE);
     InitAudioDevice();
+    if (!IsAudioDeviceReady())
+            this->_messageBus->sendMessage(Message(Packet(), BaseCommand::QUIT, Module::BROADCAST));
 
     while (this->_running) {
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
