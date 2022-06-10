@@ -43,7 +43,7 @@ namespace neo
             GameScene(std::shared_ptr<MessageBus> messageBus);
             ~GameScene();
 
-            std::string multiplier(std::string chr, std::size_t size);
+            std::string multiplier_str(std::string chr, std::size_t size);
 
             // Interface functions
             void update();
