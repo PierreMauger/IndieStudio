@@ -84,6 +84,15 @@ void GameScene::explode(std::unique_ptr<neo::Bomb> &bomb)
                     this->_walls.erase(wall_key);
                 }
             }
+            for (auto &[player_key, player] : this->_players) {
+                if (floor(player->getPos().x) + 0.5f == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
+                    floor(player->getPos().y) + 0.5f == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
+                    Packet packet;
+                    packet << player_key;
+                    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
+                    this->_players.erase(player_key);
+                }
+            }
         }
     }
 }
