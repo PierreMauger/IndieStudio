@@ -18,7 +18,6 @@ namespace neo
     private:
         glm::vec3 _speed;
         bool _direction[4];
-        double _cooldown;
         size_t _bombUp;
         size_t _speedUp;
         size_t _fireUp;
@@ -27,11 +26,11 @@ namespace neo
     public:
         Player(std::string name, glm::vec3 pos, glm::vec3 scale = glm::vec3(1.0f));
         glm::vec3 &getSpeed();
-        void setSpeed(glm::vec3 speed);
-        bool getDirection(int axis) const;
-        void setDirection(int axis, bool val);
-        const double getCooldown() const;
-        const size_t getBombUp() const;
+        bool &getDirection(int axis);
+        size_t &getBombUp();
+        size_t &getSpeedUp();
+        size_t &getFireUp();
+        bool &getWallPass();
     };
 }
 

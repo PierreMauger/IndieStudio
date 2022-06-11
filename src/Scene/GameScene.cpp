@@ -71,14 +71,16 @@ void GameScene::updatePlayers(void)
 {
     for (auto &[player_key, player] : this->_players) {
         if (player->getDirection(RIGHT))
-            player->getSpeed().x += 0.1f;
+            player->getSpeed().x += (player->getSpeedUp() + 1) * 0.1f;
         if (player->getDirection(LEFT))
-            player->getSpeed().x += -0.1f;
+            player->getSpeed().x += (player->getSpeedUp() + 1) * -0.1f;
         if (player->getDirection(UP))
-            player->getSpeed().y += 0.1f;
+            player->getSpeed().y += (player->getSpeedUp() + 1) * 0.1f;
         if (player->getDirection(DOWN))
-            player->getSpeed().y += -0.1f;
+            player->getSpeed().y += (player->getSpeedUp() + 1) * -0.1f;
         for (auto &[wall_key, wall] : this->_walls) {
+            if (wall->getName() == "Wall" && player->getWallPass())
+                continue;
             if (CheckCollisionRecs(
                 CAST(Rectangle, player->getPos().x - 0.3f + player->getSpeed().x, player->getPos().y - 0.3f, 0.6f, 0.6f),
                 CAST(Rectangle, wall->getPos().x - 0.5f, wall->getPos().y - 0.5f, 1.0f, 1.0f))) {
@@ -95,13 +97,31 @@ void GameScene::updatePlayers(void)
                 player->getSpeed().y = 0.0f;
             }
         }
+        for (auto &[powerup_key, powerup] : this->_powerUps) {
+            if (CheckCollisionRecs(
+                CAST(Rectangle, player->getPos().x - 0.3f + player->getSpeed().x, player->getPos().y - 0.3f + player->getSpeed().y, 0.6f, 0.6f),
+                CAST(Rectangle, powerup->getPos().x - 0.5f, powerup->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                if (powerup->getName() == "BombUp")
+                    player->getBombUp() += 1;
+                if (powerup->getName() == "SpeedUp")
+                    player->getSpeedUp() += 1;
+                if (powerup->getName() == "FireUp")
+                    player->getFireUp() += 1;
+                if (powerup->getName() == "WallPass")
+                    player->getWallPass() = true;
+                Packet packet;
+                packet << powerup_key;
+                this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
+                this->_powerUps.erase(powerup_key);
+            }
+        }
         if (player->getSpeed() != glm::vec3(0.0f)) {
             player->move(player->getSpeed());
             Packet packet;
             packet << player_key << player->getPos().x << player->getPos().y << player->getPos().z;
             this->_messageBus->sendMessage(Message(packet, GraphicsCommand::MOVE, Module::GRAPHICS));
             packet.clear();
-            player->setSpeed(glm::vec3(0.0f));
+            player->getSpeed() = glm::vec3(0.0f);
         }
     }
 }
@@ -180,16 +200,16 @@ void GameScene::handleKeyPressed(int playerNb, std::string action)
     if (this->_players.find(playerNb) == this->_players.end())
         return;
     if (action == "MoveRight")
-        this->_players[playerNb]->setDirection(RIGHT, true);
+        this->_players[playerNb]->getDirection(RIGHT) = true;
     else if (action == "MoveLeft")
-        this->_players[playerNb]->setDirection(LEFT, true);
+        this->_players[playerNb]->getDirection(LEFT) = true;
     else if (action == "MoveUp")
-        this->_players[playerNb]->setDirection(UP, true);
+        this->_players[playerNb]->getDirection(UP) = true;
     else if (action == "MoveDown")
-        this->_players[playerNb]->setDirection(DOWN, true);
+        this->_players[playerNb]->getDirection(DOWN) = true;
     else if (action == "Main" && canPlaceBomb(playerNb)) {
         glm::vec3 pos(floor(this->_players[playerNb]->getPos().x) + 0.5f, floor(this->_players[playerNb]->getPos().y) + 0.5f, this->_players[playerNb]->getPos().z);
-        this->_bombs[_incrementor] = std::make_unique<Bomb>("Bomb", pos, 0, playerNb, glm::vec3(0.5f));
+        this->_bombs[_incrementor] = std::make_unique<Bomb>("Bomb", pos, this->_players[playerNb]->getFireUp(), playerNb, glm::vec3(0.5f));
         Packet packet;
         packet << this->_bombs[_incrementor]->getType() << _incrementor << *this->_bombs[_incrementor];
         _incrementor++;
@@ -202,13 +222,13 @@ void GameScene::handleKeyReleased(int playerNb, std::string action)
     if (this->_players.find(playerNb) == this->_players.end())
         return;
     if (action == "MoveRight")
-        this->_players[playerNb]->setDirection(RIGHT, false);
+        this->_players[playerNb]->getDirection(RIGHT) = false;
     else if (action == "MoveLeft")
-        this->_players[playerNb]->setDirection(LEFT, false);
+        this->_players[playerNb]->getDirection(LEFT) = false;
     else if (action == "MoveUp")
-        this->_players[playerNb]->setDirection(UP, false);
+        this->_players[playerNb]->getDirection(UP) = false;
     else if (action == "MoveDown")
-        this->_players[playerNb]->setDirection(DOWN, false);
+        this->_players[playerNb]->getDirection(DOWN) = false;
 }
 
 std::string GameScene::multiplier_str(std::string chr, std::size_t size)
