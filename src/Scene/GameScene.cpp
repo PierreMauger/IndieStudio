@@ -13,6 +13,7 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
     this->_incrementor = 0;
+    srand(time(nullptr));
 }
 
 GameScene::~GameScene()
@@ -26,6 +27,44 @@ GameScene::~GameScene()
     this->_players.clear();
     this->_walls.clear();
     this->_bombs.clear();
+}
+
+void GameScene::loadScene()
+{
+    const std::vector<std::string> map = generateProceduralMap(3, 20, 20);
+    Packet packet;
+
+    for (int i = 0; i < map.size(); i++) {
+        for (int j = 0; j < map[i].size(); j++) {
+            glm::vec3 pos(i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.f);
+            if (map[i][j] == 'P') {
+                this->_players[_incrementor] = std::make_unique<Player>("RoboCat", pos, glm::vec3(0.4f));
+                packet << this->_players[_incrementor]->getType() << _incrementor << *this->_players[_incrementor];
+                _incrementor++;
+            }
+        }
+    }
+    for (int i = 0; i < map.size(); i++) {
+        for (int j = 0; j < map[i].size(); j++) {
+            glm::vec3 pos(i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.f);
+            if (map[i][j] == '#' || map[i][j] == 'W') {
+                if (map[i][j] == '#')
+                    this->_walls[_incrementor] = std::make_unique<Wall>("Block", pos, glm::vec3(0.5f));
+                if (map[i][j] == 'W')
+                    this->_walls[_incrementor] = std::make_unique<Wall>("Wall", pos, glm::vec3(0.5f));
+                packet << this->_walls[_incrementor]->getType() << _incrementor << *this->_walls[_incrementor];
+                _incrementor++;
+            }
+        }
+    }
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
+
+    packet.clear();
+    packet << 0 << glm::vec3(0.0f, 0.0f, 50.0f);
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
+    packet.clear();
+    packet << 1;
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_NEXT_POS, Module::GRAPHICS));
 }
 
 void GameScene::updatePlayers(void)
@@ -73,13 +112,22 @@ void GameScene::explode(std::unique_ptr<neo::Bomb> &bomb)
         for (int j = 0; j <= 2 + bomb->getFireUp(); j++) {
             for (auto &[wall_key, wall] : this->_walls) {
                 if (wall->getPos().x == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
-                    wall->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0) &&
-                    wall->isDestructible()) {
+                    wall->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
+                    j = INT_MAX;
+                    if (wall->getName() == "Block")
+                        break;
                     Packet packet;
                     packet << wall_key;
                     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
                     this->_walls.erase(wall_key);
-                    j = INT_MAX;
+                    if (!(rand() % 10)) {
+                        int tmp = rand() % 4;
+                        this->_powerUps[_incrementor] = std::make_unique<PowerUp>(powerUps[tmp], wall->getPos(), glm::vec3(0.5f));
+                        Packet packet;
+                        packet << this->_powerUps[_incrementor]->getType() << _incrementor << *this->_powerUps[_incrementor];
+                        _incrementor++;
+                        this->_messageBus->sendMessage(Message(packet, GraphicsCommand::ADD, Module::GRAPHICS));
+                    }
                     break;
                 }
             }
@@ -113,44 +161,6 @@ void GameScene::update()
 {
     updatePlayers();
     updateBombs();
-}
-
-void GameScene::loadScene()
-{
-    const std::vector<std::string> map = generateProceduralMap(3, 20, 20);
-    Packet packet;
-
-    for (int i = 0; i < map.size(); i++) {
-        for (int j = 0; j < map[i].size(); j++) {
-            glm::vec3 pos(i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.f);
-            if (map[i][j] == 'P') {
-                this->_players[_incrementor] = std::make_unique<Player>("RoboCat", pos, glm::vec3(0.4f));
-                packet << this->_players[_incrementor]->getType() << _incrementor << *this->_players[_incrementor];
-                _incrementor++;
-            }
-        }
-    }
-    for (int i = 0; i < map.size(); i++) {
-        for (int j = 0; j < map[i].size(); j++) {
-            glm::vec3 pos(i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.f);
-            if (map[i][j] == '#' || map[i][j] == 'W') {
-                if (map[i][j] == '#')
-                    this->_walls[_incrementor] = std::make_unique<Wall>("Block", pos, false, glm::vec3(0.5f));
-                if (map[i][j] == 'W')
-                    this->_walls[_incrementor] = std::make_unique<Wall>("Wall", pos, true, glm::vec3(0.5f));
-                packet << this->_walls[_incrementor]->getType() << _incrementor << *this->_walls[_incrementor];
-                _incrementor++;
-            }
-        }
-    }
-    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
-
-    packet.clear();
-    packet << 0 << glm::vec3(0.0f, 0.0f, 50.0f);
-    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
-    packet.clear();
-    packet << 1;
-    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_NEXT_POS, Module::GRAPHICS));
 }
 
 bool GameScene::canPlaceBomb(int playerNb)

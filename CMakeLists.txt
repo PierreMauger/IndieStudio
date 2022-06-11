@@ -82,6 +82,7 @@ set(SRC
   src/Game/Player.cpp
   src/Game/Bomb.cpp
   src/Game/Wall.cpp
+  src/Game/PowerUp.cpp
 )
 
 #fetch libraries

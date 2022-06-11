@@ -14,18 +14,12 @@
     #include "Bomb.hpp"
     #include "Player.hpp"
     #include "Wall.hpp"
+    #include "PowerUp.hpp"
 
 namespace neo
 {
     class GameScene : public virtual IScene
     {
-        enum directions {
-            RIGHT,
-            LEFT,
-            UP,
-            DOWN
-        };
-
         private:
             // map generation
             std::vector<std::string> generateProceduralMap(std::size_t nb_player, std::size_t x, std::size_t y);
@@ -50,6 +44,7 @@ namespace neo
             std::map<int, std::unique_ptr<Player>> _players;
             std::map<int, std::unique_ptr<Bomb>> _bombs;
             std::map<int, std::unique_ptr<Wall>> _walls;
+            std::map<int, std::unique_ptr<PowerUp>> _powerUps;
             int _incrementor;
 
         public:
