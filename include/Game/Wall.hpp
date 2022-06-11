@@ -18,6 +18,7 @@ namespace neo
         bool _isDestructible;
     public:
         Wall(std::string name, glm::vec3 pos, bool isDestructible, glm::vec3 scale = glm::vec3(1.0f));
+        const bool isDestructible() const;
     };
 }
 

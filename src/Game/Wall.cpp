@@ -11,3 +11,8 @@ neo::Wall::Wall(std::string name, glm::vec3 pos, bool isDestructible, glm::vec3 
 {
     this->_isDestructible = isDestructible;
 }
+
+const bool neo::Wall::isDestructible() const
+{
+    return _isDestructible;
+}

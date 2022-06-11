@@ -23,3 +23,8 @@ const size_t neo::Bomb::getPlayerId() const
 {
     return this->_playerId;
 }
+
+const size_t neo::Bomb::getFireUp() const
+{
+    return _fireUp;
+}

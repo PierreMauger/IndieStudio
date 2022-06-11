@@ -39,6 +39,7 @@ namespace neo
 
             //update functions
             void GameScene::updatePlayers(void);
+            void GameScene::explode(std::unique_ptr<neo::Bomb> &bomb);
             void GameScene::updateBombs(void);
 
             //others
@@ -48,7 +49,7 @@ namespace neo
             std::shared_ptr<MessageBus> _messageBus;
             std::map<int, std::unique_ptr<Player>> _players;
             std::map<int, std::unique_ptr<Bomb>> _bombs;
-            std::map<int, std::unique_ptr<Wall>> _map;
+            std::map<int, std::unique_ptr<Wall>> _walls;
             int _incrementor;
 
         public:
