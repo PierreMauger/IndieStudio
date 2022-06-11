@@ -73,15 +73,14 @@ void GameScene::explode(std::unique_ptr<neo::Bomb> &bomb)
         for (int j = 0; j <= 2 + bomb->getFireUp(); j++) {
             for (auto &[wall_key, wall] : this->_walls) {
                 if (wall->getPos().x == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
-                    wall->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
-                    if (!wall->isDestructible()) {
-                        j = INT_MAX;
-                        break;
-                    }
+                    wall->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0) &&
+                    wall->isDestructible()) {
                     Packet packet;
                     packet << wall_key;
                     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
                     this->_walls.erase(wall_key);
+                    j = INT_MAX;
+                    break;
                 }
             }
             for (auto &[player_key, player] : this->_players) {
