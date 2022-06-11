@@ -93,8 +93,8 @@ float Graphics::getHeightOnMap()
 void Graphics::receiveResourceList(Packet data)
 {
     while (data.checkSize(1)) {
-        std::string file;
         int type;
+        std::string file;
         data >> type >> file;
         std::string fileName = file.substr(0, file.find_last_of("."));
 
@@ -115,8 +115,8 @@ void Graphics::receiveLoad(Packet data)
     this->_buttons.clear();
 
     while (data.checkSize(1)) {
-        int id = 0;
         int type = 0;
+        int id = 0;
         GameObject obj;
 
         data >> type >> id >> obj;
@@ -134,8 +134,8 @@ void Graphics::receiveLoad(Packet data)
 void Graphics::receiveAdd(Packet data)
 {
     while (data.checkSize(1)) {
-        int id = 0;
         int type = 0;
+        int id = 0;
         GameObject obj;
 
         data >> type >> id >> obj;
@@ -158,8 +158,8 @@ void Graphics::receiveDelete(Packet data)
 
 void Graphics::receiveSetCameraPos(Packet data)
 {
-    glm::vec3 pos;
     int type;
+    glm::vec3 pos;
     data >> type >> pos;
 
     if (type == 0)

@@ -9,6 +9,7 @@
     #define GAMEOBJECT_HPP
 
     #include "includes.hpp"
+    #include "utils.hpp"
 
     #include <glm/glm.hpp>
 

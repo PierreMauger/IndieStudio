@@ -23,21 +23,26 @@ glm::vec3 &neo::Player::getSpeed()
 	return this->_speed;
 }
 
-void neo::Player::setSpeed(glm::vec3 speed)
+bool &neo::Player::getDirection(int axis)
 {
-    this->_speed = speed;
-}
-
-bool neo::Player::getDirection(int axis) const
-{
-    if (axis < 0 || axis > 3)
-        return false;
     return this->_direction[axis];
 }
 
-void neo::Player::setDirection(int axis, bool val)
+size_t &neo::Player::getBombUp() {
+    return this->_bombUp;
+}
+
+size_t &neo::Player::getSpeedUp()
 {
-    if (axis < 0 || axis > 3)
-        return;
-    this->_direction[axis] = val;
+    return this->_speedUp;
+}
+
+size_t &neo::Player::getFireUp()
+{
+    return this->_fireUp;
+}
+
+bool &neo::Player::getWallPass()
+{
+    return this->_wallPass;
 }

@@ -8,6 +8,7 @@
 #ifndef INCLUDES_HPP
     #define INCLUDES_HPP
 
+    #include <array>
     #include <vector>
     #include <map>
     #include <memory>
