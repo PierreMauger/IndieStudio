@@ -12,84 +12,107 @@ using namespace neo;
 GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
+    this->_incrementor = 0;
 }
 
 GameScene::~GameScene()
 {
-    for (auto &player : this->_players)
-        player.second.reset();
-    for (auto &wall : this->_map)
-        wall.second.reset();
-    for (auto &bomb : this->_bombs)
-        bomb.second.reset();
+    for (auto &[player_key, player] : this->_players)
+        player.reset();
+    for (auto &[wall_key, wall] : this->_map)
+        wall.reset();
+    for (auto &[bomb_key, bomb] : this->_bombs)
+        bomb.reset();
     this->_players.clear();
     this->_map.clear();
     this->_bombs.clear();
 }
 
-void GameScene::update()
+void GameScene::updatePlayers(void)
 {
-    for (int i = 0; i < this->_players.size(); i++) {
-        if (this->_players[i]->getDirection(RIGHT))
-            this->_players[i]->getSpeed().x += 0.1f;
-        if (this->_players[i]->getDirection(LEFT))
-            this->_players[i]->getSpeed().x += -0.1f;
-        if (this->_players[i]->getDirection(UP))
-            this->_players[i]->getSpeed().y += 0.1f;
-        if (this->_players[i]->getDirection(DOWN))
-            this->_players[i]->getSpeed().y += -0.1f;
-        for (size_t j = 0; j < this->_map.size(); j++) {
+    for (auto &[player_key, player] : this->_players) {
+        if (player->getDirection(RIGHT))
+            player->getSpeed().x += 0.1f;
+        if (player->getDirection(LEFT))
+            player->getSpeed().x += -0.1f;
+        if (player->getDirection(UP))
+            player->getSpeed().y += 0.1f;
+        if (player->getDirection(DOWN))
+            player->getSpeed().y += -0.1f;
+        for (auto &[wall_key, wall] : this->_map) {
             if (CheckCollisionRecs(
-                CAST(Rectangle, this->_players[i]->getPos().x - 0.3f + this->_players[i]->getSpeed().x,
-                    this->_players[i]->getPos().y - 0.3f, 0.6f, 0.6f),
-                CAST(Rectangle, this->_map[j]->getPos().x - 0.5f, this->_map[j]->getPos().y - 0.5f, 1.0f, 1.0f))) {
-                this->_players[i]->getSpeed().x = 0.0f;
+                CAST(Rectangle, player->getPos().x - 0.3f + player->getSpeed().x, player->getPos().y - 0.3f, 0.6f, 0.6f),
+                CAST(Rectangle, wall->getPos().x - 0.5f, wall->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                player->getSpeed().x = 0.0f;
             }
             if (CheckCollisionRecs(
-                CAST(Rectangle, this->_players[i]->getPos().x - 0.3f,
-                    this->_players[i]->getPos().y - 0.3f + this->_players[i]->getSpeed().y, 0.6f, 0.6f),
-                CAST(Rectangle, this->_map[j]->getPos().x - 0.5f, this->_map[j]->getPos().y - 0.5f, 1.0f, 1.0f))) {
-                this->_players[i]->getSpeed().y = 0.0f;
+                CAST(Rectangle, player->getPos().x - 0.3f, player->getPos().y - 0.3f + player->getSpeed().y, 0.6f, 0.6f),
+                CAST(Rectangle, wall->getPos().x - 0.5f, wall->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                player->getSpeed().y = 0.0f;
             }
-            if (this->_players[i]->getSpeed().x && this->_players[i]->getSpeed().y && CheckCollisionRecs(
-                CAST(Rectangle, this->_players[i]->getPos().x - 0.3f + this->_players[i]->getSpeed().x,
-                    this->_players[i]->getPos().y - 0.3f + this->_players[i]->getSpeed().y, 0.6f, 0.6f),
-                CAST(Rectangle, this->_map[j]->getPos().x - 0.5f, this->_map[j]->getPos().y - 0.5f, 1.0f, 1.0f))) {
-                this->_players[i]->getSpeed().y = 0.0f;
+            if (player->getSpeed().x && player->getSpeed().y && CheckCollisionRecs(
+                CAST(Rectangle, player->getPos().x - 0.3f + player->getSpeed().x, player->getPos().y - 0.3f + player->getSpeed().y, 0.6f, 0.6f),
+                CAST(Rectangle, wall->getPos().x - 0.5f, wall->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                player->getSpeed().y = 0.0f;
             }
         }
-        if (this->_players[i]->getSpeed() != glm::vec3(0.0f)) {
-            this->_players[i]->move(this->_players[i]->getSpeed());
+        if (player->getSpeed() != glm::vec3(0.0f)) {
+            player->move(player->getSpeed());
             Packet packet;
-            packet << i << this->_players[i]->getPos().x << this->_players[i]->getPos().y << this->_players[i]->getPos().z;
+            packet << player_key << player->getPos().x << player->getPos().y << player->getPos().z;
             this->_messageBus->sendMessage(Message(packet, GraphicsCommand::MOVE, Module::GRAPHICS));
             packet.clear();
-            this->_players[i]->setSpeed(glm::vec3(0.0f));
+            player->setSpeed(glm::vec3(0.0f));
         }
     }
+}
+
+void GameScene::updateBombs()
+{
+    for (auto &[bomb_key, bomb] : this->_bombs) {
+        if (GetTime() - bomb->getTimer() > 3) {
+            Packet packet;
+            packet << bomb_key;
+            this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
+            this->_bombs.erase(bomb_key);
+        }
+    }
+}
+
+void GameScene::update()
+{
+    updatePlayers();
+    updateBombs();
 }
 
 void GameScene::loadScene()
 {
     const std::vector<std::string> tmpMap = generateProceduralMap(3, 20, 20);
     Packet packet;
-    int incrementor = 0;
 
-    for (int i = 0, mapId = 0; i < tmpMap.size(); i++) {
+    for (int i = 0; i < tmpMap.size(); i++) {
         for (int j = 0; j < tmpMap[i].size(); j++) {
             glm::vec3 pos(i - ((float)tmpMap[i].size() - 1) / 2, -j + ((float)tmpMap.size() - 1) / 2, 0.f);
-            if (tmpMap[i][j] == '#')
-                this->_map[mapId++] = std::make_unique<Wall>("Block", pos, false, glm::vec3(0.5f));
-            if (tmpMap[i][j] == 'W')
-                this->_map[mapId++] = std::make_unique<Wall>("Wall", pos, true, glm::vec3(0.5f));
-            if (tmpMap[i][j] >= '0' && tmpMap[i][j] <= '9')
-                this->_players[tmpMap[i][j] - '0'] = std::make_unique<Player>("RoboCat", pos, glm::vec3(0.4f));
+            if (tmpMap[i][j] == 'P') {
+                this->_players[_incrementor] = std::make_unique<Player>("RoboCat", pos, glm::vec3(0.4f));
+                packet << this->_players[_incrementor]->getType() << _incrementor << *this->_players[_incrementor];
+                _incrementor++;
+            }
         }
     }
-    for (auto& player : this->_players)
-        packet << player.second->getType() << incrementor++ << *player.second;
-    for (auto& wall : this->_map)
-        packet << wall.second->getType() << incrementor++ << *wall.second;
+    for (int i = 0; i < tmpMap.size(); i++) {
+        for (int j = 0; j < tmpMap[i].size(); j++) {
+            glm::vec3 pos(i - ((float)tmpMap[i].size() - 1) / 2, -j + ((float)tmpMap.size() - 1) / 2, 0.f);
+            if (tmpMap[i][j] == '#' || tmpMap[i][j] == 'W') {
+                if (tmpMap[i][j] == '#')
+                    this->_map[_incrementor] = std::make_unique<Wall>("Block", pos, false, glm::vec3(0.5f));
+                if (tmpMap[i][j] == 'W')
+                    this->_map[_incrementor] = std::make_unique<Wall>("Wall", pos, true, glm::vec3(0.5f));
+                packet << this->_map[_incrementor]->getType() << _incrementor << *this->_map[_incrementor];
+                _incrementor++;
+            }
+        }
+    }
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
     packet.clear();
@@ -98,6 +121,18 @@ void GameScene::loadScene()
     packet.clear();
     packet << 1;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_NEXT_POS, Module::GRAPHICS));
+}
+
+bool GameScene::canPlaceBomb(int playerNb)
+{
+    size_t bombsCount = 0;
+
+    for (auto &[bomb_key, bomb] : this->_bombs)
+        if (bomb->getPlayerId() == playerNb)
+            bombsCount++;
+    if (1 + this->_players[playerNb]->getBombUp() > bombsCount)
+        return true;
+    return false;
 }
 
 void GameScene::handleKeyPressed(int playerNb, std::string action)
@@ -112,6 +147,13 @@ void GameScene::handleKeyPressed(int playerNb, std::string action)
         this->_players[playerNb]->setDirection(UP, true);
     else if (action == "MoveDown")
         this->_players[playerNb]->setDirection(DOWN, true);
+    else if (action == "Main" && canPlaceBomb(playerNb)) {
+        this->_bombs[_incrementor] = std::make_unique<Bomb>("Bomb", this->_players[playerNb]->getPos(), 0, playerNb, glm::vec3(0.4f));
+        Packet packet;
+        packet << this->_bombs[_incrementor]->getType() << _incrementor << *this->_bombs[_incrementor];
+        _incrementor++;
+        this->_messageBus->sendMessage(Message(packet, GraphicsCommand::ADD, Module::GRAPHICS));
+    }
 }
 
 void GameScene::handleKeyReleased(int playerNb, std::string action)
@@ -233,11 +275,11 @@ std::vector<std::string> GameScene::generateProceduralMap(std::size_t nb_player,
     }
     map.insert(map.begin(), multiplier_str(std::string("#"), x));
     map.push_back(multiplier_str(std::string("#"), x));
-    map[1][1] = 0 + '0';
-    map[x - 2][y - 2] = 1 + '0';
+    map[1][1] = 'P';
+    map[x - 2][y - 2] = 'P';
     if (nb_player > 2)
-        map[1][y - 2] = 2 + '0';
+        map[1][y - 2] = 'P';
     if (nb_player > 3)
-        map[x - 2][1] = 3 + '0';
+        map[x - 2][1] = 'P';
     return map;
 }

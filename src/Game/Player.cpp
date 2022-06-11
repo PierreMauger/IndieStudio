@@ -41,3 +41,13 @@ void neo::Player::setDirection(int axis, bool val)
         return;
     this->_direction[axis] = val;
 }
+
+const double neo::Player::getCooldown() const
+{
+    return this->_cooldown;
+}
+
+const size_t neo::Player::getBombUp() const
+{
+    return this->_bombUp;
+}
