@@ -128,36 +128,39 @@ void GameScene::updatePlayers(void)
 void GameScene::explode(std::unique_ptr<neo::Bomb> &bomb)
 {
     std::srand(std::time(0));
+
     for (size_t i = RIGHT; i <= DOWN; i++) {
         for (int j = 0; j <= 2 + bomb->getFireUp(); j++) {
-            for (auto &[wall_key, wall] : this->_walls) {
-                if (wall->getPos().x == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
-                    wall->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
+            for (auto it = this->_walls.begin(); it != this->_walls.end(); it++) {
+                if (it->second->getPos().x == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
+                    it->second->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
                     j = INT_MAX;
-                    if (wall->getName() == "Block")
+                    if (it->second->getName() == "Block")
                         break;
                     Packet packet;
-                    packet << wall_key;
+                    packet << it->first;
                     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-                    this->_walls.erase(wall_key);
-                    if (!(std::rand() % 10)) {
+                    this->_walls.erase(it);
+                    if (std::rand() % 10 == 0) {
                         int tmp = std::rand() % 4;
-                        this->_powerUps[_incrementor] = std::make_unique<PowerUp>(powerUps[tmp], wall->getPos(), glm::vec3(0.5f));
+                        this->_powerUps[this->_incrementor] = std::make_unique<PowerUp>(powerUps[tmp], it->second->getPos(), glm::vec3(0.5f));
                         Packet packet;
-                        packet << this->_powerUps[_incrementor]->getType() << _incrementor << *this->_powerUps[_incrementor];
-                        _incrementor++;
+                        packet << this->_powerUps[this->_incrementor]->getType() << this->_incrementor << *this->_powerUps[this->_incrementor];
+                        this->_incrementor++;
                         this->_messageBus->sendMessage(Message(packet, GraphicsCommand::ADD, Module::GRAPHICS));
                     }
                     break;
                 }
             }
-            for (auto &[player_key, player] : this->_players) {
-                if (floor(player->getPos().x) + 0.5f == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
-                    floor(player->getPos().y) + 0.5f == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
+            for (auto it = this->_players.begin(); it != this->_players.end();) {
+                if (floor(it->second->getPos().x) + 0.5f == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
+                    floor(it->second->getPos().y) + 0.5f == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
                     Packet packet;
-                    packet << player_key;
+                    packet << it->first;
                     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-                    this->_players.erase(player_key);
+                    this->_players.erase(it++);
+                } else {
+                    it++;
                 }
             }
         }
@@ -166,13 +169,15 @@ void GameScene::explode(std::unique_ptr<neo::Bomb> &bomb)
 
 void GameScene::updateBombs()
 {
-    for (auto &[bomb_key, bomb] : this->_bombs) {
-        if (GetTime() - bomb->getTimer() > 3) {
-            explode(bomb);
+    for (auto it = this->_bombs.begin(); it != this->_bombs.end();) {
+        if (GetTime() - it->second->getTimer() > 3) {
+            this->explode(it->second);
             Packet packet;
-            packet << bomb_key;
+            packet << it->first;
             this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-            this->_bombs.erase(bomb_key);
+            this->_bombs.erase(it++);
+        } else {
+            it++;
         }
     }
 }

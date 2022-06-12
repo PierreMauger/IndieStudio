@@ -16,6 +16,7 @@ neo::Camera::Camera() : _shader("resources/shaders/camera.vs", "resources/shader
     this->_up = glm::vec3(0.0f, 1.0f, 0.0f);
     this->_nextPos = glm::vec3(0.0f);
     this->_nextFront = glm::vec3(0.0f);
+    this->_rotating = false;
 
     this->lookAt(this->_pos, this->_front, this->_up);
 }

@@ -32,12 +32,12 @@ namespace neo
             std::string multiplier_str(std::string chr, std::size_t size);
 
             //update functions
-            void GameScene::updatePlayers(void);
-            void GameScene::explode(std::unique_ptr<neo::Bomb> &bomb);
-            void GameScene::updateBombs(void);
+            void updatePlayers(void);
+            void explode(std::unique_ptr<neo::Bomb> &bomb);
+            void updateBombs(void);
 
             //others
-            bool GameScene::canPlaceBomb(int playerNb);
+            bool canPlaceBomb(int playerNb);
 
             //variables
             std::shared_ptr<MessageBus> _messageBus;

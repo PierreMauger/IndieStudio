@@ -189,6 +189,8 @@ void Graphics::receiveMove(Packet data)
     float x, y, z;
 
     data >> id >> x >> y >> z;
+    if (this->_objects.find(id) == this->_objects.end())
+        return;
     if (this->_objects[id]->getPos().x < x)
         this->_objects[id]->setRotation(90);
     else if (this->_objects[id]->getPos().x > x)
