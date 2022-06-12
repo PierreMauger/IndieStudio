@@ -70,13 +70,13 @@ void GameScene::updatePlayers(void)
 {
     for (auto &[player_key, player] : this->_players) {
         if (player->getDirection(RIGHT))
-            player->getSpeed().x += (player->getSpeedUp() + 1) * 0.1f;
+            player->getSpeed().x += 0.1f + player->getSpeedUp() * 0.05f;
         if (player->getDirection(LEFT))
-            player->getSpeed().x += (player->getSpeedUp() + 1) * -0.1f;
+            player->getSpeed().x += -0.1f - player->getSpeedUp() * 0.05f;
         if (player->getDirection(UP))
-            player->getSpeed().y += (player->getSpeedUp() + 1) * 0.1f;
+            player->getSpeed().y += 0.1f + player->getSpeedUp() * 0.05f;
         if (player->getDirection(DOWN))
-            player->getSpeed().y += (player->getSpeedUp() + 1) * -0.1f;
+            player->getSpeed().y += -0.1f - player->getSpeedUp() * 0.05f;
         for (auto &[wall_key, wall] : this->_walls) {
             if (wall->getName() == "Wall" && player->getWallPass())
                 continue;
@@ -152,15 +152,13 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
                     break;
                 }
             }
-            for (auto it = this->_players.begin(); it != this->_players.end();) {
+            for (auto it = this->_players.begin(); it != this->_players.end(); it++) {
                 if (floor(it->second->getPos().x) + 0.5f == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
                     floor(it->second->getPos().y) + 0.5f == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
                     Packet packet;
                     packet << it->first;
                     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-                    this->_players.erase(it++);
-                } else {
-                    it++;
+                    this->_players.erase(it);
                 }
             }
         }
@@ -169,15 +167,13 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
 
 void GameScene::updateBombs()
 {
-    for (auto it = this->_bombs.begin(); it != this->_bombs.end();) {
+    for (auto it = this->_bombs.begin(); it != this->_bombs.end(); it++) {
         if (GetTime() - it->second->getTimer() > 3) {
             this->explode(it->second);
             Packet packet;
             packet << it->first;
             this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-            this->_bombs.erase(it++);
-        } else {
-            it++;
+            this->_bombs.erase(it);
         }
     }
 }
