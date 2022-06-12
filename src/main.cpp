@@ -12,7 +12,6 @@ int main(int argc, char **argv)
 {
     neo::Neo neo;
 
-    std::srand(std::time(nullptr));
     neo.run();
     return 0;
 }

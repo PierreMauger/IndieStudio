@@ -13,7 +13,6 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
     this->_incrementor = 0;
-    srand(time(nullptr));
 }
 
 GameScene::~GameScene()
@@ -128,6 +127,7 @@ void GameScene::updatePlayers(void)
 
 void GameScene::explode(std::unique_ptr<neo::Bomb> &bomb)
 {
+    std::srand(std::time(0));
     for (size_t i = RIGHT; i <= DOWN; i++) {
         for (int j = 0; j <= 2 + bomb->getFireUp(); j++) {
             for (auto &[wall_key, wall] : this->_walls) {
@@ -140,8 +140,8 @@ void GameScene::explode(std::unique_ptr<neo::Bomb> &bomb)
                     packet << wall_key;
                     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
                     this->_walls.erase(wall_key);
-                    if (!(rand() % 10)) {
-                        int tmp = rand() % 4;
+                    if (!(std::rand() % 10)) {
+                        int tmp = std::rand() % 4;
                         this->_powerUps[_incrementor] = std::make_unique<PowerUp>(powerUps[tmp], wall->getPos(), glm::vec3(0.5f));
                         Packet packet;
                         packet << this->_powerUps[_incrementor]->getType() << _incrementor << *this->_powerUps[_incrementor];
@@ -298,14 +298,13 @@ bool GameScene::findPathY(std::vector<std::string> map, std::pair<int, int> curr
 std::vector<std::string> GameScene::generateCornerMap(std::size_t x, std::size_t y)
 {
     std::vector<std::string> new_walls;
-    float random = 0;
+    std::srand(std::time(0));
 
     new_walls.resize(x);
     for (size_t i = 0; i != x; i++) {
         new_walls[i].resize(y);
         for (size_t n = 0; n != y; n++) {
-            random = std::rand() % 10;
-            if (random <= 6)
+            if (std::rand() % 10 <= 6)
                 new_walls[i][n] = 'W';
             else
                 new_walls[i][n] = '#';
