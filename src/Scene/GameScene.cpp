@@ -152,13 +152,15 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
                     break;
                 }
             }
-            for (auto it = this->_players.begin(); it != this->_players.end(); it++) {
+            for (auto it = this->_players.begin(); it != this->_players.end();) {
                 if (floor(it->second->getPos().x) + 0.5f == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
                     floor(it->second->getPos().y) + 0.5f == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
                     Packet packet;
                     packet << it->first;
                     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-                    this->_players.erase(it);
+                    this->_players.erase(it++);
+                } else {
+                    it++;
                 }
             }
         }
@@ -167,21 +169,23 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
 
 void GameScene::updateBombs()
 {
-    for (auto it = this->_bombs.begin(); it != this->_bombs.end(); it++) {
+    for (auto it = this->_bombs.begin(); it != this->_bombs.end();) {
         if (GetTime() - it->second->getTimer() > 3) {
             this->explode(it->second);
             Packet packet;
             packet << it->first;
             this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-            this->_bombs.erase(it);
+            this->_bombs.erase(it++);
+        } else {
+            it++;
         }
     }
 }
 
 void GameScene::update()
 {
-    updatePlayers();
-    updateBombs();
+    this->updatePlayers();
+    this->updateBombs();
 }
 
 bool GameScene::canPlaceBomb(int playerNb)
@@ -210,10 +214,10 @@ void GameScene::handleKeyPressed(int playerNb, std::string action)
         this->_players[playerNb]->getDirection(DOWN) = true;
     else if (action == "Main" && canPlaceBomb(playerNb)) {
         glm::vec3 pos(floor(this->_players[playerNb]->getPos().x) + 0.5f, floor(this->_players[playerNb]->getPos().y) + 0.5f, this->_players[playerNb]->getPos().z);
-        this->_bombs[_incrementor] = std::make_unique<Bomb>("Bomb", pos, this->_players[playerNb]->getFireUp(), playerNb, glm::vec3(0.5f));
+        this->_bombs[this->_incrementor] = std::make_unique<Bomb>("Bomb", pos, this->_players[playerNb]->getFireUp(), playerNb, glm::vec3(0.5f));
         Packet packet;
-        packet << this->_bombs[_incrementor]->getType() << _incrementor << *this->_bombs[_incrementor];
-        _incrementor++;
+        packet << this->_bombs[this->_incrementor]->getType() << this->_incrementor << *this->_bombs[this->_incrementor];
+        this->_incrementor++;
         this->_messageBus->sendMessage(Message(packet, GraphicsCommand::ADD, Module::GRAPHICS));
     }
 }
