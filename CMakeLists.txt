@@ -17,7 +17,9 @@ endif (WIN32)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
 set(DirectX_D3DX9_LIBRARY "")
 set(ASSIMP_BUILD_ASSIMP_VIEW False)
+set(ASSIMP_BUILD_ASSIMP_TOOLS False)
 set(ASSIMP_BUILD_TESTS False)
+set(ASSIMP_BUILD_SAMPLES False)
 
 #add some color
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -83,6 +85,7 @@ set(SRC
   src/Game/Bomb.cpp
   src/Game/Wall.cpp
   src/Game/PowerUp.cpp
+  src/Game/MapGenerator.cpp
 )
 
 #fetch libraries

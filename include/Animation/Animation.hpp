@@ -34,20 +34,20 @@ namespace neo
             int _tickPerSecond;
             std::vector<Bone> _bones;
             AssimpNodeData _rootNode;
-            std::map<std::string, neo::BoneInfo> _boneInfoMap;
+            std::map<std::string, BoneInfo> _boneInfoMap;
 
         public:
             Animation() = default;
-            Animation(const std::string &path, neo::Model &model);
+            Animation(const std::string &path, Model &model);
             ~Animation() = default;
 
             float getTicksPerSecond() const;
             float getDuration() const;
             const AssimpNodeData &getRootNode() const;
-            const std::map<std::string, neo::BoneInfo> &getBoneInfoMap() const;
+            const std::map<std::string, BoneInfo> &getBoneInfoMap() const;
 
             std::unique_ptr<Bone> findBone(const std::string &name);
-            void readMissingBones(const aiAnimation &animation, neo::Model &model);
+            void readMissingBones(const aiAnimation &animation, Model &model);
             void readHierarchyData(AssimpNodeData &dest, const aiNode &src);
     };
 }

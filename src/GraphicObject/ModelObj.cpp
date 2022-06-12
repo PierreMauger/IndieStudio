@@ -9,12 +9,12 @@
 
 using namespace neo;
 
-ModelObj::ModelObj(GameObject obj, std::shared_ptr<neo::Model> model) : GraphicObject(obj)
+ModelObj::ModelObj(GameObject obj, std::shared_ptr<Model> model) : GraphicObject(obj)
 {
     this->_model = model;
 }
 
-void ModelObj::draw(neo::Camera &camera)
+void ModelObj::draw(Camera &camera)
 {
     camera.setOnModel(this->_pos, this->_scale, this->_rotation);
     this->_model->draw(camera.getShader());

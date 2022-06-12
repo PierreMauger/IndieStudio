@@ -47,17 +47,17 @@ namespace neo
         private:
             std::vector<Vertex> _vertices;
             std::vector<unsigned int> _indices;
-            std::vector<neo::Texture> _textures;
-            neo::Material _material;
+            std::vector<Texture> _textures;
+            Material _material;
             unsigned int VAO;
             unsigned int VBO;
             unsigned int EBO;
 
         public:
-            Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, neo::Material material, std::vector<neo::Texture> textures);
+            Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Material material, std::vector<Texture> textures);
             ~Mesh() = default;
             void setupMesh();
-            void draw(neo::Shader &shader);
+            void draw(Shader &shader);
     };
 }
 

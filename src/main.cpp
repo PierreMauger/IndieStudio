@@ -8,9 +8,11 @@
 #include "includes.hpp"
 #include "Neo.hpp"
 
+using namespace neo;
+
 int main(int argc, char **argv)
 {
-    neo::Neo neo;
+    Neo neo;
 
     neo.run();
     return 0;

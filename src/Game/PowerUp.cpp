@@ -7,6 +7,8 @@
 
 #include "PowerUp.hpp"
 
-neo::PowerUp::PowerUp(std::string name, glm::vec3 pos, glm::vec3 scale) : GameObject(0, name, pos, scale)
+using namespace neo;
+
+PowerUp::PowerUp(std::string name, glm::vec3 pos, glm::vec3 scale) : GameObject(0, name, pos, scale)
 {
 }

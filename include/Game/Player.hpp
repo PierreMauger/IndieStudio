@@ -11,6 +11,8 @@
     #include "GameObject.hpp"
     #include "Bomb.hpp"
 
+using namespace neo;
+
 namespace neo
 {
     class Player : public virtual GameObject

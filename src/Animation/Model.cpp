@@ -84,7 +84,7 @@ void neo::Model::extractBoneWeightForVertices(std::vector<Vertex> &vertices, aiM
         int boneID = -1;
         std::string boneName = mesh.mBones[boneIndex]->mName.C_Str();
         if (boneInfoMap.find(boneName) == boneInfoMap.end()) {
-            neo::BoneInfo newBoneInfo;
+            BoneInfo newBoneInfo;
             newBoneInfo.id = boneCount;
             newBoneInfo.offset = ConvertMatrixToGLMFormat(mesh.mBones[boneIndex]->mOffsetMatrix);
             boneInfoMap[boneName] = newBoneInfo;
@@ -111,7 +111,7 @@ neo::Mesh neo::Model::processMesh(aiMesh &mesh, const aiScene &scene)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<neo::Texture> textures;
+    std::vector<Texture> textures;
 
     for (unsigned int i = 0; i < mesh.mNumVertices; i++) {
         Vertex vertex;
@@ -140,7 +140,7 @@ neo::Mesh neo::Model::processMesh(aiMesh &mesh, const aiScene &scene)
     aiColor3D color(0.0f, 0.0f, 0.0f);
     float shininess;
 
-    neo::Material material;
+    Material material;
 
     materialLoaded->Get(AI_MATKEY_COLOR_DIFFUSE, color);
     material.diffuse = glm::vec3(color.r, color.g, color.b);
@@ -168,12 +168,12 @@ neo::Mesh neo::Model::processMesh(aiMesh &mesh, const aiScene &scene)
 
     }
 
-    return neo::Mesh(vertices, indices, material, textures);
+    return Mesh(vertices, indices, material, textures);
 }
 
 std::vector<neo::Texture> neo::Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)
 {
-    std::vector<neo::Texture> textures;
+    std::vector<Texture> textures;
 
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
         aiString str;
@@ -187,7 +187,7 @@ std::vector<neo::Texture> neo::Model::loadMaterialTextures(aiMaterial *mat, aiTe
             }
         }
         if (!skip) {
-            neo::Texture texture;
+            Texture texture;
             texture.id = textureFromFile(str.C_Str(), "resources/textures/");
             texture.type = typeName;
             texture.path = str.C_Str();
@@ -213,7 +213,7 @@ unsigned int neo::Model::textureFromFile(const char* path, const std::string& di
     return texture.id;
 }
 
-void neo::Model::draw(neo::Shader &shader)
+void neo::Model::draw(Shader &shader)
 {
     for (unsigned int i = 0; i < this->_meshes.size(); i++)
         this->_meshes[i].draw(shader);

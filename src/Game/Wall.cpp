@@ -7,6 +7,8 @@
 
 #include "Wall.hpp"
 
-neo::Wall::Wall(std::string name, glm::vec3 pos, glm::vec3 scale) : GameObject(0, name, pos, scale)
+using namespace neo;
+
+Wall::Wall(std::string name, glm::vec3 pos, glm::vec3 scale) : GameObject(0, name, pos, scale)
 {
 }

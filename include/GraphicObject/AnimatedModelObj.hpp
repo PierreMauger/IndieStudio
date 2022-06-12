@@ -19,15 +19,15 @@ namespace neo
     class AnimatedModelObj : public GraphicObject
     {
         private:
-            std::shared_ptr<neo::Model> _model;
-            std::shared_ptr<neo::Animation> _animation;
-            std::unique_ptr<neo::Animator> _animator;
+            std::shared_ptr<Model> _model;
+            std::shared_ptr<Animation> _animation;
+            std::unique_ptr<Animator> _animator;
 
         public:
-            AnimatedModelObj(GameObject obj, std::shared_ptr<neo::Model> model, std::shared_ptr<neo::Animation> animation);
+            AnimatedModelObj(GameObject obj, std::shared_ptr<Model> model, std::shared_ptr<Animation> animation);
             ~AnimatedModelObj() = default;
 
-            void draw(neo::Camera &camera);
+            void draw(Camera &camera);
     };
 }
 

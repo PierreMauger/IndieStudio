@@ -21,7 +21,7 @@ static glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4 &from)
     return to;
 }
 
-Animation::Animation(const std::string &path, neo::Model &model)
+Animation::Animation(const std::string &path, Model &model)
 {
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate);
@@ -65,7 +65,7 @@ const std::map<std::string, neo::BoneInfo> &Animation::getBoneInfoMap() const
     return this->_boneInfoMap;
 }
 
-void Animation::readMissingBones(const aiAnimation &animation, neo::Model &model)
+void Animation::readMissingBones(const aiAnimation &animation, Model &model)
 {
     int size = animation.mNumChannels;
 
