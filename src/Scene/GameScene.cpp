@@ -96,22 +96,24 @@ void GameScene::updatePlayers(void)
                 player->getSpeed().y = 0.0f;
             }
         }
-        for (auto &[powerup_key, powerup] : this->_powerUps) {
+        for (auto it = this->_powerUps.begin(); it != this->_powerUps.end();) {
             if (CheckCollisionRecs(
                 CAST(Rectangle, player->getPos().x - 0.3f + player->getSpeed().x, player->getPos().y - 0.3f + player->getSpeed().y, 0.6f, 0.6f),
-                CAST(Rectangle, powerup->getPos().x - 0.5f, powerup->getPos().y - 0.5f, 1.0f, 1.0f))) {
-                if (powerup->getName() == "BombUp")
+                CAST(Rectangle, it->second->getPos().x - 0.5f, it->second->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                if (it->second->getName() == "BombUp")
                     player->getBombUp() += 1;
-                if (powerup->getName() == "SpeedUp")
+                if (it->second->getName() == "SpeedUp")
                     player->getSpeedUp() += 1;
-                if (powerup->getName() == "FireUp")
+                if (it->second->getName() == "FireUp")
                     player->getFireUp() += 1;
-                if (powerup->getName() == "WallPass")
+                if (it->second->getName() == "WallPass")
                     player->getWallPass() = true;
                 Packet packet;
-                packet << powerup_key;
+                packet << it->first;
                 this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-                this->_powerUps.erase(powerup_key);
+                this->_powerUps.erase(it++);
+            } else {
+                it++;
             }
         }
         if (player->getSpeed() != glm::vec3(0.0f)) {
@@ -192,8 +194,8 @@ bool GameScene::canPlaceBomb(int playerNb)
 {
     size_t bombsCount = 0;
 
-    for (auto &[bomb_key, bomb] : this->_bombs)
-        if (bomb->getPlayerId() == playerNb)
+    for (auto it = this->_bombs.begin(); it != this->_bombs.end(); it++)
+        if (it->second->getPlayerId() == playerNb)
             bombsCount++;
     if (1 + this->_players[playerNb]->getBombUp() > bombsCount)
         return true;
