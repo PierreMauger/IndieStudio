@@ -68,7 +68,13 @@ void Graphics::draw()
 
     glEnable(GL_DEPTH_TEST);
     for (auto &object : this->_objects)
-        object.second->draw(*this->_camera);
+        if (!object.second->getStatus())
+            object.second->draw(*this->_camera);
+    for (auto &object : this->_objects)
+        if (object.second->getStatus()) {
+            glClear(GL_DEPTH_BUFFER_BIT);
+            object.second->draw(*this->_camera);
+        }
     glDisable(GL_DEPTH_TEST);
     for (auto &button : this->_buttons)
         button.second->draw(*this->_camera);
@@ -208,6 +214,6 @@ void Graphics::receiveSelectButton(Packet data)
     int status;
 
     data >> id >> status;
-    if (this->_buttons.find(id) != this->_buttons.end())
-        this->_buttons[id]->setStatus(status);
+    if (this->_objects.find(id) != this->_objects.end())
+        this->_objects[id]->setStatus(status);
 }

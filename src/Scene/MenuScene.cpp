@@ -12,11 +12,10 @@ using namespace neo;
 MenuScene::MenuScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
-    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(90.0f))));
-    this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>(0, "RoboCat", glm::vec3(0.0f), glm::vec3(0.5f))));
-    this->_buttons.insert(std::make_pair(0, std::make_unique<GameObject>(2, "red", glm::vec3(50, 500, 0), glm::vec3(100, 50, 0))));
-    this->_buttons.insert(std::make_pair(1, std::make_unique<GameObject>(2, "red", glm::vec3(250, 500, 0), glm::vec3(100, 50, 0))));
-    this->_buttons.insert(std::make_pair(2, std::make_unique<GameObject>(2, "red", glm::vec3(450, 500, 0), glm::vec3(100, 50, 0))));
+    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "Asteroid", glm::vec3(0.0f, 0.0f, -0.5f), glm::vec3(0.5f))));
+    this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>(0, "Asteroid", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f))));
+    this->_objects.insert(std::make_pair(2, std::make_unique<GameObject>(0, "Asteroid", glm::vec3(0.0f, 0.0f, 0.5f), glm::vec3(0.5f))));
+    this->_objects.insert(std::make_pair(3, std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(90.0f))));
 
     this->_selectedButton = -1;
 }
@@ -99,11 +98,11 @@ void MenuScene::handleMovePressed(int playerNb, std::string action)
         this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT_BUTTON, Module::GRAPHICS));
         packet.clear();
         if (action == "MoveRight")
-            this->_selectedButton = (this->_selectedButton + 1) % this->_buttons.size();
+            this->_selectedButton = (this->_selectedButton + 1) % 3;
         else {
-            if (this->_selectedButton == 0)
-                this->_selectedButton = this->_buttons.size();
-            this->_selectedButton = (this->_selectedButton - 1) % this->_buttons.size();
+            if (this->_selectedButton <= 0)
+                this->_selectedButton = 3;
+            this->_selectedButton = (this->_selectedButton - 1) % 3;
         }
         packet << this->_selectedButton << 1;
         this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT_BUTTON, Module::GRAPHICS));

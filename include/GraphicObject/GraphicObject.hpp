@@ -30,6 +30,7 @@ namespace neo
             glm::vec3 getPos() const;
             glm::vec3 getScale() const;
             float getRotation() const;
+            int getStatus() const;
             void setPos(glm::vec3 pos);
             void setRotation(float rotation);
             void setStatus(int status);

@@ -11,6 +11,8 @@ uniform vec3 viewPos;
 uniform vec3 lightColor;
 uniform vec3 objectColor;
 
+uniform bool outline = false;
+
 uniform sampler2D textureDiffuse;
 
 void main()
@@ -36,4 +38,6 @@ void main()
     FragColor = texture(textureDiffuse, TexCoords);
     if (FragColor.rgb == vec3(0.0f)) // if texture is not loaded
         FragColor += vec4(result, 1.0f);
+    if (outline)
+        FragColor = vec4(vec3(1.0f, 1.0f, 1.0f), 0.33f);
 }

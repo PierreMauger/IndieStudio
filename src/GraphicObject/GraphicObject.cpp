@@ -33,6 +33,11 @@ float GraphicObject::getRotation() const
     return this->_rotation;
 }
 
+int GraphicObject::getStatus() const
+{
+    return this->_status;
+}
+
 void GraphicObject::setPos(glm::vec3 pos)
 {
     this->_pos = pos;
