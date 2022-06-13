@@ -31,7 +31,7 @@ void neo::Camera::lookAt(glm::vec3 const &pos, glm::vec3 const &front, glm::vec3
 {
     this->_pos = pos;
     this->_front = front;
-    this->_up = up;
+
     this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
     this->_projection = glm::perspective(glm::radians(45.0f), (float)GetScreenWidth() / (float)GetScreenHeight(), 0.1f, 100.0f);
     this->_model = glm::mat4(1.0f);
@@ -47,6 +47,15 @@ void neo::Camera::setPos(glm::vec3 const &pos)
 {
     this->_pos = pos;
     this->_front = -pos;
+
+    glm::vec3 forward = glm::normalize(this->_pos - this->_front);
+    if (forward != glm::vec3(0.0f, 0.0f, 1.0f)) { // if not looking at the z axis, other solution would be using quaternions
+        glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0.0f, 0.0f, 1.0f)));
+        glm::vec3 up = glm::normalize(glm::cross(right, forward));
+        this->_up = up;
+    } else {
+        this->_up = glm::vec3(0.0f, 1.0f, 0.0f);
+    }
     this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
 }
 
@@ -60,9 +69,9 @@ void neo::Camera::setRotating(bool rotating)
 {
     this->_rotating = rotating;
     if (this->_rotating) {
-        this->_up = glm::vec3(0.0f, 0.0f, 1.0f);
+        this->_up = glm::vec3(0.0f, 0.0f, 0.0f);
     } else {
-        this->_up = glm::vec3(0.0f, 1.0f, 0.0f);
+        this->_up = glm::vec3(0.0f, 0.0f, 0.0f);
     }
 }
 
