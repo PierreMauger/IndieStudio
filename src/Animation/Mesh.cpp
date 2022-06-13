@@ -20,7 +20,6 @@ neo::Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
 
 void neo::Mesh::draw(Shader &shader)
 {
-    shader.setVec3("lightColor", glm::vec3(1.0f));
     shader.setVec3("objectColor", this->_material.diffuse);
 
     unsigned int diffuseNr = 1;

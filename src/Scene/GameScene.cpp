@@ -77,23 +77,27 @@ void GameScene::updatePlayers(void)
             player->getSpeed().y += 0.1f + player->getSpeedUp() * 0.05f;
         if (player->getDirection(DOWN))
             player->getSpeed().y += -0.1f - player->getSpeedUp() * 0.05f;
-        for (auto &[wall_key, wall] : this->_walls) {
-            if (wall->getName() == "Wall" && player->getWallPass())
+        for (auto it = this->_walls.begin(); it != this->_walls.end();) {
+            if (it->second->getName() == "Wall" && player->getWallPass()) {
+                it++;
                 continue;
+            }
             if (CheckCollisionRecs(
                 CAST(Rectangle, player->getPos().x - 0.3f + player->getSpeed().x, player->getPos().y - 0.3f, 0.6f, 0.6f),
-                CAST(Rectangle, wall->getPos().x - 0.5f, wall->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                CAST(Rectangle, it->second->getPos().x - 0.5f, it->second->getPos().y - 0.5f, 1.0f, 1.0f))) {
                 player->getSpeed().x = 0.0f;
             }
             if (CheckCollisionRecs(
                 CAST(Rectangle, player->getPos().x - 0.3f, player->getPos().y - 0.3f + player->getSpeed().y, 0.6f, 0.6f),
-                CAST(Rectangle, wall->getPos().x - 0.5f, wall->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                CAST(Rectangle, it->second->getPos().x - 0.5f, it->second->getPos().y - 0.5f, 1.0f, 1.0f))) {
                 player->getSpeed().y = 0.0f;
             }
             if (player->getSpeed().x && player->getSpeed().y && CheckCollisionRecs(
                 CAST(Rectangle, player->getPos().x - 0.3f + player->getSpeed().x, player->getPos().y - 0.3f + player->getSpeed().y, 0.6f, 0.6f),
-                CAST(Rectangle, wall->getPos().x - 0.5f, wall->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                CAST(Rectangle, it->second->getPos().x - 0.5f, it->second->getPos().y - 0.5f, 1.0f, 1.0f))) {
                 player->getSpeed().y = 0.0f;
+            } else {
+                it++;
             }
         }
         for (auto it = this->_powerUps.begin(); it != this->_powerUps.end();) {
@@ -106,8 +110,10 @@ void GameScene::updatePlayers(void)
                     player->getSpeedUp() += 1;
                 if (it->second->getName() == "FireUp")
                     player->getFireUp() += 1;
-                if (it->second->getName() == "WallPass")
+                if (it->second->getName() == "WallPass") {
+                    std::cout << "Activate WallPass" << std::endl;
                     player->getWallPass() = true;
+                }
                 Packet packet;
                 packet << it->first;
                 this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
@@ -133,7 +139,7 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
 
     for (size_t i = RIGHT; i <= DOWN; i++) {
         for (int j = 0; j <= 2 + bomb->getFireUp(); j++) {
-            for (auto it = this->_walls.begin(); it != this->_walls.end(); it++) {
+            for (auto it = this->_walls.begin(); it != this->_walls.end();) {
                 if (it->second->getPos().x == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
                     it->second->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
                     j = INT_MAX;
@@ -142,7 +148,6 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
                     Packet packet;
                     packet << it->first;
                     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-                    this->_walls.erase(it);
                     if (std::rand() % 10 == 0) {
                         int tmp = std::rand() % 4;
                         this->_powerUps[this->_incrementor] = std::make_unique<PowerUp>(powerUps[tmp], it->second->getPos(), glm::vec3(0.5f));
@@ -151,7 +156,10 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
                         this->_incrementor++;
                         this->_messageBus->sendMessage(Message(packet, GraphicsCommand::ADD, Module::GRAPHICS));
                     }
+                    this->_walls.erase(it++);
                     break;
+                } else {
+                    it++;
                 }
             }
             for (auto it = this->_players.begin(); it != this->_players.end();) {
