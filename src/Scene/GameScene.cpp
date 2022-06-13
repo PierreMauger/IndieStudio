@@ -36,8 +36,8 @@ void GameScene::loadScene()
     for (int i = 0; i < map.size(); i++) {
         for (int j = 0; j < map[i].size(); j++) {
             glm::vec3 pos(i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.f);
-            if (map[i][j] == 'P') {
-                this->_players[_incrementor] = std::make_unique<Player>("RoboCat", pos, glm::vec3(0.4f));
+            if (map[i][j] == 'P' || map[i][j] == 'B') {
+                this->_players[_incrementor] = std::make_unique<Player>("RoboCat", pos, map[i][j] == 'B', glm::vec3(0.4f));
                 packet << this->_players[_incrementor]->getType() << _incrementor << *this->_players[_incrementor];
                 _incrementor++;
             }
@@ -110,10 +110,8 @@ void GameScene::updatePlayers(void)
                     player->getSpeedUp() += 1;
                 if (it->second->getName() == "FireUp")
                     player->getFireUp() += 1;
-                if (it->second->getName() == "WallPass") {
-                    std::cout << "Activate WallPass" << std::endl;
+                if (it->second->getName() == "WallPass")
                     player->getWallPass() = true;
-                }
                 Packet packet;
                 packet << it->first;
                 this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
@@ -136,10 +134,9 @@ void GameScene::updatePlayers(void)
 void GameScene::explode(std::unique_ptr<Bomb> &bomb)
 {
     std::srand(std::time(0));
-
     for (size_t i = RIGHT; i <= DOWN; i++) {
         for (int j = 0; j <= 2 + bomb->getFireUp(); j++) {
-            for (auto it = this->_walls.begin(); it != this->_walls.end();) {
+            for (auto it = this->_walls.begin(); it != this->_walls.end(); it++) {
                 if (it->second->getPos().x == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
                     it->second->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
                     j = INT_MAX;
@@ -148,7 +145,7 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
                     Packet packet;
                     packet << it->first;
                     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-                    if (std::rand() % 10 == 0) {
+                    if (std::rand() % 1 == 0) {
                         int tmp = std::rand() % 4;
                         this->_powerUps[this->_incrementor] = std::make_unique<PowerUp>(powerUps[tmp], it->second->getPos(), glm::vec3(0.5f));
                         Packet packet;
@@ -156,10 +153,8 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
                         this->_incrementor++;
                         this->_messageBus->sendMessage(Message(packet, GraphicsCommand::ADD, Module::GRAPHICS));
                     }
-                    this->_walls.erase(it++);
+                    this->_walls.erase(it);
                     break;
-                } else {
-                    it++;
                 }
             }
             for (auto it = this->_players.begin(); it != this->_players.end();) {
@@ -177,7 +172,7 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
     }
 }
 
-void GameScene::updateBombs()
+void GameScene::updateBombs(void)
 {
     for (auto it = this->_bombs.begin(); it != this->_bombs.end();) {
         if (GetTime() - it->second->getTimer() > 3) {
@@ -192,8 +187,18 @@ void GameScene::updateBombs()
     }
 }
 
-void GameScene::update()
+void GameScene::updateAI(void)
 {
+    for (auto &[player_key, player] : this->_players) {
+        if (!player->getAI())
+            continue;
+        handleKeyPressed(player_key, "MoveUp");
+    }
+}
+
+void GameScene::update(void)
+{
+    this->updateAI();
     this->updatePlayers();
     this->updateBombs();
 }

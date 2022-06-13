@@ -26,6 +26,7 @@ namespace neo
             void updatePlayers(void);
             void explode(std::unique_ptr<Bomb> &bomb);
             void updateBombs(void);
+            void updateAI(void);
 
             //others
             bool canPlaceBomb(int playerNb);
