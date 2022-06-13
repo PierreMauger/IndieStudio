@@ -68,11 +68,6 @@ void neo::Camera::centerOn(glm::vec3 const &pos)
 void neo::Camera::setRotating(bool rotating)
 {
     this->_rotating = rotating;
-    if (this->_rotating) {
-        this->_up = glm::vec3(0.0f, 0.0f, 0.0f);
-    } else {
-        this->_up = glm::vec3(0.0f, 0.0f, 0.0f);
-    }
 }
 
 void neo::Camera::setShader(float time)

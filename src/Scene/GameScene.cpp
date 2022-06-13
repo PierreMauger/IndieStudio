@@ -110,10 +110,8 @@ void GameScene::updatePlayers(void)
                     player->getSpeedUp() += 1;
                 if (it->second->getName() == "FireUp")
                     player->getFireUp() += 1;
-                if (it->second->getName() == "WallPass") {
-                    std::cout << "Activate WallPass" << std::endl;
+                if (it->second->getName() == "WallPass")
                     player->getWallPass() = true;
-                }
                 Packet packet;
                 packet << it->first;
                 this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
