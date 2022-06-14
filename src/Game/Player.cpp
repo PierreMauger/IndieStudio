@@ -9,7 +9,7 @@
 
 using namespace neo;
 
-Player::Player(std::string name, glm::vec3 pos, bool isAI, glm::vec3 scale) : GameObject(0, name, pos, scale)
+Player::Player(std::string name, glm::vec3 pos, bool isBot, glm::vec3 scale) : GameObject(0, name, pos, scale)
 {
     this->_speed = glm::vec3(0.0f);
     this->_bombUp = 0;
@@ -18,7 +18,7 @@ Player::Player(std::string name, glm::vec3 pos, bool isAI, glm::vec3 scale) : Ga
     this->_wallPass = false;
     for (int i = 0; i < 4; i++)
         this->_direction[i] = false;
-    this->_isAI = isAI;
+    this->_isBot = isBot;
 }
 
 glm::vec3 &Player::getSpeed()
@@ -50,7 +50,7 @@ bool &Player::getWallPass()
     return this->_wallPass;
 }
 
-bool &Player::getAI()
+bool &Player::isBot()
 {
-    return this->_isAI;
+    return this->_isBot;
 }

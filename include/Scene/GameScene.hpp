@@ -16,6 +16,7 @@
     #include "Wall.hpp"
     #include "PowerUp.hpp"
     #include "MapGenerator.hpp"
+    #include "BotEngine.hpp"
 
 namespace neo
 {
@@ -38,6 +39,7 @@ namespace neo
             std::map<int, std::unique_ptr<Wall>> _walls;
             std::map<int, std::unique_ptr<PowerUp>> _powerUps;
             MapGenerator _mapGenerator;
+            BotEngine _botEngine;
             int _incrementor;
 
         public:

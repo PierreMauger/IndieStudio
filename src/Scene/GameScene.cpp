@@ -23,9 +23,12 @@ GameScene::~GameScene()
         wall.reset();
     for (auto &[bomb_key, bomb] : this->_bombs)
         bomb.reset();
+    for (auto &[powerUp_key, powerUp] : this->_powerUps)
+        powerUp.reset();
     this->_players.clear();
     this->_walls.clear();
     this->_bombs.clear();
+    this->_powerUps.clear();
 }
 
 void GameScene::loadScene()
@@ -100,6 +103,27 @@ void GameScene::updatePlayers(void)
                 it++;
             }
         }
+        for (auto &[bomb_key, bomb] : this->_bombs) {
+            if (CheckCollisionRecs(
+                CAST(Rectangle, player->getPos().x - 0.3f, player->getPos().y - 0.3f, 0.6f, 0.6f),
+                CAST(Rectangle, bomb->getPos().x - 0.5f, bomb->getPos().y - 0.5f, 1.0f, 1.0f)))
+                continue;
+            if (CheckCollisionRecs(
+                CAST(Rectangle, player->getPos().x - 0.3f + player->getSpeed().x, player->getPos().y - 0.3f, 0.6f, 0.6f),
+                CAST(Rectangle, bomb->getPos().x - 0.5f, bomb->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                player->getSpeed().x = 0.0f;
+            }
+            if (CheckCollisionRecs(
+                CAST(Rectangle, player->getPos().x - 0.3f, player->getPos().y - 0.3f + player->getSpeed().y, 0.6f, 0.6f),
+                CAST(Rectangle, bomb->getPos().x - 0.5f, bomb->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                player->getSpeed().y = 0.0f;
+            }
+            if (player->getSpeed().x && player->getSpeed().y && CheckCollisionRecs(
+                CAST(Rectangle, player->getPos().x - 0.3f + player->getSpeed().x, player->getPos().y - 0.3f + player->getSpeed().y, 0.6f, 0.6f),
+                CAST(Rectangle, bomb->getPos().x - 0.5f, bomb->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                player->getSpeed().y = 0.0f;
+            }
+        }
         for (auto it = this->_powerUps.begin(); it != this->_powerUps.end();) {
             if (CheckCollisionRecs(
                 CAST(Rectangle, player->getPos().x - 0.3f + player->getSpeed().x, player->getPos().y - 0.3f + player->getSpeed().y, 0.6f, 0.6f),
@@ -134,12 +158,53 @@ void GameScene::updatePlayers(void)
 void GameScene::explode(std::unique_ptr<Bomb> &bomb)
 {
     std::srand(std::time(0));
+    for (auto it = this->_players.begin(); it != this->_players.end();) {
+        if (std::floor(it->second->getPos().x) + 0.5f == bomb->getPos().x &&
+            bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > it->second->getPos().y &&
+            it->second->getPos().y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
+            std::floor(it->second->getPos().y) + 0.5f == bomb->getPos().y &&
+            bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > it->second->getPos().x &&
+            it->second->getPos().x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp()) {
+            Packet packet;
+            packet << it->first;
+            this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
+            this->_players.erase(it++);
+        } else {
+            it++;
+        }
+    }
+    for (auto &[bomb_key, other_bomb] : this->_bombs) {
+        if (other_bomb->getPos() == bomb->getPos())
+            continue;
+        if (std::floor(other_bomb->getPos().x) + 0.5f == bomb->getPos().x &&
+            bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > other_bomb->getPos().y &&
+            other_bomb->getPos().y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
+            std::floor(other_bomb->getPos().y) + 0.5f == bomb->getPos().y &&
+            bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > other_bomb->getPos().x &&
+            other_bomb->getPos().x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp())
+            other_bomb->getTimer() = 0.0f;
+    }
+    for (auto it = this->_powerUps.begin(); it != this->_powerUps.end();) {
+        if (std::floor(it->second->getPos().x) + 0.5f == bomb->getPos().x &&
+            bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > it->second->getPos().y &&
+            it->second->getPos().y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
+            std::floor(it->second->getPos().y) + 0.5f == bomb->getPos().y &&
+            bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > it->second->getPos().x &&
+            it->second->getPos().x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp()) {
+            Packet packet;
+            packet << it->first;
+            this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
+            this->_powerUps.erase(it++);
+        } else {
+            it++;
+        }
+    }
     for (size_t i = RIGHT; i <= DOWN; i++) {
         for (int j = 0; j <= 2 + bomb->getFireUp(); j++) {
             for (auto it = this->_walls.begin(); it != this->_walls.end(); it++) {
                 if (it->second->getPos().x == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
                     it->second->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
-                    j = INT_MAX;
+                    j = INT_MAX - 1;
                     if (it->second->getName() == "Block")
                         break;
                     Packet packet;
@@ -155,17 +220,6 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
                     }
                     this->_walls.erase(it);
                     break;
-                }
-            }
-            for (auto it = this->_players.begin(); it != this->_players.end();) {
-                if (floor(it->second->getPos().x) + 0.5f == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
-                    floor(it->second->getPos().y) + 0.5f == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
-                    Packet packet;
-                    packet << it->first;
-                    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-                    this->_players.erase(it++);
-                } else {
-                    it++;
                 }
             }
         }
@@ -187,18 +241,9 @@ void GameScene::updateBombs(void)
     }
 }
 
-void GameScene::updateAI(void)
-{
-    for (auto &[player_key, player] : this->_players) {
-        if (!player->getAI())
-            continue;
-        handleKeyPressed(player_key, "MoveUp");
-    }
-}
-
 void GameScene::update(void)
 {
-    this->updateAI();
+    this->_botEngine.updateBot(this->_messageBus, this->_players, this->_bombs, this->_walls, this->_powerUps);
     this->updatePlayers();
     this->updateBombs();
 }

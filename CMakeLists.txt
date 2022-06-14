@@ -86,6 +86,7 @@ set(SRC
   src/Game/Wall.cpp
   src/Game/PowerUp.cpp
   src/Game/MapGenerator.cpp
+  src/Game/BotEngine.cpp
 )
 
 #fetch libraries
