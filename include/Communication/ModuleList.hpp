@@ -65,7 +65,7 @@ namespace neo
                 DELETE,
                 SET_CAMERA_POS,
                 SET_CAMERA_NEXT_POS,
-                SET_CAMERA_FRONT,
+                SET_CAMERA_OFFSET,
                 MOVE,
                 SELECT_BUTTON
             };

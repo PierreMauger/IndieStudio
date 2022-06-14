@@ -17,7 +17,7 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->_functionTab.push_back(std::bind(&Graphics::receiveDelete, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveSetCameraPos, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveSetCameraNextPos, this, std::placeholders::_1));
-    this->_functionTab.push_back(std::bind(&Graphics::receiveSetCameraFront, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Graphics::receiveSetCameraOffset, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveMove, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveSelectButton, this, std::placeholders::_1));
 }
@@ -190,7 +190,7 @@ void Graphics::receiveSetCameraNextPos(Packet data)
     }
 }
 
-void Graphics::receiveSetCameraFront(Packet data)
+void Graphics::receiveSetCameraOffset(Packet data)
 {
     glm::vec3 delay;
 

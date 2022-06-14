@@ -37,7 +37,7 @@ void MenuScene::update()
 
     Packet packet;
     packet << pos.x << pos.y << 0;
-    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_FRONT, Module::GRAPHICS));
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_OFFSET, Module::GRAPHICS));
 }
 
 void MenuScene::loadScene()
