@@ -15,7 +15,8 @@ MenuScene::MenuScene(std::shared_ptr<MessageBus> messageBus)
     this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "Asteroid", glm::vec3(0.0f, -5.0f, -1.5f), glm::vec3(0.5f))));
     this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>(0, "Asteroid", glm::vec3(0.0f, -5.0f, 0.0f), glm::vec3(0.5f))));
     this->_objects.insert(std::make_pair(2, std::make_unique<GameObject>(0, "Asteroid", glm::vec3(0.0f, -5.0f, 1.5f), glm::vec3(0.5f))));
-    this->_objects.insert(std::make_pair(3, std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f))));
+    this->_objects.insert(std::make_pair(3, std::make_unique<GameObject>(0, "Asteroid", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f))));
+    this->_objects.insert(std::make_pair(4, std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f))));
 
     this->_selectedButton = -1;
 }
@@ -32,6 +33,11 @@ MenuScene::~MenuScene()
 
 void MenuScene::update()
 {
+    Vector2 pos = GetMousePosition();
+
+    Packet packet;
+    packet << pos.x << pos.y << 0;
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_FRONT, Module::GRAPHICS));
 }
 
 void MenuScene::loadScene()
@@ -45,7 +51,7 @@ void MenuScene::loadScene()
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
     packet.clear();
-    packet << 0 << glm::vec3(10.0f, 0.0f, 10.0f);
+    packet << 1 << glm::vec3(10.0f, 0.0f, 10.0f);
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
     packet.clear();
     packet << 0 << glm::vec3(10.0f, 0.0f, 3.0f);

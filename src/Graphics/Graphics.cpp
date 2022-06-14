@@ -17,6 +17,7 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->_functionTab.push_back(std::bind(&Graphics::receiveDelete, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveSetCameraPos, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveSetCameraNextPos, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Graphics::receiveSetCameraFront, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveMove, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveSelectButton, this, std::placeholders::_1));
 }
@@ -187,6 +188,18 @@ void Graphics::receiveSetCameraNextPos(Packet data)
     } else {
         this->_camera->setMovement(glm::vec3(0.0f, 0.0f, this->getHeightOnMap()), glm::vec3(0.0f));
     }
+}
+
+void Graphics::receiveSetCameraFront(Packet data)
+{
+    glm::vec3 delay;
+
+    data >> delay;
+    delay.x -= (float)GetScreenWidth() / 2.0f;
+    delay.y -= (float)GetScreenHeight() / 2.0f;
+    delay.x /= 50.0f;
+    delay.y /= 10.0f;
+    this->_camera->setRotation(delay);
 }
 
 void Graphics::receiveMove(Packet data)

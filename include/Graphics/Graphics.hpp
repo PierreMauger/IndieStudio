@@ -48,6 +48,7 @@ namespace neo
             void receiveDelete(Packet);
             void receiveSetCameraPos(Packet);
             void receiveSetCameraNextPos(Packet);
+            void receiveSetCameraFront(Packet);
             void receiveMove(Packet);
             void receiveSelectButton(Packet);
     };
