@@ -22,6 +22,7 @@ namespace neo
             glm::vec3 _scale;
             float _rotation;
             int _status;
+            bool _shiny;
 
         public:
             GraphicObject(GameObject obj);
@@ -34,6 +35,7 @@ namespace neo
             void setPos(glm::vec3 pos);
             void setRotation(float rotation);
             void setStatus(int status);
+            bool getShiny() const;
             virtual void draw(Camera &camera) = 0;
     };
 }

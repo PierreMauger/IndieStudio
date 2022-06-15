@@ -23,6 +23,7 @@ void ModelObj::draw(Camera &camera)
         this->_model->draw(camera.getShader());
         glEnable(GL_DEPTH_TEST);
     }
+    camera.getShader().setBool("shiny", this->_shiny);
     camera.getShader().setBool("outline", false);
     camera.setOnModel(this->_pos, this->_scale, this->_rotation);
     this->_model->draw(camera.getShader());

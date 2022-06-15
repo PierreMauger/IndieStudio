@@ -16,8 +16,7 @@ MenuScene::MenuScene(std::shared_ptr<MessageBus> messageBus)
     this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>(0, "Asteroid", glm::vec3(0.0f, -5.0f, 0.0f), glm::vec3(0.5f))));
     this->_objects.insert(std::make_pair(2, std::make_unique<GameObject>(0, "Asteroid", glm::vec3(0.0f, -5.0f, 1.5f), glm::vec3(0.5f))));
     this->_objects.insert(std::make_pair(3, std::make_unique<GameObject>(0, "Asteroid", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f))));
-    this->_objects.insert(std::make_pair(4, std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f))));
-    this->_objects.insert(std::make_pair(5, std::make_unique<GameObject>(0, "Bomb", glm::vec3(0.0f, -3.0f, -1.5f), glm::vec3(0.5f))));
+    this->_objects.insert(std::make_pair(4, std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f), false)));
 
     this->_selectedButton = -1;
 }

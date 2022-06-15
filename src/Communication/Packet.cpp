@@ -72,7 +72,7 @@ Packet &Packet::operator<<(std::map<std::string, int> &data)
 
 Packet &Packet::operator<<(PlayerConfig &data)
 {
-    *this << data.getMode();
+    *this << static_cast<int>(data.getMode());
     *this << data.getControllerConfig();
     *this << data.getKeyboardConfig();
     return *this;
@@ -84,6 +84,7 @@ Packet &Packet::operator<<(GameObject &data)
     *this << data.getName();
     *this << data.getPos();
     *this << data.getScale();
+    *this << static_cast<int>(data.getShiny());
     return *this;
 }
 
@@ -134,6 +135,7 @@ Packet &Packet::operator>>(std::map<std::string, int> &data)
     int size = 0;
     *this >> size;
 
+
     for (int i = 0; i < size; i++) {
         std::string action;
         int key = 0;
@@ -161,13 +163,13 @@ Packet &Packet::operator>>(GameObject &data)
     int type = 0;
     std::string name;
     glm::vec3 pos, scale;
+    int shiny = false;
 
-    *this >> type;
+    *this >> type >> name >> pos >> scale >> shiny;
     data.setType(type);
-    *this >> name;
     data.setName(name);
-    *this >> pos >> scale;
     data.setPos(pos);
     data.setScale(scale);
+    data.setShiny(static_cast<bool>(shiny));
     return *this;
 }

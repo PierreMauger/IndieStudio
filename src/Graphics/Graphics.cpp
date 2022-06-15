@@ -112,8 +112,7 @@ void Graphics::receiveResourceList(Packet data)
             this->_animations[fileName] = std::shared_ptr<Animation>(new Animation("resources/animations/" + file, *this->_models[fileName]));
         }
     }
-    Packet packet;
-    this->_messageBus->sendMessage(Message(packet, CoreCommand::GRAPHICS_READY, Module::CORE));
+    this->_messageBus->sendMessage(Message(Packet(), CoreCommand::GRAPHICS_READY, Module::CORE));
 }
 
 void Graphics::receiveLoad(Packet data)
@@ -167,8 +166,8 @@ void Graphics::receiveSetCameraPos(Packet data)
 {
     int type;
     glm::vec3 pos;
-    data >> type >> pos;
 
+    data >> type >> pos;
     if (type == 0)
         this->_camera->setRotating(false);
     else

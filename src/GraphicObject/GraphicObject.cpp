@@ -14,6 +14,7 @@ GraphicObject::GraphicObject(GameObject obj)
     this->_name = obj.getName();
     this->_pos = obj.getPos();
     this->_scale = obj.getScale();
+    this->_shiny = obj.getShiny();
     this->_rotation = 0.0f;
     this->_status = 0;
 }
@@ -51,4 +52,9 @@ void GraphicObject::setRotation(float rotation)
 void GraphicObject::setStatus(int status)
 {
     this->_status = status;
+}
+
+bool GraphicObject::getShiny() const
+{
+    return this->_shiny;
 }
