@@ -9,6 +9,11 @@
 
 using namespace neo;
 
+BotEngine::BotEngine()
+{
+    this->_visited = std::vector<std::vector<bool>>(20, std::vector<bool>(20, false));
+}
+
 bool BotEngine::canMoveToPos(glm::vec3 pos)
 {
     for (auto &[wall_key, wall] : this->_walls)

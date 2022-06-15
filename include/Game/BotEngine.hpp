@@ -38,6 +38,8 @@ namespace neo
         std::vector<std::vector<bool>> _visited;
         bool _found;
     public:
+        BotEngine();
+
         void updateBot(std::shared_ptr<MessageBus> messageBus,
             std::map<int, std::unique_ptr<Player>> &players,
             std::map<int, std::unique_ptr<Bomb>> &bombs,

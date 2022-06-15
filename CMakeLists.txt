@@ -35,6 +35,12 @@ set(EXEC_NAME
   bomberman
 )
 
+#add -g flag
+# add_compile_options(-g)
+
+#add performance flags
+# add_compile_options(-O3 -Ofast -flto)
+
 #fetch include directories
 set(INC
   include/
