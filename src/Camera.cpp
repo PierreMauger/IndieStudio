@@ -31,9 +31,8 @@ neo::Shader &neo::Camera::getShader()
 void neo::Camera::update()
 {
     glm::vec3 forward = glm::normalize(this->_pos - this->_front);
-    if (this->_rotating) {
+    if (this->_rotating)
         forward = glm::vec3(forward.x, forward.z, forward.y);
-    }
     if (forward != glm::vec3(0.0f, 0.0f, 1.0f)) {
         glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0.0f, 0.0f, 1.0f)));
         glm::vec3 up = glm::normalize(glm::cross(right, forward));
@@ -89,13 +88,16 @@ void neo::Camera::setShader(float time)
         float camZ = static_cast<float>(std::sin(glm::radians(this->_rotation.y)) * this->_pos.z);
         temp = glm::vec3(camY, camX, this->_pos.z + camZ);
         this->_view = glm::lookAt(temp, this->_pos + this->_front, this->_up);
+        this->_shader.setVec3("viewPos", temp);
+        this->_shader.setVec3("lightPos", temp);
+    } else {
+        this->_shader.setVec3("viewPos", this->_pos);
+        this->_shader.setVec3("lightPos", this->_pos);
     }
     this->_shader.setVec3("lightColor", glm::vec3(1.0f));
     this->_shader.setMat4("view", this->_view);
     this->_shader.setMat4("projection", this->_projection);
     this->_shader.setFloat("time", time);
-    this->_shader.setVec3("viewPos", this->_pos);
-    this->_shader.setVec3("lightPos", glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
 void neo::Camera::setOnModel(glm::vec3 pos, glm::vec3 scale, float rotation)

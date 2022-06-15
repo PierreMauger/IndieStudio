@@ -65,7 +65,7 @@ void Graphics::draw()
     ClearBackground(RAYWHITE);
 
     this->_camera->getShader().use();
-    this->_camera->setShader(GetTime() * 10);
+    this->_camera->setShader(GetTime());
 
     glEnable(GL_DEPTH_TEST);
     for (auto &object : this->_objects)

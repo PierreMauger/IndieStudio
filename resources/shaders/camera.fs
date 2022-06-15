@@ -35,9 +35,14 @@ void main()
     vec3 specular = specularStrength * spec * lightColor;
 
     vec3 result = (ambient + diffuse + specular) * objectColor;
-    FragColor = texture(textureDiffuse, TexCoords);
-    if (FragColor.rgb == vec3(0.0f)) // if texture is not loaded
-        FragColor += vec4(result, 1.0f);
+    vec3 textureColor = texture(textureDiffuse, TexCoords).rgb;
+    // FragColor = texture(textureDiffuse, TexCoords);
+    if (textureColor == vec3(0.0f)) // if texture is not loaded
+        FragColor = vec4(result, 1.0f);
+    else {
+        // FragColor = vec4(textureColor, 1.0f);
+        FragColor = vec4((ambient + diffuse) * textureColor + specular, 1.0f);
+    }
     if (outline)
-        FragColor = vec4(vec3(1.0f, 1.0f, 1.0f), 0.33f);
+        FragColor = vec4(vec3(1.0f, 1.0f, 1.0f), 0.5f);
 }
