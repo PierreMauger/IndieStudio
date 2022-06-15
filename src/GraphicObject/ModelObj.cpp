@@ -16,6 +16,8 @@ ModelObj::ModelObj(GameObject obj, std::shared_ptr<Model> model) : GraphicObject
 
 void ModelObj::draw(Camera &camera)
 {
+    if (!this->_shiny)
+        this->_rotation += 0.05f;
     if (this->_status) {
         glDisable(GL_DEPTH_TEST);
         camera.setOnModel(this->_pos - glm::vec3(0.f, 0.f, this->_scale.z * 0.1f), this->_scale * glm::vec3(1.1f), this->_rotation);
