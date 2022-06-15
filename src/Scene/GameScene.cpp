@@ -157,7 +157,6 @@ void GameScene::updatePlayers(void)
 
 void GameScene::explode(std::unique_ptr<Bomb> &bomb)
 {
-    std::srand(std::time(0));
     for (auto it = this->_players.begin(); it != this->_players.end();) {
         if (std::floor(it->second->getPos().x) + 0.5f == bomb->getPos().x &&
             bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > it->second->getPos().y &&
@@ -176,19 +175,19 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
     for (auto &[bomb_key, other_bomb] : this->_bombs) {
         if (other_bomb->getPos() == bomb->getPos())
             continue;
-        if (std::floor(other_bomb->getPos().x) + 0.5f == bomb->getPos().x &&
+        if (other_bomb->getPos().x == bomb->getPos().x &&
             bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > other_bomb->getPos().y &&
             other_bomb->getPos().y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
-            std::floor(other_bomb->getPos().y) + 0.5f == bomb->getPos().y &&
+            other_bomb->getPos().y == bomb->getPos().y &&
             bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > other_bomb->getPos().x &&
             other_bomb->getPos().x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp())
             other_bomb->getTimer() = 0.0f;
     }
     for (auto it = this->_powerUps.begin(); it != this->_powerUps.end();) {
-        if (std::floor(it->second->getPos().x) + 0.5f == bomb->getPos().x &&
+        if (it->second->getPos().x == bomb->getPos().x &&
             bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > it->second->getPos().y &&
             it->second->getPos().y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
-            std::floor(it->second->getPos().y) + 0.5f == bomb->getPos().y &&
+            it->second->getPos().y == bomb->getPos().y &&
             bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > it->second->getPos().x &&
             it->second->getPos().x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp()) {
             Packet packet;
@@ -199,6 +198,7 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
             it++;
         }
     }
+    std::srand(std::time(0));
     for (size_t i = RIGHT; i <= DOWN; i++) {
         for (int j = 0; j <= 2 + bomb->getFireUp(); j++) {
             for (auto it = this->_walls.begin(); it != this->_walls.end(); it++) {
@@ -243,7 +243,7 @@ void GameScene::updateBombs(void)
 
 void GameScene::update(void)
 {
-    this->_botEngine.updateBot(this->_messageBus, this->_players, this->_bombs, this->_walls, this->_powerUps);
+    this->_botEngine.updateBot(this->_messageBus, this->_players, this->_bombs, this->_walls, this->_powerUps, this->_mapGenerator);
     this->updatePlayers();
     this->updateBombs();
 }
