@@ -13,6 +13,7 @@ using namespace neo;
 int main(int argc, char **argv)
 {
     Neo neo;
+    std::srand(std::time(0));
 
     neo.run();
     return 0;

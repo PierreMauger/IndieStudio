@@ -30,6 +30,8 @@ endif()
 
 ################## BUILD ##################
 
+add_compile_options(-g)
+
 #set result executable (target) name
 set(EXEC_NAME
   bomberman
