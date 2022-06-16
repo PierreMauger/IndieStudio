@@ -15,6 +15,7 @@ GameObject::GameObject(int type, std::string name, glm::vec3 pos, glm::vec3 scal
     this->_name = name;
     this->_pos = pos;
     this->_scale = scale;
+    this->_rotation = glm::vec3(0.0f);
     this->_shiny = true;
 }
 

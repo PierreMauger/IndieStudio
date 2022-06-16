@@ -66,7 +66,7 @@ void ConfigScene::addCard(int card)
     float pos = -1.f + 0.08f + card * 0.48f;
     this->_buttons[card] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, 0.0f, 0.0f), glm::vec3(0.2f, 0.45f, 0.0f));
     this->_objects[card + 1] = std::make_unique<GameObject>(0, "RoboCat", glm::vec3(pos * 4, 0.0f, 0.0f), glm::vec3(0.5f));
-    this->_objects[card + 1]->setRotation(glm::vec3(0.0f, 0.0f, 0.0f));
+    this->_objects[card + 1]->setRotation(glm::vec3(270.0f, 0.0f, 0.0f));
 }
 
 void ConfigScene::deleteCard(int card)

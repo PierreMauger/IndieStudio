@@ -15,7 +15,7 @@ GraphicObject::GraphicObject(GameObject obj)
     this->_pos = obj.getPos();
     this->_scale = obj.getScale();
     this->_shiny = obj.getShiny();
-    this->_rotation = glm::vec3(0.0f);
+    this->_rotation = obj.getRotation();
     this->_status = 0;
 }
 
