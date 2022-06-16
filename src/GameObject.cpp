@@ -9,13 +9,13 @@
 
 using namespace neo;
 
-GameObject::GameObject(int type, std::string name, glm::vec3 pos, glm::vec3 scale, bool shiny)
+GameObject::GameObject(int type, std::string name, glm::vec3 pos, glm::vec3 scale)
 {
     this->_type = type;
     this->_name = name;
     this->_pos = pos;
     this->_scale = scale;
-    this->_shiny = shiny;
+    this->_shiny = true;
 }
 
 int GameObject::getType() const

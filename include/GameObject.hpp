@@ -26,7 +26,7 @@ namespace neo
 
         public:
             GameObject() = default;
-            GameObject(int type, std::string name, glm::vec3 pos, glm::vec3 scale = glm::vec3(1.0f), bool shiny = true);
+            GameObject(int type, std::string name, glm::vec3 pos, glm::vec3 scale = glm::vec3(1.0f));
             ~GameObject() = default;
 
             int getType() const;

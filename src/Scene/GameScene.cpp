@@ -133,8 +133,6 @@ void GameScene::updatePlayers(void)
 
 void GameScene::explode(std::unique_ptr<Bomb> &bomb)
 {
-    std::srand(std::time(0));
-
     for (size_t i = RIGHT; i <= DOWN; i++) {
         for (int j = 0; j <= 2 + bomb->getFireUp(); j++) {
             for (auto it = this->_walls.begin(); it != this->_walls.end();) {
