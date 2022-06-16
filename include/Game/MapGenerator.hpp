@@ -22,8 +22,13 @@ namespace neo
             bool findPathX(std::vector<std::string> map, std::pair<int, int> curr, std::size_t y, std::size_t x);
             bool findPathY(std::vector<std::string> map, std::pair<int, int> curr, std::size_t y, std::size_t x);
             std::string multiplier_str(std::string chr, std::size_t size);
+
+            size_t _width;
+            size_t _height;
         public:
             std::vector<std::string> generateProceduralMap(std::size_t nb_player, std::size_t x, std::size_t y);
+            const size_t getWidth(void) const;
+            const size_t getHeight(void) const;
     };
 }
 

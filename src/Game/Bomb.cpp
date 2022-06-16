@@ -16,7 +16,7 @@ Bomb::Bomb(std::string name, glm::vec3 pos, size_t fireUp, size_t playerId, glm:
     this->_playerId = playerId;
 }
 
-const double Bomb::getTimer() const
+double &Bomb::getTimer()
 {
     return this->_timer;
 }
