@@ -24,7 +24,6 @@ bool BotEngine::canMoveToPos(glm::vec3 pos)
 
 int BotEngine::getNeighbor(glm::vec3 pos)
 {
-    printf("%f %f\n", pos.x, pos.y);
     if (canMoveToPos(glm::vec3(pos.x + 1.f, pos.y, pos.z)) && this->_visited[pos.y][pos.x + 1] == false) {
         return 1;
     }

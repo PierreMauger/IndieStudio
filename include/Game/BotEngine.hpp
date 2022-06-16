@@ -28,6 +28,7 @@ namespace neo
         void checkEnd(glm::vec3 pos);
         int getNeighbor(glm::vec3 pos);
         bool canMoveToPos(glm::vec3 pos);
+        void test(std::unique_ptr<Player> &bot);
 
         std::shared_ptr<MessageBus> _messageBus;
         std::map<int, std::unique_ptr<Player>> _players;
@@ -39,7 +40,7 @@ namespace neo
         bool _found;
     public:
         BotEngine();
-
+        
         void updateBot(std::shared_ptr<MessageBus> messageBus,
             std::map<int, std::unique_ptr<Player>> &players,
             std::map<int, std::unique_ptr<Bomb>> &bombs,

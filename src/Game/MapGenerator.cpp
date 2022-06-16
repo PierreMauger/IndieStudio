@@ -76,7 +76,6 @@ bool MapGenerator::findPathY(std::vector<std::string> map, std::pair<int, int> c
 std::vector<std::string> MapGenerator::generateCornerMap(std::size_t x, std::size_t y)
 {
     std::vector<std::string> new_walls;
-    std::srand(std::time(0));
 
     new_walls.resize(x);
     for (size_t i = 0; i != x; i++) {
