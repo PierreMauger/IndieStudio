@@ -113,6 +113,8 @@ void Graphics::receiveResourceList(Packet data)
         } else if (type == 1) {
             this->_models[fileName] = std::shared_ptr<Model>(new Model("resources/animations/" + file));
             this->_animations[fileName] = std::shared_ptr<Animation>(new Animation("resources/animations/" + file, *this->_models[fileName]));
+        } else if (type == 2) {
+            this->_textures[fileName] = std::make_shared<Texture2D>(LoadTexture(std::string("resources/textures/" + file).c_str()));
         }
     }
     this->_messageBus->sendMessage(Message(Packet(), CoreCommand::GRAPHICS_READY, Module::CORE));
@@ -135,8 +137,8 @@ void Graphics::receiveLoad(Packet data)
             this->_objects[id] = std::unique_ptr<GraphicObject>(new AnimatedModelObj(obj, this->_models[obj.getName()], this->_animations[obj.getName()]));
         else if (type == 2)
             this->_buttons[id] = std::unique_ptr<GraphicObject>(new RectangleObj(obj));
-        else if (type == 3)
-            this->_buttons[id] = std::unique_ptr<GraphicObject>(new SpriteObj(obj));
+        else if (type == 3 && this->_textures.find(obj.getName()) != this->_textures.end())
+            this->_buttons[id] = std::unique_ptr<GraphicObject>(new SpriteObj(obj, this->_textures[obj.getName()]));
     }
 }
 
