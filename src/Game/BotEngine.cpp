@@ -14,35 +14,50 @@ BotEngine::BotEngine()
     this->_visited = std::vector<std::vector<bool>>(20, std::vector<bool>(20, false));
 }
 
-bool BotEngine::canMoveToPos(glm::vec3 pos)
+void BotEngine::doAction(GameScene *gameScene, const int &bot_key, std::string action)
 {
-    for (auto &[wall_key, wall] : this->_walls)
+    Packet data;
+
+    data << bot_key << action;
+    gameScene->getMessageBus()->sendMessage(Message(data, CoreCommand::KEY_PRESSED, Module::CORE));
+}
+
+bool BotEngine::canMoveToPos(GameScene *gameScene, glm::vec3 pos)
+{
+    for (auto &[wall_key, wall] : gameScene->getWalls())
         if (pos.x + 0.5f == wall->getPos().x && pos.y + 0.5f == wall->getPos().y)
+            return false;
+    for (auto &[bomb_key, bomb] : gameScene->getBombs())
+        if (pos.x + 0.5f == bomb->getPos().x && pos.y + 0.5f == bomb->getPos().y)
             return false;
     return true;
 }
 
-int BotEngine::getNeighbor(glm::vec3 pos)
+int BotEngine::getNeighbor(GameScene *gameScene, glm::vec3 pos)
 {
-    if (canMoveToPos(glm::vec3(pos.x + 1.f, pos.y, pos.z)) && this->_visited[pos.y][pos.x + 1] == false) {
+    if (canMoveToPos(gameScene, glm::vec3(pos.x + 1.f, pos.y, pos.z)) &&
+        this->_visited[std::abs(pos.y) + gameScene->getMapGenerator().getHeight() / 2][std::abs(pos.x) + gameScene->getMapGenerator().getWidth() / 2 + 1] == false) {
         return 1;
     }
-    else if (canMoveToPos(glm::vec3(pos.x, pos.y + 1.f, pos.z)) && this->_visited[pos.y + 1][pos.x] == false) {
+    else if (canMoveToPos(gameScene, glm::vec3(pos.x, pos.y + 1.f, pos.z)) &&
+    this->_visited[std::abs(pos.y) + gameScene->getMapGenerator().getHeight() / 2 + 1][std::abs(pos.x) + gameScene->getMapGenerator().getWidth() / 2] == false) {
         return 2;
     }
-    else if (canMoveToPos(glm::vec3(pos.x - 1.f, pos.y, pos.z)) && this->_visited[pos.y][pos.x - 1] == false) {
+    else if (canMoveToPos(gameScene, glm::vec3(pos.x - 1.f, pos.y, pos.z)) &&
+        this->_visited[std::abs(pos.y) + gameScene->getMapGenerator().getHeight() / 2][std::abs(pos.x) + gameScene->getMapGenerator().getWidth() / 2 - 1] == false) {
         return 3;
     }
-    else if (canMoveToPos(glm::vec3(pos.x, pos.y - 1.f, pos.z)) && this->_visited[pos.y - 1][pos.x] == false) {
+    else if (canMoveToPos(gameScene, glm::vec3(pos.x, pos.y - 1.f, pos.z)) &&
+        this->_visited[std::abs(pos.y) + gameScene->getMapGenerator().getHeight() / 2 - 1][std::abs(pos.x) + gameScene->getMapGenerator().getWidth() / 2] == false) {
         return 4;
     }
     return 0;
 }
 
-void BotEngine::checkEnd(glm::vec3 pos)
+void BotEngine::checkEnd(GameScene *gameScene, glm::vec3 pos)
 {
-    this->_visited[pos.y][pos.x] = true;
-    for (auto &[bomb_key, bomb] : this->_bombs)
+    this->_visited[std::abs(pos.y) + gameScene->getMapGenerator().getHeight() / 2][std::abs(pos.x) + gameScene->getMapGenerator().getWidth() / 2] = true;
+    for (auto &[bomb_key, bomb] : gameScene->getBombs())
         if (pos.x + 0.5f == bomb->getPos().x &&
             bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > pos.y &&
             pos.y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
@@ -53,31 +68,31 @@ void BotEngine::checkEnd(glm::vec3 pos)
     this->_found = true;
 }
 
-void BotEngine::recursive(glm::vec3 pos)
+void BotEngine::recursive(GameScene *gameScene, glm::vec3 pos)
 {
-    int neighbor = getNeighbor(pos);
+    int neighbor = getNeighbor(gameScene, pos);
 
-    this->checkEnd(pos);
+    this->checkEnd(gameScene, pos);
     while (neighbor != 0 && this->_found == false) {
         switch (neighbor) {
-        case 1: this->recursive(glm::vec3(pos.x + 1.f, pos.y, pos.z));
+        case 1: this->recursive(gameScene, glm::vec3(pos.x + 1.f, pos.y, pos.z));
             break;
-        case 2: this->recursive(glm::vec3(pos.x, pos.y + 1.f, pos.z));
+        case 2: this->recursive(gameScene, glm::vec3(pos.x, pos.y + 1.f, pos.z));
             break;
-        case 3: this->recursive(glm::vec3(pos.x - 1.f, pos.y, pos.z));
+        case 3: this->recursive(gameScene, glm::vec3(pos.x - 1.f, pos.y, pos.z));
             break;
-        case 4: this->recursive(glm::vec3(pos.x, pos.y - 1.f, pos.z));
+        case 4: this->recursive(gameScene, glm::vec3(pos.x, pos.y - 1.f, pos.z));
             break;
         default:
             break;
         }
-        neighbor = getNeighbor(pos);
+        neighbor = getNeighbor(gameScene, pos);
     }
 }
 
-void BotEngine::dodgeBombs(std::unique_ptr<Player> &bot)
+void BotEngine::dodgeBombs(GameScene *gameScene, const int &bot_key, std::unique_ptr<Player> &bot)
 {
-    for (auto &[bomb_key, bomb] : this->_bombs) {
+    for (auto &[bomb_key, bomb] : gameScene->getBombs()) {
         if (std::floor(bot->getPos().x) + 0.5f == bomb->getPos().x &&
             bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > bot->getPos().y &&
             bot->getPos().y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
@@ -85,42 +100,26 @@ void BotEngine::dodgeBombs(std::unique_ptr<Player> &bot)
             bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > bot->getPos().x &&
             bot->getPos().x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp()) {
             this->_found = false;
-            this->_visited.clear();
-            for (size_t i = 0; i < _mapGenerator.getHeight(); i++) {
-                this->_visited.push_back(std::vector<bool>());
-                for (size_t j = 0; j < _mapGenerator.getWidth(); j++)
-                    this->_visited[i].push_back(false);
-            }
-            recursive(glm::vec3(std::floor(bot->getPos().x), std::floor(bot->getPos().y), bot->getPos().z));
+            recursive(gameScene, glm::vec3(std::floor(bot->getPos().x), std::floor(bot->getPos().y), bot->getPos().z));
             for (size_t i = 0; i < this->_visited.size(); i++) {
-                for (size_t j = 0; j <  this->_visited[i].size(); j++)
+                for (size_t j = 0; j < this->_visited[i].size(); j++)
                     printf("%d ", this->_visited[i][j] ? 1 : 0);
                 printf("\n");
             }
             printf("\n");
+            for (size_t i = 0; i < gameScene->getMapGenerator().getHeight(); i++)
+                for (size_t j = 0; j < gameScene->getMapGenerator().getWidth(); j++)
+                    this->_visited[i][j] = false;
             return;
         }
     }
 }
 
-void BotEngine::updateBot(std::shared_ptr<MessageBus> messageBus, std::map<int, std::unique_ptr<Player>> &players,
-std::map<int, std::unique_ptr<Bomb>> &bombs, std::map<int, std::unique_ptr<Wall>> &walls,
-std::map<int, std::unique_ptr<PowerUp>> &powerUps, MapGenerator mapGenerator)
+void BotEngine::updateBot(GameScene *gameScene)
 {
-    this->_messageBus = std::move(messageBus);
-    this->_players = std::move(players);
-    this->_bombs = std::move(bombs);
-    this->_walls = std::move(walls);
-    this->_powerUps = std::move(powerUps);
-    this->_mapGenerator = mapGenerator;
-    for (auto &[player_key, player] : this->_players) {
+    for (auto &[player_key, player] : gameScene->getPlayers()) {
         if (!player->isBot())
             continue;
-        dodgeBombs(player);
+        dodgeBombs(gameScene, player_key, player);
     }
-    messageBus = std::move(this->_messageBus);
-    players = std::move(this->_players);
-    bombs = std::move(this->_bombs);
-    walls = std::move(this->_walls);
-    powerUps = std::move(this->_powerUps);
 }

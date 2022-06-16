@@ -13,6 +13,7 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
     this->_incrementor = 0;
+    this->_botEngine = std::make_unique<BotEngine>();
 }
 
 GameScene::~GameScene()
@@ -242,7 +243,7 @@ void GameScene::updateBombs(void)
 
 void GameScene::update(void)
 {
-    this->_botEngine.updateBot(this->_messageBus, this->_players, this->_bombs, this->_walls, this->_powerUps, this->_mapGenerator);
+    this->_botEngine->updateBot(this);
     this->updatePlayers();
     this->updateBombs();
 }

@@ -20,6 +20,8 @@
 
 namespace neo
 {
+    class BotEngine;
+    
     class GameScene : public virtual IScene
     {
         private:
@@ -38,8 +40,8 @@ namespace neo
             std::map<int, std::unique_ptr<Bomb>> _bombs;
             std::map<int, std::unique_ptr<Wall>> _walls;
             std::map<int, std::unique_ptr<PowerUp>> _powerUps;
+            std::unique_ptr<BotEngine> _botEngine;
             MapGenerator _mapGenerator;
-            BotEngine _botEngine;
             int _incrementor;
 
         public:

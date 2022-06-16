@@ -28,6 +28,7 @@ Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 
 void Core::run()
 {
+    std::srand(std::time(0));
     while (this->_running) {
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
         this->update();
