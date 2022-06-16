@@ -50,6 +50,13 @@ namespace neo
 
             void handleKeyPressed(int playerNb, std::string action);
             void handleKeyReleased(int playerNb, std::string action);
+
+            std::shared_ptr<MessageBus> getMessageBus();
+            std::map<int, std::unique_ptr<Player>> &getPlayers();
+            std::map<int, std::unique_ptr<Bomb>> &getBombs();
+            std::map<int, std::unique_ptr<Wall>> &getWalls();
+            std::map<int, std::unique_ptr<PowerUp>> &getPowerUps();
+            MapGenerator &getMapGenerator();
     };
 }
 

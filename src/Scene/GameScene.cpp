@@ -250,3 +250,33 @@ void GameScene::handleKeyReleased(int playerNb, std::string action)
     else if (action == "MoveDown")
         this->_players[playerNb]->getDirection(DOWN) = false;
 }
+
+std::shared_ptr<MessageBus> GameScene::getMessageBus()
+{
+    return this->_messageBus;
+}
+
+std::map<int, std::unique_ptr<Player>> &GameScene::getPlayers()
+{
+    return this->_players;
+}
+
+std::map<int, std::unique_ptr<Bomb>> &GameScene::getBombs()
+{
+    return this->_bombs;
+}
+
+std::map<int, std::unique_ptr<Wall>> &GameScene::getWalls()
+{
+    return this->_walls;
+}
+
+std::map<int, std::unique_ptr<PowerUp>> &GameScene::getPowerUps()
+{
+    return this->_powerUps;
+}
+
+neo::MapGenerator &GameScene::getMapGenerator()
+{
+    return this->_mapGenerator;
+}
