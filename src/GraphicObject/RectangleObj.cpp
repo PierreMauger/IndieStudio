@@ -15,8 +15,11 @@ RectangleObj::RectangleObj(GameObject obj) : GraphicObject(obj)
 
 void RectangleObj::draw(Camera &camera)
 {
+    float height = GetScreenHeight();
+    float width = GetScreenWidth();
+    Color color = RED;
+
     if (this->_status)
-        DrawRectangle(this->_pos.x, this->_pos.y, this->_scale.x, this->_scale.y, YELLOW);
-    else
-        DrawRectangle(this->_pos.x, this->_pos.y, this->_scale.x, this->_scale.y, RED);
+        color = YELLOW;
+    DrawRectangle(this->_pos.x * width / 2 + width / 2, this->_pos.y * height / 2 + height / 2, this->_scale.x * width, this->_scale.y * height, color);
 }

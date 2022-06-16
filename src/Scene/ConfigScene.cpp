@@ -13,7 +13,10 @@ ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
 
-    this->_buttons[0] = std::make_unique<GameObject>(2, "Button", glm::vec3(45.0f, 0.0f, 0.0f), glm::vec3(50.0f, 30.0f, 0.0f));
+    this->addCard(0);
+    this->addCard(1);
+    this->addCard(2);
+    this->addCard(3);
     this->_objects[0] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
     this->_objects[0]->setShiny(false);
 }
@@ -45,6 +48,9 @@ void ConfigScene::loadScene()
     packet.clear();
     packet << 0 << glm::vec3(0.0f, 0.0f, 10.0f);
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
+    packet.clear();
+    packet << 0 << glm::vec3(0.0f);
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_NEXT_POS, Module::GRAPHICS));
 }
 
 void ConfigScene::handleKeyPressed(int playerNb, std::string action)
@@ -52,5 +58,15 @@ void ConfigScene::handleKeyPressed(int playerNb, std::string action)
 }
 
 void ConfigScene::handleKeyReleased(int playerNb, std::string action)
+{
+}
+
+void ConfigScene::addCard(int card)
+{
+    float pos = -1.f + 0.08f + card * 0.48f;
+    this->_buttons[card] = std::make_unique<GameObject>(2, "Button", glm::vec3(pos, 0.0f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
+}
+
+void ConfigScene::deleteCard(int card)
 {
 }

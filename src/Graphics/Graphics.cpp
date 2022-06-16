@@ -32,10 +32,13 @@ Graphics::~Graphics()
         model.second.reset();
     for (auto &animation : this->_animations)
         animation.second.reset();
+    for (auto &texture : this->_textures)
+        texture.second.reset();
     this->_objects.clear();
     this->_buttons.clear();
     this->_models.clear();
     this->_animations.clear();
+    this->_textures.clear();
     this->_camera.reset();
 }
 

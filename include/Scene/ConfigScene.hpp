@@ -19,6 +19,9 @@ namespace neo
             std::map<int, std::unique_ptr<GameObject>> _objects;
             std::map<int, std::unique_ptr<GameObject>> _buttons;
 
+            void addCard(int card);
+            void deleteCard(int card);
+
         public:
             ConfigScene(std::shared_ptr<MessageBus> messageBus);
             ~ConfigScene();
