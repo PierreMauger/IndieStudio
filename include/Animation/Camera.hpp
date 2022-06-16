@@ -43,8 +43,8 @@ namespace neo
             void setRotating(bool rotating);
             void setRotation(glm::vec3 const &rotation);
             void setShader(float time);
-            void setOnModel(glm::vec3 pos, glm::vec3 scale, float rotation);
-            void setOnAnimatedModel(glm::vec3 pos, glm::vec3 scale, float rotation, Animator &animator);
+            void setOnModel(glm::vec3 pos, glm::vec3 scale, glm::vec3 rotation);
+            void setOnAnimatedModel(glm::vec3 pos, glm::vec3 scale, glm::vec3 rotation, Animator &animator);
     };
 }
 

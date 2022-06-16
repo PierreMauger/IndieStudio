@@ -22,6 +22,7 @@ namespace neo
             std::string _name;
             glm::vec3 _pos;
             glm::vec3 _scale;
+            glm::vec3 _rotation;
             bool _shiny;
 
         public:
@@ -33,11 +34,13 @@ namespace neo
             std::string getName() const;
             glm::vec3 getPos() const;
             glm::vec3 getScale() const;
+            glm::vec3 getRotation() const;
             bool getShiny() const;
             void setType(int type);
             void setName(std::string name);
             void setPos(glm::vec3 pos);
             void setScale(glm::vec3 scale);
+            void setRotation(glm::vec3 rotation);
             void setShiny(bool shiny);
 
             void move(glm::vec3 speed);

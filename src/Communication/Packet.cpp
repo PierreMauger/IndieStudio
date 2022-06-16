@@ -84,6 +84,7 @@ Packet &Packet::operator<<(GameObject &data)
     *this << data.getName();
     *this << data.getPos();
     *this << data.getScale();
+    *this << data.getRotation();
     *this << static_cast<int>(data.getShiny());
     return *this;
 }
@@ -162,14 +163,15 @@ Packet &Packet::operator>>(GameObject &data)
 {
     int type = 0;
     std::string name;
-    glm::vec3 pos, scale;
+    glm::vec3 pos, scale, rotation;
     int shiny = false;
 
-    *this >> type >> name >> pos >> scale >> shiny;
+    *this >> type >> name >> pos >> scale >> rotation >> shiny;
     data.setType(type);
     data.setName(name);
     data.setPos(pos);
     data.setScale(scale);
+    data.setRotation(rotation);
     data.setShiny(static_cast<bool>(shiny));
     return *this;
 }

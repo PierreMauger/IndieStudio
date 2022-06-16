@@ -16,10 +16,6 @@ Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
     this->_currentScene = 0;
 
-    this->_scenes.push_back(std::make_unique<MenuScene>(this->_messageBus));
-    this->_scenes.push_back(std::make_unique<ConfigScene>(this->_messageBus));
-    this->_scenes.push_back(std::make_unique<GameScene>(this->_messageBus));
-
     this->_functionTab.push_back(std::bind(&Core::receiveKeyPressed, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Core::receiveKeyReleased, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Core::receiveGraphicsReady, this, std::placeholders::_1));
@@ -28,6 +24,11 @@ Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 
 void Core::run()
 {
+    std::srand(std::time(0));
+    this->_scenes.push_back(std::make_unique<MenuScene>(this->_messageBus));
+    this->_scenes.push_back(std::make_unique<ConfigScene>(this->_messageBus));
+    this->_scenes.push_back(std::make_unique<GameScene>(this->_messageBus));
+
     while (this->_running) {
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
         this->update();

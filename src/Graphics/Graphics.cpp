@@ -215,13 +215,13 @@ void Graphics::receiveMove(Packet data)
     if (this->_objects.find(id) == this->_objects.end())
         return;
     if (this->_objects[id]->getPos().x < x)
-        this->_objects[id]->setRotation(90);
+        this->_objects[id]->setRotation(glm::vec3(0.0f, 0.0f, 90.0f));
     else if (this->_objects[id]->getPos().x > x)
-        this->_objects[id]->setRotation(270);
+        this->_objects[id]->setRotation(glm::vec3(0.0f, 0.0f, 270.0f));
     else if (this->_objects[id]->getPos().y < y)
-        this->_objects[id]->setRotation(180);
+        this->_objects[id]->setRotation(glm::vec3(0.0f, 0.0f, 180.0f));
     else if (this->_objects[id]->getPos().y > y)
-        this->_objects[id]->setRotation(0);
+        this->_objects[id]->setRotation(glm::vec3(0.0f, 0.0f, 0.0f));
     this->_objects[id]->setPos(glm::vec3(x, y, z));
 }
 

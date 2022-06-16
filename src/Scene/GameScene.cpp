@@ -13,6 +13,24 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
     this->_incrementor = 0;
+
+    const std::vector<std::string> map = _mapGenerator.generateProceduralMap(3, 20, 20);
+    for (int i = 0; i < map.size(); i++) {
+        for (int j = 0; j < map[i].size(); j++) {
+            glm::vec3 pos = {i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.0f};
+            if (map[i][j] == 'P')
+                this->_players[this->_incrementor++] = std::make_unique<Player>("RoboCat", pos, glm::vec3(0.4f));
+        }
+    }
+    for (int i = 0; i < map.size(); i++) {
+        for (int j = 0; j < map[i].size(); j++) {
+            glm::vec3 pos = {i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.0f};
+            if (map[i][j] == '#')
+                this->_walls[this->_incrementor++] = std::make_unique<Wall>("Block", pos, glm::vec3(0.5f));
+            else if (map[i][j] == 'W')
+                this->_walls[this->_incrementor++] = std::make_unique<Wall>("Wall", pos, glm::vec3(0.5f));
+        }
+    }
 }
 
 GameScene::~GameScene()
@@ -30,32 +48,14 @@ GameScene::~GameScene()
 
 void GameScene::loadScene()
 {
-    const std::vector<std::string> map = _mapGenerator.generateProceduralMap(3, 20, 20);
     Packet packet;
 
-    for (int i = 0; i < map.size(); i++) {
-        for (int j = 0; j < map[i].size(); j++) {
-            glm::vec3 pos(i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.f);
-            if (map[i][j] == 'P') {
-                this->_players[_incrementor] = std::make_unique<Player>("RoboCat", pos, glm::vec3(0.4f));
-                packet << this->_players[_incrementor]->getType() << _incrementor << *this->_players[_incrementor];
-                _incrementor++;
-            }
-        }
-    }
-    for (int i = 0; i < map.size(); i++) {
-        for (int j = 0; j < map[i].size(); j++) {
-            glm::vec3 pos(i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.f);
-            if (map[i][j] == '#' || map[i][j] == 'W') {
-                if (map[i][j] == '#')
-                    this->_walls[_incrementor] = std::make_unique<Wall>("Block", pos, glm::vec3(0.5f));
-                if (map[i][j] == 'W')
-                    this->_walls[_incrementor] = std::make_unique<Wall>("Wall", pos, glm::vec3(0.5f));
-                packet << this->_walls[_incrementor]->getType() << _incrementor << *this->_walls[_incrementor];
-                _incrementor++;
-            }
-        }
-    }
+    for (auto &[player_key, player] : this->_players)
+        packet << player->getType() << player_key << *player;
+    for (auto &[wall_key, wall] : this->_walls)
+        packet << wall->getType() << wall_key << *wall;
+    for (auto &[bomb_key, bomb] : this->_bombs)
+        packet << bomb->getType() << bomb_key << *bomb;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
     packet.clear();

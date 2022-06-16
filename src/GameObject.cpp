@@ -38,6 +38,11 @@ glm::vec3 GameObject::getScale() const
     return this->_scale;
 }
 
+glm::vec3 GameObject::getRotation() const
+{
+    return this->_rotation;
+}
+
 bool GameObject::getShiny() const
 {
     return this->_shiny;
@@ -61,6 +66,11 @@ void GameObject::setPos(glm::vec3 pos)
 void GameObject::setScale(glm::vec3 scale)
 {
     this->_scale = scale;
+}
+
+void GameObject::setRotation(glm::vec3 rotation)
+{
+    this->_rotation = rotation;
 }
 
 void GameObject::setShiny(bool shiny)

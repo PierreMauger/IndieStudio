@@ -100,22 +100,26 @@ void neo::Camera::setShader(float time)
     this->_shader.setFloat("time", time);
 }
 
-void neo::Camera::setOnModel(glm::vec3 pos, glm::vec3 scale, float rotation)
+void neo::Camera::setOnModel(glm::vec3 pos, glm::vec3 scale, glm::vec3 rotation)
 {
     glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
     model = glm::scale(model, scale);
-    model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+    model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
     this->_shader.setMat4("model", model);
 
     for (std::size_t i = 0; i < 100; i++)
         this->_shader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", glm::mat4(1.0f));
 }
 
-void neo::Camera::setOnAnimatedModel(glm::vec3 pos, glm::vec3 scale, float rotation, Animator &animator)
+void neo::Camera::setOnAnimatedModel(glm::vec3 pos, glm::vec3 scale, glm::vec3 rotation, Animator &animator)
 {
     glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
     model = glm::scale(model, scale);
-    model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+    model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
     this->_shader.setMat4("model", model);
 
     auto transforms = animator.getFinalBoneMatrices();
