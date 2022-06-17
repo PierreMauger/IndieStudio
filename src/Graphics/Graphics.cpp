@@ -13,6 +13,8 @@ Graphics::Graphics(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
     this->_functionTab.push_back(std::bind(&Graphics::receiveResourceList, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveLoad, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Graphics::receiveAdd, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Graphics::receiveDelete, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveSetCameraPos, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveSetCameraNextPos, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Graphics::receiveMove, this, std::placeholders::_1));
@@ -42,7 +44,6 @@ void Graphics::run()
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(1280, 720, "Neo");
     SetTargetFPS(60);
-    glEnable(GL_DEPTH_TEST);
     for (int i = 0; getMapping(i); i++)
         SetGamepadMappings(getMapping(i));
     this->_camera = std::unique_ptr<Camera>(new Camera());
@@ -65,8 +66,10 @@ void Graphics::draw()
     this->_camera->getShader().use();
     this->_camera->setShader(GetTime() * 10);
 
+    glEnable(GL_DEPTH_TEST);
     for (auto &object : this->_objects)
         object.second->draw(*this->_camera);
+    glDisable(GL_DEPTH_TEST);
     for (auto &button : this->_buttons)
         button.second->draw(*this->_camera);
     EndDrawing();
@@ -90,8 +93,8 @@ float Graphics::getHeightOnMap()
 void Graphics::receiveResourceList(Packet data)
 {
     while (data.checkSize(1)) {
-        std::string file;
         int type;
+        std::string file;
         data >> type >> file;
         std::string fileName = file.substr(0, file.find_last_of("."));
 
@@ -112,8 +115,8 @@ void Graphics::receiveLoad(Packet data)
     this->_buttons.clear();
 
     while (data.checkSize(1)) {
-        int id = 0;
         int type = 0;
+        int id = 0;
         GameObject obj;
 
         data >> type >> id >> obj;
@@ -128,10 +131,35 @@ void Graphics::receiveLoad(Packet data)
     }
 }
 
+void Graphics::receiveAdd(Packet data)
+{
+    while (data.checkSize(1)) {
+        int type = 0;
+        int id = 0;
+        GameObject obj;
+
+        data >> type >> id >> obj;
+        if (type == 0 && this->_models.find(obj.getName()) != this->_models.end())
+            this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(obj, this->_models[obj.getName()]));
+        else if (type == 1 && this->_models.find(obj.getName()) != this->_models.end() && this->_animations.find(obj.getName()) != this->_animations.end())
+            this->_objects[id] = std::unique_ptr<GraphicObject>(new AnimatedModelObj(obj, this->_models[obj.getName()], this->_animations[obj.getName()]));
+    }
+}
+
+void Graphics::receiveDelete(Packet data)
+{
+    while (data.checkSize(1)) {
+        int id = 0;
+        data >> id;
+        if (this->_objects.find(id) != this->_objects.end())
+            this->_objects.erase(id);
+    }
+}
+
 void Graphics::receiveSetCameraPos(Packet data)
 {
-    glm::vec3 pos;
     int type;
+    glm::vec3 pos;
     data >> type >> pos;
 
     if (type == 0)

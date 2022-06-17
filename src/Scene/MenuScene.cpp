@@ -12,7 +12,7 @@ using namespace neo;
 MenuScene::MenuScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
-    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(80.0f))));
+    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(90.0f))));
     this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>(0, "RoboCat", glm::vec3(0.0f), glm::vec3(0.5f))));
     this->_buttons.insert(std::make_pair(0, std::make_unique<GameObject>(2, "red", glm::vec3(50, 500, 0), glm::vec3(100, 50, 0))));
     this->_buttons.insert(std::make_pair(1, std::make_unique<GameObject>(2, "red", glm::vec3(250, 500, 0), glm::vec3(100, 50, 0))));
@@ -27,6 +27,8 @@ MenuScene::~MenuScene()
         object.second.reset();
     for (auto &button : this->_buttons)
         button.second.reset();
+    this->_objects.clear();
+    this->_buttons.clear();
 }
 
 void MenuScene::update()

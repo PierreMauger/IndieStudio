@@ -17,7 +17,7 @@ _core(_messageBus),
 _graphics(_messageBus),
 _input(_messageBus)
 {
-    this->_running = true;
+    std::srand(std::time(nullptr));
 }
 
 void Neo::run()

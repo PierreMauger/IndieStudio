@@ -14,10 +14,8 @@ namespace neo
 {
     class Wall : public virtual GameObject
     {
-    private:
-        bool _isDestructible;
-    public:
-        Wall(std::string name, glm::vec3 pos, bool isDestructible, glm::vec3 scale = glm::vec3(1.0f));
+        public:
+            Wall(std::string name, glm::vec3 pos, glm::vec3 scale = glm::vec3(1.0f));
     };
 }
 
