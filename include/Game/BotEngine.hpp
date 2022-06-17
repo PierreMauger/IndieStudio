@@ -25,10 +25,12 @@ namespace neo
         int getNeighbor(GameScene *gameScene, glm::vec3 pos);
         bool canMoveToPos(GameScene *gameScene, glm::vec3 pos);
         
-        void doAction(GameScene *gameScene, const int &bot_key, std::string action);
+        void doAction(GameScene *gameScene, const int &bot_key, std::string action, bool isPressed);
 
         std::vector<std::vector<bool>> _visited;
         bool _found;
+        std::vector<glm::vec3> _path;
+        directions _direction;
     public:
         BotEngine();
 

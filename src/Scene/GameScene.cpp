@@ -199,8 +199,17 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
             it++;
         }
     }
+    for (auto it = this->_walls.begin(); it != this->_walls.end(); it++) {
+        if (it->second->getPos().x == bomb->getPos().x && it->second->getPos().y == bomb->getPos().y) {
+            Packet packet;
+            packet << it->first;
+            this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
+            this->_walls.erase(it);
+            break;
+        }
+    }
     for (size_t i = RIGHT; i <= DOWN; i++) {
-        for (int j = 0; j <= 2 + bomb->getFireUp(); j++) {
+        for (int j = 1; j <= 2 + bomb->getFireUp(); j++) {
             for (auto it = this->_walls.begin(); it != this->_walls.end(); it++) {
                 if (it->second->getPos().x == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
                     it->second->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
