@@ -27,7 +27,7 @@ namespace neo
             bool _isBot;
 
         public:
-            Player(std::string name, glm::vec3 pos, glm::vec3 scale = glm::vec3(1.0f));
+            Player(std::string name, glm::vec3 pos, bool isBot, glm::vec3 scale = glm::vec3(1.0f));
             glm::vec3 &getSpeed();
             bool &getDirection(int axis);
             size_t &getBombUp();

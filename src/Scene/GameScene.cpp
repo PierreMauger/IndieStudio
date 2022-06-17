@@ -19,7 +19,10 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
         for (int j = 0; j < map[i].size(); j++) {
             glm::vec3 pos = {i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.0f};
             if (map[i][j] == 'P')
-                this->_players[this->_incrementor++] = std::make_unique<Player>("RoboCat", pos, glm::vec3(0.4f));
+                this->_players[this->_incrementor++] = std::make_unique<Player>("RoboCat", pos, false, glm::vec3(0.4f));
+            else if (map[i][j] == 'B')
+                this->_players[this->_incrementor++] = std::make_unique<Player>("RoboCat", pos, true, glm::vec3(0.4f));
+
         }
     }
     for (int i = 0; i < map.size(); i++) {
