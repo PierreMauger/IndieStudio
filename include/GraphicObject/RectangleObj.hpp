@@ -21,6 +21,7 @@ namespace neo
             ~RectangleObj() = default;
 
             void draw(Camera &camera);
+            Rectangle getBox() const;
     };
 }
 

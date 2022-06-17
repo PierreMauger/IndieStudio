@@ -24,6 +24,7 @@ namespace neo
             ~SpriteObj() = default;
 
             void draw(Camera &camera);
+            Rectangle getBox() const;
     };
 }
 

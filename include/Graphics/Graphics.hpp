@@ -40,6 +40,7 @@ namespace neo
             void run();
 
             // Interface functions
+            void update();
             void draw();
             float getHeightOnMap();
 

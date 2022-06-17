@@ -12,9 +12,13 @@ using namespace neo;
 ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
+    this->_playerConnected.resize(4, false);
 
     this->_objects[0] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
     this->_objects[0]->setShiny(false);
+
+    // this->_buttons[0] = std::make_unique<GameObject>(2, "Button", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f));
+
     this->addCard(0);
     this->addCard(1);
     this->addCard(2);
@@ -33,6 +37,8 @@ ConfigScene::~ConfigScene()
 
 void ConfigScene::update()
 {
+            // if (this->_playerConnected[button.first] && button.second->getName() == "Card")
+                // this->_playerConnected[button.first] = false;
 }
 
 void ConfigScene::loadScene()
@@ -63,9 +69,9 @@ void ConfigScene::handleKeyReleased(int playerNb, std::string action)
 
 void ConfigScene::addCard(int card)
 {
-    float pos = -1.f + 0.08f + card * 0.48f;
-    this->_buttons[card] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, 0.0f, 0.0f), glm::vec3(0.2f, 0.45f, 0.0f));
-    this->_objects[card + 1] = std::make_unique<GameObject>(0, "RoboCat", glm::vec3((pos + 0.2f) * 7.0f, -1.5f, 0.0f), glm::vec3(0.5f));
+    float pos = -1.f + 0.28f + card * 0.48f;
+    this->_buttons[card] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, 0.45f, 0.0f), glm::vec3(0.2f, 0.45f, 0.0f));
+    this->_objects[card + 1] = std::make_unique<GameObject>(0, "RoboCat", glm::vec3((pos) * 7.0f, -1.5f, 0.0f), glm::vec3(0.5f));
     this->_objects[card + 1]->setRotation(glm::vec3(270.0f, 0.0f, 0.0f));
 }
 

@@ -18,6 +18,7 @@ namespace neo
             std::shared_ptr<MessageBus> _messageBus;
             std::map<int, std::unique_ptr<GameObject>> _objects;
             std::map<int, std::unique_ptr<GameObject>> _buttons;
+            std::vector<bool> _playerConnected;
 
             void addCard(int card);
             void deleteCard(int card);

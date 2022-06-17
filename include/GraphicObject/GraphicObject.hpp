@@ -37,6 +37,7 @@ namespace neo
             void setStatus(int status);
             bool getShiny() const;
             virtual void draw(Camera &camera) = 0;
+            virtual Rectangle getBox() const = 0;
     };
 }
 

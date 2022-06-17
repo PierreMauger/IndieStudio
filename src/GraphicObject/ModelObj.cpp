@@ -30,3 +30,8 @@ void ModelObj::draw(Camera &camera)
     camera.setOnModel(this->_pos, this->_scale, this->_rotation);
     this->_model->draw(camera.getShader());
 }
+
+Rectangle ModelObj::getBox() const
+{
+    return {0, 0, 0, 0};
+}

@@ -32,3 +32,8 @@ void AnimatedModelObj::draw(Camera &camera)
     camera.setOnAnimatedModel(this->_pos, this->_scale, this->_rotation, *this->_animator);
     this->_model->draw(camera.getShader());
 }
+
+Rectangle AnimatedModelObj::getBox() const
+{
+    return {0, 0, 0, 0};
+}

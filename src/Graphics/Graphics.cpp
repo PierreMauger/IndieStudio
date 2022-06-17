@@ -54,12 +54,23 @@ void Graphics::run()
 
     while (this->_running) {
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        this->update();
         this->draw();
         this->_messageBus->notify(Module::GRAPHICS);
         if (WindowShouldClose())
             this->_messageBus->sendMessage(Message(Packet(), BaseCommand::QUIT, Module::BROADCAST));
     }
     CloseWindow();
+}
+
+void Graphics::update()
+{
+    Vector2 pos = GetMousePosition();
+
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        for (auto &button : this->_buttons)
+            if (CheckCollisionPointRec(pos, button.second->getBox()))
+                std::cout << "temp" << std::endl;
 }
 
 void Graphics::draw()
