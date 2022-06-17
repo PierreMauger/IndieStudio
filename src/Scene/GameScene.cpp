@@ -309,7 +309,7 @@ void GameScene::handleKeyReleased(int playerNb, std::string action)
 }
 
 
-void GameScene::handleButtonClicked(int playerNb, int button)
+void GameScene::handleButtonClicked(int button)
 {
 }
 

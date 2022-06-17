@@ -69,8 +69,11 @@ void Graphics::update()
 
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         for (auto &button : this->_buttons)
-            if (CheckCollisionPointRec(pos, button.second->getBox()))
-                std::cout << "temp" << std::endl;
+            if (CheckCollisionPointRec(pos, button.second->getBox())) {
+                Packet data;
+                data << button.first;
+                this->_messageBus->sendMessage(Message(data, CoreCommand::BUTTON_CLICKED, Module::CORE));
+            }
 }
 
 void Graphics::draw()

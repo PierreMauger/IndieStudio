@@ -65,7 +65,7 @@ void ConfigScene::handleKeyReleased(int playerNb, std::string action)
 {
 }
 
-void ConfigScene::handleButtonClicked(int playerNb, int button)
+void ConfigScene::handleButtonClicked(int button)
 {
     if (this->_playerConnected[button]) {
         this->deleteCard(button);
