@@ -33,7 +33,7 @@ namespace neo
             void setPos(glm::vec3 pos);
             void setRotation(float rotation);
             void setStatus(int status);
-            virtual void draw(neo::Camera &camera) = 0;
+            virtual void draw(Camera &camera) = 0;
     };
 }
 

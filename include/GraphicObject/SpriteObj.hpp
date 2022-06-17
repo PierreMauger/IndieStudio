@@ -20,7 +20,7 @@ namespace neo
             SpriteObj(GameObject obj);
             ~SpriteObj() = default;
 
-            void draw(neo::Camera &camera);
+            void draw(Camera &camera);
     };
 }
 

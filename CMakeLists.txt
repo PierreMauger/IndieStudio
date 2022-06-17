@@ -17,7 +17,9 @@ endif (WIN32)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
 set(DirectX_D3DX9_LIBRARY "")
 set(ASSIMP_BUILD_ASSIMP_VIEW False)
+set(ASSIMP_BUILD_ASSIMP_TOOLS False)
 set(ASSIMP_BUILD_TESTS False)
+set(ASSIMP_BUILD_SAMPLES False)
 
 #add some color
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -32,6 +34,12 @@ endif()
 set(EXEC_NAME
   bomberman
 )
+
+#add -g flag
+# add_compile_options(-g)
+
+#add performance flags
+# add_compile_options(-O3 -Ofast -flto)
 
 #fetch include directories
 set(INC
@@ -83,6 +91,8 @@ set(SRC
   src/Game/Bomb.cpp
   src/Game/Wall.cpp
   src/Game/PowerUp.cpp
+  src/Game/MapGenerator.cpp
+  src/Game/BotEngine.cpp
 )
 
 #fetch libraries

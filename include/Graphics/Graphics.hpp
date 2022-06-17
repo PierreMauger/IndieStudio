@@ -25,11 +25,11 @@ namespace neo
     class Graphics : public virtual Node, public virtual IGraphics
     {
         private:
-            std::unique_ptr<neo::Camera> _camera;
+            std::unique_ptr<Camera> _camera;
             std::map<int, std::unique_ptr<GraphicObject>> _objects;
             std::map<int, std::unique_ptr<GraphicObject>> _buttons;
-            std::map<std::string, std::shared_ptr<neo::Model>> _models;
-            std::map<std::string, std::shared_ptr<neo::Animation>> _animations;
+            std::map<std::string, std::shared_ptr<Model>> _models;
+            std::map<std::string, std::shared_ptr<Animation>> _animations;
 
         public:
             Graphics(std::shared_ptr<MessageBus> messageBus);

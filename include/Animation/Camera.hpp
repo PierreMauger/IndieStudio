@@ -27,7 +27,7 @@ namespace neo
             glm::vec3 _up;
             glm::mat4 _projection;
             glm::mat4 _model;
-            neo::Shader _shader;
+            Shader _shader;
             bool _rotating;
             glm::vec3 _nextPos;
             glm::vec3 _nextFront;
@@ -35,7 +35,7 @@ namespace neo
         public:
             Camera();
             ~Camera() = default;
-            neo::Shader &getShader();
+            Shader &getShader();
             void lookAt(glm::vec3 const &pos, glm::vec3 const &front, glm::vec3 const &up);
             void setMovement(glm::vec3 const &nextPos, glm::vec3 const &nextFront);
             void setPos(glm::vec3 const &pos);

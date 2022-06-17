@@ -20,7 +20,7 @@ namespace neo
             RectangleObj(GameObject obj);
             ~RectangleObj() = default;
 
-            void draw(neo::Camera &camera);
+            void draw(Camera &camera);
     };
 }
 

@@ -15,26 +15,21 @@
     #include "Player.hpp"
     #include "Wall.hpp"
     #include "PowerUp.hpp"
+    #include "MapGenerator.hpp"
+    #include "BotEngine.hpp"
 
 namespace neo
 {
+    class BotEngine;
+    
     class GameScene : public virtual IScene
     {
         private:
-            // map generation
-            std::vector<std::string> generateProceduralMap(std::size_t nb_player, std::size_t x, std::size_t y);
-            std::vector<std::string> generateCornerMap(std::size_t x, std::size_t y);
-            std::vector<std::string> copySymmetrical(std::size_t nb_player, std::vector<std::string>);
-            void forcePathX(std::vector<std::string> &map, std::pair<int, int> curr, std::size_t y, std::size_t x);
-            void forcePathY(std::vector<std::string> &map, std::pair<int, int> curr, std::size_t y, std::size_t x);
-            bool findPathX(std::vector<std::string> map, std::pair<int, int> curr, std::size_t y, std::size_t x);
-            bool findPathY(std::vector<std::string> map, std::pair<int, int> curr, std::size_t y, std::size_t x);
-            std::string multiplier_str(std::string chr, std::size_t size);
-
             //update functions
             void updatePlayers(void);
-            void explode(std::unique_ptr<neo::Bomb> &bomb);
+            void explode(std::unique_ptr<Bomb> &bomb);
             void updateBombs(void);
+            void updateAI(void);
 
             //others
             bool canPlaceBomb(int playerNb);
@@ -45,6 +40,8 @@ namespace neo
             std::map<int, std::unique_ptr<Bomb>> _bombs;
             std::map<int, std::unique_ptr<Wall>> _walls;
             std::map<int, std::unique_ptr<PowerUp>> _powerUps;
+            std::unique_ptr<BotEngine> _botEngine;
+            MapGenerator _mapGenerator;
             int _incrementor;
 
         public:
@@ -57,6 +54,13 @@ namespace neo
 
             void handleKeyPressed(int playerNb, std::string action);
             void handleKeyReleased(int playerNb, std::string action);
+
+            std::shared_ptr<MessageBus> getMessageBus();
+            std::map<int, std::unique_ptr<Player>> &getPlayers();
+            std::map<int, std::unique_ptr<Bomb>> &getBombs();
+            std::map<int, std::unique_ptr<Wall>> &getWalls();
+            std::map<int, std::unique_ptr<PowerUp>> &getPowerUps();
+            MapGenerator &getMapGenerator();
     };
 }
 

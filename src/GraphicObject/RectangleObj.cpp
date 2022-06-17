@@ -13,7 +13,7 @@ RectangleObj::RectangleObj(GameObject obj) : GraphicObject(obj)
 {
 }
 
-void RectangleObj::draw(neo::Camera &camera)
+void RectangleObj::draw(Camera &camera)
 {
     if (this->_status)
         DrawRectangle(this->_pos.x, this->_pos.y, this->_scale.x, this->_scale.y, YELLOW);

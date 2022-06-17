@@ -17,13 +17,13 @@ namespace neo
     class ModelObj : public GraphicObject
     {
         private:
-            std::shared_ptr<neo::Model> _model;
+            std::shared_ptr<Model> _model;
 
         public:
-            ModelObj(GameObject obj, std::shared_ptr<neo::Model> model);
+            ModelObj(GameObject obj, std::shared_ptr<Model> model);
             ~ModelObj() = default;
 
-            void draw(neo::Camera &camera);
+            void draw(Camera &camera);
     };
 }
 

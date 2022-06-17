@@ -16,6 +16,7 @@ neo::Camera::Camera() : _shader("resources/shaders/camera.vs", "resources/shader
     this->_up = glm::vec3(0.0f, 1.0f, 0.0f);
     this->_nextPos = glm::vec3(0.0f);
     this->_nextFront = glm::vec3(0.0f);
+    this->_rotating = false;
 
     this->lookAt(this->_pos, this->_front, this->_up);
 }
@@ -90,7 +91,7 @@ void neo::Camera::setShader(float time)
         this->_front = -this->_pos;
         this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
     }
-
+    this->_shader.setVec3("lightColor", glm::vec3(1.0f));
     this->_shader.setMat4("view", this->_view);
     this->_shader.setMat4("projection", this->_projection);
     this->_shader.setFloat("time", time);

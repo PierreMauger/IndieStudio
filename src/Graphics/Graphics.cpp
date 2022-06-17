@@ -99,10 +99,10 @@ void Graphics::receiveResourceList(Packet data)
         std::string fileName = file.substr(0, file.find_last_of("."));
 
         if (type == 0) {
-            this->_models[fileName] = std::shared_ptr<neo::Model>(new Model("resources/models/" + file));
+            this->_models[fileName] = std::shared_ptr<Model>(new Model("resources/models/" + file));
         } else if (type == 1) {
-            this->_models[fileName] = std::shared_ptr<neo::Model>(new Model("resources/animations/" + file));
-            this->_animations[fileName] = std::shared_ptr<neo::Animation>(new Animation("resources/animations/" + file, *this->_models[fileName]));
+            this->_models[fileName] = std::shared_ptr<Model>(new Model("resources/animations/" + file));
+            this->_animations[fileName] = std::shared_ptr<Animation>(new Animation("resources/animations/" + file, *this->_models[fileName]));
         }
     }
     Packet packet;
@@ -189,6 +189,8 @@ void Graphics::receiveMove(Packet data)
     float x, y, z;
 
     data >> id >> x >> y >> z;
+    if (this->_objects.find(id) == this->_objects.end())
+        return;
     if (this->_objects[id]->getPos().x < x)
         this->_objects[id]->setRotation(90);
     else if (this->_objects[id]->getPos().x > x)

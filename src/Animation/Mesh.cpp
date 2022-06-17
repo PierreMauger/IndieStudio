@@ -9,7 +9,7 @@
 
 using namespace neo;
 
-neo::Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, neo::Material material, std::vector<neo::Texture> textures)
+neo::Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Material material, std::vector<Texture> textures)
 {
     this->_vertices = vertices;
     this->_indices = indices;
@@ -18,9 +18,8 @@ neo::Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
     this->setupMesh();
 }
 
-void neo::Mesh::draw(neo::Shader &shader)
+void neo::Mesh::draw(Shader &shader)
 {
-    shader.setVec3("lightColor", glm::vec3(1.0f));
     shader.setVec3("objectColor", this->_material.diffuse);
 
     unsigned int diffuseNr = 1;

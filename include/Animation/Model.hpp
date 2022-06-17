@@ -27,21 +27,21 @@ namespace neo
     class Model
     {
         private:
-            std::vector<neo::Mesh> _meshes;
-            std::vector<neo::Texture> _texturesLoaded;
-            std::map<std::string, neo::BoneInfo> _boneInfoMap;
+            std::vector<Mesh> _meshes;
+            std::vector<Texture> _texturesLoaded;
+            std::map<std::string, BoneInfo> _boneInfoMap;
             int _boneCounter = 0;
 
         public:
             Model(std::string const &filename);
             ~Model() = default;
 
-            std::map<std::string, neo::BoneInfo> &getBoneInfoMap();
+            std::map<std::string, BoneInfo> &getBoneInfoMap();
             int &getBoneCount();
 
             void processNode(aiNode &node, const aiScene &scene);
             Mesh processMesh(aiMesh &mesh, const aiScene &scene);
-            std::vector<neo::Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
+            std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
             unsigned int textureFromFile(const char* path, const std::string& directory, bool gamma = false);
 
             void setVertexBoneDataToDefault(Vertex &vertex);
@@ -49,7 +49,7 @@ namespace neo
             void extractBoneWeightForVertices(std::vector<Vertex> &vertices, aiMesh &mesh, const aiScene &scene);
 
             void load(std::string const &filename);
-            void draw(neo::Shader &shader);
+            void draw(Shader &shader);
             void setPos(glm::vec3 pos);
     };
 }
