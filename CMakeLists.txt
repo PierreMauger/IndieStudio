@@ -120,7 +120,7 @@ if(WIN32)
   )
   else()
   add_custom_command(
-    TARGET ${EXEC_NAME} PRE_BUILD
+    TARGET ${EXEC_NAME} PRE_LINK
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/cmake_modules/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cmake_modules/
   )
   add_custom_command(
