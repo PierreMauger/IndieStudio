@@ -18,7 +18,7 @@ std::string MapGenerator::multiplier_str(std::string chr, std::size_t size)
     return str;
 }
 
-std::vector<std::string> MapGenerator::copySymmetrical(std::size_t nb_player, std::vector<std::string> map)
+std::vector<std::string> MapGenerator::copySymmetrical(std::size_t nbPlayers, std::vector<std::string> map)
 {
     std::size_t max_y = map.size();
 
@@ -101,22 +101,36 @@ std::vector<std::string> MapGenerator::generateCornerMap(std::size_t x, std::siz
     return new_walls;
 }
 
-std::vector<std::string> MapGenerator::generateProceduralMap(std::size_t nb_player, std::size_t x, std::size_t y)
+std::vector<std::string> MapGenerator::generateProceduralMap(std::size_t nbPlayers, std::size_t x, std::size_t y)
 {
     std::vector<std::string> map = generateCornerMap(x / 2 - 1, y / 2 - 1);
 
-    map = copySymmetrical(nb_player, map);
+    this->_width = x;
+    this->_height = y;
+    map = copySymmetrical(nbPlayers, map);
     for (auto &m : map) {
         m.insert(m.begin(), '#');
         m.push_back('#');
     }
     map.insert(map.begin(), multiplier_str(std::string("#"), x));
     map.push_back(multiplier_str(std::string("#"), x));
-    map[1][1] = 'P';
-    map[x - 2][y - 2] = 'P';
-    if (nb_player > 2)
-        map[1][y - 2] = 'P';
-    if (nb_player > 3)
-        map[x - 2][1] = 'P';
+    // map[1][1] = nbPlayers > 0 ? 'P' : 'B';
+    // map[x - 2][1] = nbPlayers > 1 ? 'P' : 'B';
+    // map[1][y - 2] = nbPlayers > 2 ? 'P' : 'B';
+    // for ai testing only
+    map[x - 2][y - 3] = nbPlayers > 0 ? 'P' : 'B';
+    map[x - 2][1] = nbPlayers > 1 ? 'P' : 'B';
+    map[x - 3][y - 2] = nbPlayers > 2 ? 'P' : 'B';
+    map[x - 2][y - 2] = nbPlayers > 3 ? 'P' : 'B';
     return map;
+}
+
+const size_t MapGenerator::getWidth(void) const
+{
+    return this->_width;
+}
+
+const size_t MapGenerator::getHeight(void) const
+{
+    return this->_height;
 }

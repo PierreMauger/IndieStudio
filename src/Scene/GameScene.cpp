@@ -31,6 +31,7 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
                 this->_walls[this->_incrementor++] = std::make_unique<Wall>("Wall", pos, glm::vec3(0.5f));
         }
     }
+    this->_botEngine = std::make_unique<BotEngine>();
 }
 
 GameScene::~GameScene()
@@ -41,9 +42,12 @@ GameScene::~GameScene()
         wall.reset();
     for (auto &[bomb_key, bomb] : this->_bombs)
         bomb.reset();
+    for (auto &[powerUp_key, powerUp] : this->_powerUps)
+        powerUp.reset();
     this->_players.clear();
     this->_walls.clear();
     this->_bombs.clear();
+    this->_powerUps.clear();
 }
 
 void GameScene::loadScene()
@@ -100,6 +104,27 @@ void GameScene::updatePlayers(void)
                 it++;
             }
         }
+        for (auto &[bomb_key, bomb] : this->_bombs) {
+            if (CheckCollisionRecs(
+                CAST(Rectangle, player->getPos().x - 0.3f, player->getPos().y - 0.3f, 0.6f, 0.6f),
+                CAST(Rectangle, bomb->getPos().x - 0.5f, bomb->getPos().y - 0.5f, 1.0f, 1.0f)))
+                continue;
+            if (CheckCollisionRecs(
+                CAST(Rectangle, player->getPos().x - 0.3f + player->getSpeed().x, player->getPos().y - 0.3f, 0.6f, 0.6f),
+                CAST(Rectangle, bomb->getPos().x - 0.5f, bomb->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                player->getSpeed().x = 0.0f;
+            }
+            if (CheckCollisionRecs(
+                CAST(Rectangle, player->getPos().x - 0.3f, player->getPos().y - 0.3f + player->getSpeed().y, 0.6f, 0.6f),
+                CAST(Rectangle, bomb->getPos().x - 0.5f, bomb->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                player->getSpeed().y = 0.0f;
+            }
+            if (player->getSpeed().x && player->getSpeed().y && CheckCollisionRecs(
+                CAST(Rectangle, player->getPos().x - 0.3f + player->getSpeed().x, player->getPos().y - 0.3f + player->getSpeed().y, 0.6f, 0.6f),
+                CAST(Rectangle, bomb->getPos().x - 0.5f, bomb->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                player->getSpeed().y = 0.0f;
+            }
+        }
         for (auto it = this->_powerUps.begin(); it != this->_powerUps.end();) {
             if (CheckCollisionRecs(
                 CAST(Rectangle, player->getPos().x - 0.3f + player->getSpeed().x, player->getPos().y - 0.3f + player->getSpeed().y, 0.6f, 0.6f),
@@ -133,18 +158,68 @@ void GameScene::updatePlayers(void)
 
 void GameScene::explode(std::unique_ptr<Bomb> &bomb)
 {
+    for (auto it = this->_players.begin(); it != this->_players.end();) {
+        if (std::floor(it->second->getPos().x) + 0.5f == bomb->getPos().x &&
+            bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > it->second->getPos().y &&
+            it->second->getPos().y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
+            std::floor(it->second->getPos().y) + 0.5f == bomb->getPos().y &&
+            bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > it->second->getPos().x &&
+            it->second->getPos().x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp()) {
+            Packet packet;
+            packet << it->first;
+            this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
+            this->_players.erase(it++);
+        } else {
+            it++;
+        }
+    }
+    for (auto &[bomb_key, other_bomb] : this->_bombs) {
+        if (other_bomb->getPos() == bomb->getPos())
+            continue;
+        if (other_bomb->getPos().x == bomb->getPos().x &&
+            bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > other_bomb->getPos().y &&
+            other_bomb->getPos().y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
+            other_bomb->getPos().y == bomb->getPos().y &&
+            bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > other_bomb->getPos().x &&
+            other_bomb->getPos().x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp())
+            other_bomb->getTimer() = 0.0f;
+    }
+    for (auto it = this->_powerUps.begin(); it != this->_powerUps.end();) {
+        if (it->second->getPos().x == bomb->getPos().x &&
+            bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > it->second->getPos().y &&
+            it->second->getPos().y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
+            it->second->getPos().y == bomb->getPos().y &&
+            bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > it->second->getPos().x &&
+            it->second->getPos().x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp()) {
+            Packet packet;
+            packet << it->first;
+            this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
+            this->_powerUps.erase(it++);
+        } else {
+            it++;
+        }
+    }
+    for (auto it = this->_walls.begin(); it != this->_walls.end(); it++) {
+        if (it->second->getPos().x == bomb->getPos().x && it->second->getPos().y == bomb->getPos().y) {
+            Packet packet;
+            packet << it->first;
+            this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
+            this->_walls.erase(it);
+            break;
+        }
+    }
     for (size_t i = RIGHT; i <= DOWN; i++) {
-        for (int j = 0; j <= 2 + bomb->getFireUp(); j++) {
-            for (auto it = this->_walls.begin(); it != this->_walls.end();) {
+        for (int j = 1; j <= 2 + bomb->getFireUp(); j++) {
+            for (auto it = this->_walls.begin(); it != this->_walls.end(); it++) {
                 if (it->second->getPos().x == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
                     it->second->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
-                    j = INT_MAX;
+                    j = INT_MAX - 1;
                     if (it->second->getName() == "Block")
                         break;
                     Packet packet;
                     packet << it->first;
                     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-                    if (std::rand() % 10 == 0) {
+                    if (std::rand() % 1 == 0) {
                         int tmp = std::rand() % 4;
                         this->_powerUps[this->_incrementor] = std::make_unique<PowerUp>(powerUps[tmp], it->second->getPos(), glm::vec3(0.5f));
                         Packet packet;
@@ -152,28 +227,15 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
                         this->_incrementor++;
                         this->_messageBus->sendMessage(Message(packet, GraphicsCommand::ADD, Module::GRAPHICS));
                     }
-                    this->_walls.erase(it++);
+                    this->_walls.erase(it);
                     break;
-                } else {
-                    it++;
-                }
-            }
-            for (auto it = this->_players.begin(); it != this->_players.end();) {
-                if (floor(it->second->getPos().x) + 0.5f == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
-                    floor(it->second->getPos().y) + 0.5f == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
-                    Packet packet;
-                    packet << it->first;
-                    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-                    this->_players.erase(it++);
-                } else {
-                    it++;
                 }
             }
         }
     }
 }
 
-void GameScene::updateBombs()
+void GameScene::updateBombs(void)
 {
     for (auto it = this->_bombs.begin(); it != this->_bombs.end();) {
         if (GetTime() - it->second->getTimer() > 3) {
@@ -188,8 +250,9 @@ void GameScene::updateBombs()
     }
 }
 
-void GameScene::update()
+void GameScene::update(void)
 {
+    this->_botEngine->updateBot(this);
     this->updatePlayers();
     this->updateBombs();
 }
@@ -242,6 +305,37 @@ void GameScene::handleKeyReleased(int playerNb, std::string action)
         this->_players[playerNb]->getDirection(DOWN) = false;
 }
 
+
 void GameScene::handleButtonClicked(int playerNb, int button)
 {
+}
+
+std::shared_ptr<MessageBus> GameScene::getMessageBus()
+{
+    return this->_messageBus;
+}
+
+std::map<int, std::unique_ptr<Player>> &GameScene::getPlayers()
+{
+    return this->_players;
+}
+
+std::map<int, std::unique_ptr<Bomb>> &GameScene::getBombs()
+{
+    return this->_bombs;
+}
+
+std::map<int, std::unique_ptr<Wall>> &GameScene::getWalls()
+{
+    return this->_walls;
+}
+
+std::map<int, std::unique_ptr<PowerUp>> &GameScene::getPowerUps()
+{
+    return this->_powerUps;
+}
+
+neo::MapGenerator &GameScene::getMapGenerator()
+{
+    return this->_mapGenerator;
 }

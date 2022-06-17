@@ -37,6 +37,12 @@ set(EXEC_NAME
   bomberman
 )
 
+#add -g flag
+# add_compile_options(-g)
+
+#add performance flags
+# add_compile_options(-O3 -Ofast -flto)
+
 #fetch include directories
 set(INC
   include/
@@ -88,6 +94,7 @@ set(SRC
   src/Game/Wall.cpp
   src/Game/PowerUp.cpp
   src/Game/MapGenerator.cpp
+  src/Game/BotEngine.cpp
 )
 
 #fetch libraries
@@ -123,11 +130,14 @@ if(WIN32)
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/bin/glew32.dll ${CMAKE_SOURCE_DIR}
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/_deps/raylib-build/raylib/raylib.dll ${CMAKE_SOURCE_DIR}
   )
-else()
+  else()
+  add_custom_command(
+    TARGET ${EXEC_NAME} PRE_LINK
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/cmake_modules/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cmake_modules/
+  )
   add_custom_command(
     TARGET ${EXEC_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXEC_NAME} ${CMAKE_SOURCE_DIR}
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/cmake_modules/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cmake_modules/
   )
 endif()

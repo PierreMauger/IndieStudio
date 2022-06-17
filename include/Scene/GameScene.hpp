@@ -16,9 +16,12 @@
     #include "Wall.hpp"
     #include "PowerUp.hpp"
     #include "MapGenerator.hpp"
+    #include "BotEngine.hpp"
 
 namespace neo
 {
+    class BotEngine;
+    
     class GameScene : public virtual IScene
     {
         private:
@@ -26,6 +29,7 @@ namespace neo
             void updatePlayers(void);
             void explode(std::unique_ptr<Bomb> &bomb);
             void updateBombs(void);
+            void updateAI(void);
 
             //others
             bool canPlaceBomb(int playerNb);
@@ -36,6 +40,7 @@ namespace neo
             std::map<int, std::unique_ptr<Bomb>> _bombs;
             std::map<int, std::unique_ptr<Wall>> _walls;
             std::map<int, std::unique_ptr<PowerUp>> _powerUps;
+            std::unique_ptr<BotEngine> _botEngine;
             MapGenerator _mapGenerator;
             int _incrementor;
 
@@ -50,6 +55,13 @@ namespace neo
             void handleKeyPressed(int playerNb, std::string action);
             void handleKeyReleased(int playerNb, std::string action);
             void handleButtonClicked(int playerNb, int button);
+
+            std::shared_ptr<MessageBus> getMessageBus();
+            std::map<int, std::unique_ptr<Player>> &getPlayers();
+            std::map<int, std::unique_ptr<Bomb>> &getBombs();
+            std::map<int, std::unique_ptr<Wall>> &getWalls();
+            std::map<int, std::unique_ptr<PowerUp>> &getPowerUps();
+            MapGenerator &getMapGenerator();
     };
 }
 
