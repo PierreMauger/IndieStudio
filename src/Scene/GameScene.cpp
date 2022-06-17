@@ -241,3 +241,7 @@ void GameScene::handleKeyReleased(int playerNb, std::string action)
     else if (action == "MoveDown")
         this->_players[playerNb]->getDirection(DOWN) = false;
 }
+
+void GameScene::handleButtonClicked(int playerNb, int button)
+{
+}

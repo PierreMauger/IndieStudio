@@ -52,6 +52,7 @@ namespace neo
                 KEY_RELEASED,
                 GRAPHICS_READY,
                 CHANGE_SCENE,
+                BUTTON_CLICKED,
             };
     };
 

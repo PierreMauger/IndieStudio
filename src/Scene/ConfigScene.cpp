@@ -37,8 +37,6 @@ ConfigScene::~ConfigScene()
 
 void ConfigScene::update()
 {
-            // if (this->_playerConnected[button.first] && button.second->getName() == "Card")
-                // this->_playerConnected[button.first] = false;
 }
 
 void ConfigScene::loadScene()
@@ -67,6 +65,17 @@ void ConfigScene::handleKeyReleased(int playerNb, std::string action)
 {
 }
 
+void ConfigScene::handleButtonClicked(int playerNb, int button)
+{
+    if (this->_playerConnected[button]) {
+        this->deleteCard(button);
+        this->_playerConnected[button] = false;
+    } else {
+        this->addCard(button);
+        this->_playerConnected[button] = true;
+    }
+}
+
 void ConfigScene::addCard(int card)
 {
     float pos = -1.f + 0.28f + card * 0.48f;
@@ -77,4 +86,8 @@ void ConfigScene::addCard(int card)
 
 void ConfigScene::deleteCard(int card)
 {
+    float pos = -1.f + 0.28f + card * 0.48f;
+    this->_buttons[card] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, 0.45f, 0.0f), glm::vec3(0.2f, 0.45f, 0.0f));
+    this->_objects[card + 1] = std::make_unique<GameObject>(0, "RoboCat", glm::vec3((pos) * 7.0f, -1.5f, 0.0f), glm::vec3(0.5f));
+    this->_objects[card + 1]->setRotation(glm::vec3(270.0f, 0.0f, 0.0f));
 }

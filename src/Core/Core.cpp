@@ -20,6 +20,7 @@ Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->_functionTab.push_back(std::bind(&Core::receiveKeyReleased, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Core::receiveGraphicsReady, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Core::receiveChangeScene, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Core::receiveButtonClicked, this, std::placeholders::_1));
 }
 
 void Core::run()
@@ -72,4 +73,13 @@ void Core::receiveChangeScene(Packet data)
     this->_currentScene = scene;
     if (scene < this->_scenes.size())
         this->_scenes[scene]->loadScene();
+}
+
+void Core::receiveButtonClicked(Packet data)
+{
+    int playerNb = 0;
+    int button = 0;
+
+    data >> playerNb >> button;
+    this->_scenes[this->_currentScene]->handleButtonClicked(playerNb, button);
 }
