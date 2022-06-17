@@ -54,6 +54,7 @@ namespace neo
 
             void handleKeyPressed(int playerNb, std::string action);
             void handleKeyReleased(int playerNb, std::string action);
+            void handleButtonClicked(int playerNb, int button);
 
             std::shared_ptr<MessageBus> getMessageBus();
             std::map<int, std::unique_ptr<Player>> &getPlayers();

@@ -16,19 +16,20 @@ Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
     this->_currentScene = 2;
 
-    this->_scenes.push_back(std::make_unique<MenuScene>(this->_messageBus));
-    this->_scenes.push_back(std::make_unique<ConfigScene>(this->_messageBus));
-    this->_scenes.push_back(std::make_unique<GameScene>(this->_messageBus));
-
     this->_functionTab.push_back(std::bind(&Core::receiveKeyPressed, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Core::receiveKeyReleased, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Core::receiveGraphicsReady, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Core::receiveChangeScene, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Core::receiveButtonClicked, this, std::placeholders::_1));
 }
 
 void Core::run()
 {
     std::srand(std::time(0));
+    this->_scenes.push_back(std::make_unique<MenuScene>(this->_messageBus));
+    this->_scenes.push_back(std::make_unique<ConfigScene>(this->_messageBus));
+    this->_scenes.push_back(std::make_unique<GameScene>(this->_messageBus));
+
     while (this->_running) {
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
         this->update();
@@ -72,4 +73,13 @@ void Core::receiveChangeScene(Packet data)
     this->_currentScene = scene;
     if (scene < this->_scenes.size())
         this->_scenes[scene]->loadScene();
+}
+
+void Core::receiveButtonClicked(Packet data)
+{
+    int playerNb = 0;
+    int button = 0;
+
+    data >> playerNb >> button;
+    this->_scenes[this->_currentScene]->handleButtonClicked(playerNb, button);
 }

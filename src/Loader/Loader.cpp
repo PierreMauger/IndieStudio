@@ -38,31 +38,41 @@ void Loader::sendPlayerConfig()
 
 void Loader::sendResourceList(void)
 {
-    std::vector<std::string> modelFiles = this->getFilesFromDir("resources/models/");
-    std::vector<std::string> animationFiles = this->getFilesFromDir("resources/animations/");
+    std::vector<std::string> modelsFiles = this->getFilesFromDir("resources/models/");
+    std::vector<std::string> animationsFiles = this->getFilesFromDir("resources/animations/");
+    std::vector<std::string> texturesFiles = this->getFilesFromDir("resources/textures/");
     std::vector<std::string> soundsFiles = this->getFilesFromDir("resources/audio/sounds/");
     std::vector<std::string> musicsFiles = this->getFilesFromDir("resources/audio/musics/");
     Packet packet;
 
-    for (auto &file : modelFiles) {
+    for (auto &file : modelsFiles) {
         std::filesystem::path path(file);
-        packet << 0 << path.filename().string();
+        if (path.extension() == ".dae")
+            packet << 0 << path.filename().string();
     }
-    for (auto &file : animationFiles) {
+    for (auto &file : animationsFiles) {
         std::filesystem::path path(file);
-        packet << 1 << path.filename().string();
+        if (path.extension() == ".dae")
+            packet << 1 << path.filename().string();
+    }
+    for (auto &file : texturesFiles) {
+        std::filesystem::path path(file);
+        if (path.extension() == ".png")
+            packet << 2 << path.filename().string();
     }
     this->postMessage(Message(packet, GraphicsCommand::RESOURCE_LIST, Module::GRAPHICS));
     // packet.clear();
     // for (auto &file : soundsFiles) {
     //     std::filesystem::path path(file);
-    //     packet << path.filename().string();
+    //     if (path.extension() == ".mp3")
+    //         packet << path.filename().string();
     // }
     // this->postMessage(Message(packet, AudioCommand::LOAD_SOUNDS, Module::AUDIO));
     // packet.clear();
     // for (auto &file : musicsFiles) {
     //     std::filesystem::path path(file);
-    //     packet << path.filename().string();
+    //     if (path.extension() == ".mp3")
+    //         packet << path.filename().string();
     // }
     // this->postMessage(Message(packet, AudioCommand::LOAD_MUSICS, Module::AUDIO));
 }

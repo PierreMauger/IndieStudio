@@ -31,19 +31,20 @@ namespace neo
             bool _rotating;
             glm::vec3 _nextPos;
             glm::vec3 _nextFront;
+            glm::vec3 _rotation;
 
         public:
             Camera();
             ~Camera() = default;
             Shader &getShader();
-            void lookAt(glm::vec3 const &pos, glm::vec3 const &front, glm::vec3 const &up);
+            void update();
             void setMovement(glm::vec3 const &nextPos, glm::vec3 const &nextFront);
             void setPos(glm::vec3 const &pos);
-            void centerOn(glm::vec3 const &pos);
             void setRotating(bool rotating);
+            void setRotation(glm::vec3 const &rotation);
             void setShader(float time);
-            void setOnModel(glm::vec3 pos, glm::vec3 scale, float rotation);
-            void setOnAnimatedModel(glm::vec3 pos, glm::vec3 scale, float rotation, Animator &animator);
+            void setOnModel(glm::vec3 pos, glm::vec3 scale, glm::vec3 rotation);
+            void setOnAnimatedModel(glm::vec3 pos, glm::vec3 scale, glm::vec3 rotation, Animator &animator);
     };
 }
 

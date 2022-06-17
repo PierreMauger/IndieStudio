@@ -12,12 +12,12 @@ using namespace neo;
 MenuScene::MenuScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
-    this->_objects.insert(std::make_pair(0, std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(90.0f))));
-    this->_objects.insert(std::make_pair(1, std::make_unique<GameObject>(0, "RoboCat", glm::vec3(0.0f), glm::vec3(0.5f))));
-    this->_buttons.insert(std::make_pair(0, std::make_unique<GameObject>(2, "red", glm::vec3(50, 500, 0), glm::vec3(100, 50, 0))));
-    this->_buttons.insert(std::make_pair(1, std::make_unique<GameObject>(2, "red", glm::vec3(250, 500, 0), glm::vec3(100, 50, 0))));
-    this->_buttons.insert(std::make_pair(2, std::make_unique<GameObject>(2, "red", glm::vec3(450, 500, 0), glm::vec3(100, 50, 0))));
-
+    this->_objects[0] = std::make_unique<GameObject>(0, "Asteroid1", glm::vec3(0.0f, -5.0f, -1.75f), glm::vec3(0.5f));
+    this->_objects[1] = std::make_unique<GameObject>(0, "Asteroid2", glm::vec3(0.0f, -5.0f, -0.25f), glm::vec3(0.4f));
+    this->_objects[2] = std::make_unique<GameObject>(0, "Asteroid3", glm::vec3(0.0f, -5.0f, 1.25f), glm::vec3(0.5f));
+    this->_objects[3] = std::make_unique<GameObject>(0, "Asteroid1", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f));
+    this->_objects[4] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
+    this->_objects[4]->setShiny(false);
     this->_selectedButton = -1;
 }
 
@@ -33,6 +33,11 @@ MenuScene::~MenuScene()
 
 void MenuScene::update()
 {
+    Vector2 pos = GetMousePosition();
+
+    Packet packet;
+    packet << pos.x << pos.y << 0;
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_OFFSET, Module::GRAPHICS));
 }
 
 void MenuScene::loadScene()
@@ -46,10 +51,10 @@ void MenuScene::loadScene()
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
     packet.clear();
-    packet << 1 << glm::vec3(5.0f, 5.0f, 10.0f);
+    packet << 1 << glm::vec3(10.0f, 0.0f, 10.0f);
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
     packet.clear();
-    packet << 0 << glm::vec3(5.0f, 5.0f, 3.0f);
+    packet << 0 << glm::vec3(10.0f, 0.0f, 3.0f);
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_NEXT_POS, Module::GRAPHICS));
 }
 
@@ -63,6 +68,10 @@ void MenuScene::handleKeyPressed(int playerNb, std::string action)
 }
 
 void MenuScene::handleKeyReleased(int playerNb, std::string action)
+{
+}
+
+void MenuScene::handleButtonClicked(int playerNb, int button)
 {
 }
 
@@ -93,17 +102,17 @@ void MenuScene::handleBackPressed(int playerNb, std::string action)
 
 void MenuScene::handleMovePressed(int playerNb, std::string action)
 {
-    if (action == "MoveRight" || action == "MoveLeft") {
+    if (action == "MoveUp" || action == "MoveDown") {
         Packet packet;
         packet << this->_selectedButton << 0;
         this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT_BUTTON, Module::GRAPHICS));
         packet.clear();
-        if (action == "MoveRight")
-            this->_selectedButton = (this->_selectedButton + 1) % this->_buttons.size();
+        if (action == "MoveUp")
+            this->_selectedButton = (this->_selectedButton + 1) % 3;
         else {
-            if (this->_selectedButton == 0)
-                this->_selectedButton = this->_buttons.size();
-            this->_selectedButton = (this->_selectedButton - 1) % this->_buttons.size();
+            if (this->_selectedButton <= 0)
+                this->_selectedButton = 3;
+            this->_selectedButton = (this->_selectedButton - 1) % 3;
         }
         packet << this->_selectedButton << 1;
         this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT_BUTTON, Module::GRAPHICS));

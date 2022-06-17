@@ -16,11 +16,15 @@ namespace neo
     class SpriteObj : public GraphicObject
     {
         private:
+            std::shared_ptr<Texture2D> _texture;
+            glm::vec2 _coords;
+
         public:
-            SpriteObj(GameObject obj);
+            SpriteObj(GameObject obj, std::shared_ptr<Texture2D> texture);
             ~SpriteObj() = default;
 
             void draw(Camera &camera);
+            Rectangle getBox() const;
     };
 }
 

@@ -16,6 +16,12 @@ namespace neo
     {
         private:
             std::shared_ptr<MessageBus> _messageBus;
+            std::map<int, std::unique_ptr<GameObject>> _objects;
+            std::map<int, std::unique_ptr<GameObject>> _buttons;
+            std::vector<bool> _playerConnected;
+
+            void addCard(int card);
+            void deleteCard(int card);
 
         public:
             ConfigScene(std::shared_ptr<MessageBus> messageBus);
@@ -27,6 +33,7 @@ namespace neo
 
             void handleKeyPressed(int playerNb, std::string action);
             void handleKeyReleased(int playerNb, std::string action);
+            void handleButtonClicked(int playerNb, int button);
     };
 }
 

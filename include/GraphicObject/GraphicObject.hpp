@@ -20,8 +20,9 @@ namespace neo
             std::string _name;
             glm::vec3 _pos;
             glm::vec3 _scale;
-            float _rotation;
+            glm::vec3 _rotation;
             int _status;
+            bool _shiny;
 
         public:
             GraphicObject(GameObject obj);
@@ -29,11 +30,14 @@ namespace neo
 
             glm::vec3 getPos() const;
             glm::vec3 getScale() const;
-            float getRotation() const;
+            glm::vec3 getRotation() const;
+            int getStatus() const;
             void setPos(glm::vec3 pos);
-            void setRotation(float rotation);
+            void setRotation(glm::vec3 rotation);
             void setStatus(int status);
+            bool getShiny() const;
             virtual void draw(Camera &camera) = 0;
+            virtual Rectangle getBox() const = 0;
     };
 }
 

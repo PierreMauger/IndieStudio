@@ -11,6 +11,9 @@ uniform vec3 viewPos;
 uniform vec3 lightColor;
 uniform vec3 objectColor;
 
+uniform bool outline = false;
+uniform bool shiny = true;
+
 uniform sampler2D textureDiffuse;
 
 void main()
@@ -32,8 +35,20 @@ void main()
     float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 32);
     vec3 specular = specularStrength * spec * lightColor;
 
-    vec3 result = (ambient + diffuse + specular) * objectColor;
-    FragColor = texture(textureDiffuse, TexCoords);
-    if (FragColor.rgb == vec3(0.0f)) // if texture is not loaded
-        FragColor += vec4(result, 1.0f);
+    if (outline) {
+        FragColor = vec4(vec3(1.0f, 1.0f, 1.0f), 0.5f);
+        return;
+    }
+    vec3 textureColor = texture(textureDiffuse, TexCoords).rgb;
+    if (textureColor == vec3(0.0f)) { // if texture is not loaded
+        vec3 result = (ambient + diffuse + specular) * objectColor;
+        FragColor = vec4(result, 1.0f);
+    } else {
+        if (shiny) {
+            vec3 result = (ambient + diffuse + specular) * textureColor;
+            FragColor = vec4(result, 1.0f);
+        } else {
+            FragColor = vec4(textureColor, 1.0f);
+        }
+    }
 }

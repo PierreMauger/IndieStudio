@@ -30,6 +30,7 @@ namespace neo
             std::map<int, std::unique_ptr<GraphicObject>> _buttons;
             std::map<std::string, std::shared_ptr<Model>> _models;
             std::map<std::string, std::shared_ptr<Animation>> _animations;
+            std::map<std::string, std::shared_ptr<Texture2D>> _textures;
 
         public:
             Graphics(std::shared_ptr<MessageBus> messageBus);
@@ -39,6 +40,7 @@ namespace neo
             void run();
 
             // Interface functions
+            void update();
             void draw();
             float getHeightOnMap();
 
@@ -48,6 +50,7 @@ namespace neo
             void receiveDelete(Packet);
             void receiveSetCameraPos(Packet);
             void receiveSetCameraNextPos(Packet);
+            void receiveSetCameraOffset(Packet);
             void receiveMove(Packet);
             void receiveSelectButton(Packet);
     };

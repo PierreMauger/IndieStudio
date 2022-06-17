@@ -28,6 +28,7 @@ namespace neo
             ~AnimatedModelObj() = default;
 
             void draw(Camera &camera);
+            Rectangle getBox() const;
     };
 }
 

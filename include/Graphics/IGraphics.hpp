@@ -17,7 +17,9 @@ namespace neo
         public:
             virtual ~IGraphics() = default;
 
+            virtual void update() = 0;
             virtual void draw() = 0;
+            virtual float getHeightOnMap() = 0;
     };
 }
 

@@ -52,6 +52,7 @@ namespace neo
                 KEY_RELEASED,
                 GRAPHICS_READY,
                 CHANGE_SCENE,
+                BUTTON_CLICKED,
             };
     };
 
@@ -65,6 +66,7 @@ namespace neo
                 DELETE,
                 SET_CAMERA_POS,
                 SET_CAMERA_NEXT_POS,
+                SET_CAMERA_OFFSET,
                 MOVE,
                 SELECT_BUTTON
             };
