@@ -71,7 +71,7 @@ void MenuScene::handleKeyReleased(int playerNb, std::string action)
 {
 }
 
-void MenuScene::handleButtonClicked(int playerNb, int button)
+void MenuScene::handleButtonClicked(int button)
 {
 }
 

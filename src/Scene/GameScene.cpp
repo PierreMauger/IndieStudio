@@ -51,6 +51,7 @@ GameScene::~GameScene()
     this->_walls.clear();
     this->_bombs.clear();
     this->_powerUps.clear();
+    this->_botEngine.reset();
 }
 
 void GameScene::loadScene()
@@ -75,6 +76,8 @@ void GameScene::loadScene()
 
 void GameScene::updatePlayers(void)
 {
+    Packet data;
+
     for (auto &[player_key, player] : this->_players) {
         if (player->getDirection(RIGHT))
             player->getSpeed().x += 0.1f + player->getSpeedUp() * 0.05f;
@@ -140,9 +143,7 @@ void GameScene::updatePlayers(void)
                     player->getFireUp() += 1;
                 if (it->second->getName() == "WallPass")
                     player->getWallPass() = true;
-                Packet packet;
-                packet << it->first;
-                this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
+                data << it->second->getType() << it->first;
                 this->_powerUps.erase(it++);
             } else {
                 it++;
@@ -153,104 +154,90 @@ void GameScene::updatePlayers(void)
             Packet packet;
             packet << player_key << player->getPos().x << player->getPos().y << player->getPos().z;
             this->_messageBus->sendMessage(Message(packet, GraphicsCommand::MOVE, Module::GRAPHICS));
-            packet.clear();
             player->getSpeed() = glm::vec3(0.0f);
         }
     }
+    if (data.checkSize(1))
+        this->_messageBus->sendMessage(Message(data, GraphicsCommand::DELETE, Module::GRAPHICS));
 }
 
 void GameScene::explode(std::unique_ptr<Bomb> &bomb)
 {
-    for (auto it = this->_players.begin(); it != this->_players.end();) {
-        if (std::floor(it->second->getPos().x) + 0.5f == bomb->getPos().x &&
-            bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > it->second->getPos().y &&
-            it->second->getPos().y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
-            std::floor(it->second->getPos().y) + 0.5f == bomb->getPos().y &&
-            bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > it->second->getPos().x &&
-            it->second->getPos().x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp()) {
-            Packet packet;
-            packet << it->first;
-            this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-            this->_players.erase(it++);
-        } else {
-            it++;
-        }
-    }
-    for (auto &[bomb_key, other_bomb] : this->_bombs) {
-        if (other_bomb->getPos() == bomb->getPos())
-            continue;
-        if (other_bomb->getPos().x == bomb->getPos().x &&
-            bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > other_bomb->getPos().y &&
-            other_bomb->getPos().y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
-            other_bomb->getPos().y == bomb->getPos().y &&
-            bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > other_bomb->getPos().x &&
-            other_bomb->getPos().x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp())
-            other_bomb->getTimer() = 0.0f;
-    }
-    for (auto it = this->_powerUps.begin(); it != this->_powerUps.end();) {
-        if (it->second->getPos().x == bomb->getPos().x &&
-            bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > it->second->getPos().y &&
-            it->second->getPos().y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
-            it->second->getPos().y == bomb->getPos().y &&
-            bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > it->second->getPos().x &&
-            it->second->getPos().x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp()) {
-            Packet packet;
-            packet << it->first;
-            this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-            this->_powerUps.erase(it++);
-        } else {
-            it++;
-        }
-    }
-    for (auto it = this->_walls.begin(); it != this->_walls.end(); it++) {
-        if (it->second->getPos().x == bomb->getPos().x && it->second->getPos().y == bomb->getPos().y) {
-            Packet packet;
-            packet << it->first;
-            this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-            this->_walls.erase(it);
-            break;
-        }
-    }
+    Packet addData;
+    Packet deleteData;
+
     for (size_t i = RIGHT; i <= DOWN; i++) {
-        for (int j = 1; j <= 2 + bomb->getFireUp(); j++) {
+        for (int j = 0; j <= 2 + bomb->getFireUp(); j++) {
             for (auto it = this->_walls.begin(); it != this->_walls.end(); it++) {
                 if (it->second->getPos().x == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
                     it->second->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
                     j = INT_MAX - 1;
                     if (it->second->getName() == "Block")
                         break;
-                    Packet packet;
-                    packet << it->first;
-                    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
+                    deleteData << it->second->getType() << it->first;
                     if (std::rand() % 1 == 0) {
                         int tmp = std::rand() % 4;
                         this->_powerUps[this->_incrementor] = std::make_unique<PowerUp>(powerUps[tmp], it->second->getPos(), glm::vec3(0.5f));
-                        Packet packet;
-                        packet << this->_powerUps[this->_incrementor]->getType() << this->_incrementor << *this->_powerUps[this->_incrementor];
+                        addData << this->_powerUps[this->_incrementor]->getType() << this->_incrementor << *this->_powerUps[this->_incrementor];
                         this->_incrementor++;
-                        this->_messageBus->sendMessage(Message(packet, GraphicsCommand::ADD, Module::GRAPHICS));
                     }
-                    this->_walls.erase(it);
+                    this->_walls.erase(it++);
                     break;
+                }
+            }
+
+            for (auto it = this->_players.begin(); it != this->_players.end();) {
+                if (std::floor(it->second->getPos().x) + 0.5f == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
+                    std::floor(it->second->getPos().y) + 0.5f == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
+                    deleteData << it->second->getType() << it->first;
+                    this->_players.erase(it++);
+                } else {
+                    it++;
+                }
+            }
+
+            for (auto &[bomb_key, other_bomb] : this->_bombs) {
+                if (other_bomb->getPos() == bomb->getPos())
+                    continue;
+                if (std::floor(other_bomb->getPos().x) + 0.5f == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
+                    std::floor(other_bomb->getPos().y) + 0.5f == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
+                    j = INT_MAX - 1;
+                    other_bomb->getTimer() = 0.0f;
+                }
+            }
+            for (auto it = this->_powerUps.begin(); it != this->_powerUps.end();) {
+                if (std::floor(it->second->getPos().x) + 0.5f == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
+                    std::floor(it->second->getPos().y) + 0.5f == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
+                    j = INT_MAX - 1;
+                    deleteData << it->second->getType() << it->first;
+                    this->_powerUps.erase(it++);
+                } else {
+                    it++;
                 }
             }
         }
     }
+    if (addData.checkSize(1))
+        this->_messageBus->sendMessage(Message(addData, GraphicsCommand::ADD, Module::GRAPHICS));
+    if (deleteData.checkSize(1))
+        this->_messageBus->sendMessage(Message(deleteData, GraphicsCommand::DELETE, Module::GRAPHICS));
 }
 
 void GameScene::updateBombs(void)
 {
+    Packet data;
+
     for (auto it = this->_bombs.begin(); it != this->_bombs.end();) {
         if (GetTime() - it->second->getTimer() > 3) {
             this->explode(it->second);
-            Packet packet;
-            packet << it->first;
-            this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
+            data << it->second->getType() << it->first;
             this->_bombs.erase(it++);
         } else {
             it++;
         }
     }
+    if (data.checkSize(1))
+        this->_messageBus->sendMessage(Message(data, GraphicsCommand::DELETE, Module::GRAPHICS));
 }
 
 void GameScene::update(void)
@@ -309,7 +296,7 @@ void GameScene::handleKeyReleased(int playerNb, std::string action)
 }
 
 
-void GameScene::handleButtonClicked(int playerNb, int button)
+void GameScene::handleButtonClicked(int button)
 {
 }
 

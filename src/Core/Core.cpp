@@ -14,7 +14,7 @@ using namespace neo;
 
 Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    this->_currentScene = 2;
+    this->_currentScene = 0;
 
     this->_functionTab.push_back(std::bind(&Core::receiveKeyPressed, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Core::receiveKeyReleased, this, std::placeholders::_1));
@@ -77,9 +77,9 @@ void Core::receiveChangeScene(Packet data)
 
 void Core::receiveButtonClicked(Packet data)
 {
-    int playerNb = 0;
+    int type = 0;
     int button = 0;
 
-    data >> playerNb >> button;
-    this->_scenes[this->_currentScene]->handleButtonClicked(playerNb, button);
+    data >> type >> button;
+    this->_scenes[this->_currentScene]->handleButtonClicked(button);
 }
