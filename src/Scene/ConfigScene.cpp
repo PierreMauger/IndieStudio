@@ -17,12 +17,16 @@ ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
     this->_objects[0] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
     this->_objects[0]->setShiny(false);
 
-    // this->_buttons[0] = std::make_unique<GameObject>(2, "Button", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f));
+    float pos = -1.f + 0.28f;
+    this->_buttons[0] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos            , 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
+    this->_buttons[1] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 1 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
+    this->_buttons[2] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 2 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
+    this->_buttons[3] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 3 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
 
-    this->addCard(0);
-    this->addCard(1);
-    this->addCard(2);
-    this->addCard(3);
+    // this->addCard(0);
+    // this->addCard(1);
+    // this->addCard(2);
+    // this->addCard(3);
 }
 
 ConfigScene::~ConfigScene()
@@ -78,16 +82,32 @@ void ConfigScene::handleButtonClicked(int button)
 
 void ConfigScene::addCard(int card)
 {
+    Packet data;
     float pos = -1.f + 0.28f + card * 0.48f;
+
+    data << this->_buttons[card]->getType() << card;
+    this->_messageBus->sendMessage(Message(data, GraphicsCommand::DELETE, Module::GRAPHICS));
+    data.clear();
+
     this->_buttons[card] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, 0.45f, 0.0f), glm::vec3(0.2f, 0.45f, 0.0f));
     this->_objects[card + 1] = std::make_unique<GameObject>(0, "RoboCat", glm::vec3((pos) * 7.0f, -1.5f, 0.0f), glm::vec3(0.5f));
     this->_objects[card + 1]->setRotation(glm::vec3(270.0f, 0.0f, 0.0f));
+    data << this->_buttons[card]->getType() << card << *this->_buttons[card];
+    data << this->_objects[card + 1]->getType() << card + 1 << *this->_objects[card + 1];
+    this->_messageBus->sendMessage(Message(data, GraphicsCommand::ADD, Module::GRAPHICS));
 }
 
 void ConfigScene::deleteCard(int card)
 {
+    Packet data;
     float pos = -1.f + 0.28f + card * 0.48f;
-    this->_buttons[card] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, 0.45f, 0.0f), glm::vec3(0.2f, 0.45f, 0.0f));
-    this->_objects[card + 1] = std::make_unique<GameObject>(0, "RoboCat", glm::vec3((pos) * 7.0f, -1.5f, 0.0f), glm::vec3(0.5f));
-    this->_objects[card + 1]->setRotation(glm::vec3(270.0f, 0.0f, 0.0f));
+
+    data << this->_buttons[card]->getType() << card;
+    data << this->_objects[card + 1]->getType() << card + 1;
+    this->_messageBus->sendMessage(Message(data, GraphicsCommand::DELETE, Module::GRAPHICS));
+    data.clear();
+
+    this->_buttons[card] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
+    data << this->_buttons[card]->getType() << card << *this->_buttons[card];
+    this->_messageBus->sendMessage(Message(data, GraphicsCommand::ADD, Module::GRAPHICS));
 }

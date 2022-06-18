@@ -77,8 +77,9 @@ void Core::receiveChangeScene(Packet data)
 
 void Core::receiveButtonClicked(Packet data)
 {
+    int type = 0;
     int button = 0;
 
-    data >> button;
+    data >> type >> button;
     this->_scenes[this->_currentScene]->handleButtonClicked(button);
 }

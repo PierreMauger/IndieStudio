@@ -71,7 +71,7 @@ void Graphics::update()
         for (auto &button : this->_buttons)
             if (CheckCollisionPointRec(pos, button.second->getBox())) {
                 Packet data;
-                data << button.first;
+                data << 0 << button.first;
                 this->_messageBus->sendMessage(Message(data, CoreCommand::BUTTON_CLICKED, Module::CORE));
             }
 }
@@ -168,6 +168,10 @@ void Graphics::receiveAdd(Packet data)
             this->_objects[id] = std::unique_ptr<GraphicObject>(new ModelObj(obj, this->_models[obj.getName()]));
         else if (type == 1 && this->_models.find(obj.getName()) != this->_models.end() && this->_animations.find(obj.getName()) != this->_animations.end())
             this->_objects[id] = std::unique_ptr<GraphicObject>(new AnimatedModelObj(obj, this->_models[obj.getName()], this->_animations[obj.getName()]));
+        else if (type == 2)
+            this->_buttons[id] = std::unique_ptr<GraphicObject>(new RectangleObj(obj));
+        else if (type == 3 && this->_textures.find(obj.getName()) != this->_textures.end())
+            this->_buttons[id] = std::unique_ptr<GraphicObject>(new SpriteObj(obj, this->_textures[obj.getName()]));
     }
 }
 
@@ -175,9 +179,15 @@ void Graphics::receiveDelete(Packet data)
 {
     while (data.checkSize(1)) {
         int id = 0;
-        data >> id;
-        if (this->_objects.find(id) != this->_objects.end())
-            this->_objects.erase(id);
+        int type = 0;
+        data >> type >> id;
+        if (type == 0 || type == 1) {
+            if (this->_objects.find(id) != this->_objects.end())
+                this->_objects.erase(id);
+        } else if (type == 2 || type == 3) {
+            if (this->_buttons.find(id) != this->_buttons.end())
+                this->_buttons.erase(id);
+        }
     }
 }
 
