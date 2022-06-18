@@ -22,11 +22,6 @@ ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
     this->_buttons[1] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 1 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
     this->_buttons[2] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 2 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
     this->_buttons[3] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 3 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
-
-    // this->addCard(0);
-    // this->addCard(1);
-    // this->addCard(2);
-    // this->addCard(3);
 }
 
 ConfigScene::~ConfigScene()
