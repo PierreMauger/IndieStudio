@@ -14,7 +14,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fexceptions")
 if (WIN32)
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /EHsc")
 endif (WIN32)
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" FORCE)
 set(DirectX_D3DX9_LIBRARY "")
 set(ASSIMP_BUILD_ASSIMP_VIEW False)
 set(ASSIMP_BUILD_ASSIMP_TOOLS False)
@@ -128,11 +128,7 @@ if(WIN32)
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/bin/glew32.dll ${CMAKE_SOURCE_DIR}
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/_deps/raylib-build/raylib/raylib.dll ${CMAKE_SOURCE_DIR}
   )
-  else()
-  add_custom_command(
-    TARGET ${EXEC_NAME} PRE_LINK
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/cmake_modules/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cmake_modules/
-  )
+else()
   add_custom_command(
     TARGET ${EXEC_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXEC_NAME} ${CMAKE_SOURCE_DIR}
