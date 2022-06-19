@@ -14,9 +14,7 @@ Node::Node(std::shared_ptr<MessageBus> messageBus)
     this->_messageBus = messageBus;
     this->_messageBus->addReceiver(this->getNotify());
     this->_running = true;
-    this->_functionTab = {
-        std::bind(&Node::receiveQuit, this, std::placeholders::_1),
-    };
+    this->_functionTab.push_back(std::bind(&Node::receiveQuit, this, std::placeholders::_1));
 }
 
 std::function<void(Message)> Node::getNotify()

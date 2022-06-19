@@ -18,6 +18,7 @@ namespace neo
     {
         private:
             std::vector<PlayerConfig> _configs;
+            std::map<int, PlayerConfig> _usedConfigs;
 
         public:
             Input(std::shared_ptr<MessageBus> messageBus);
@@ -36,6 +37,7 @@ namespace neo
             void checkJoystickStatus(int key, std::string action, int playerNb);
 
             void receiveKeyConfig(Packet);
+            void receiveChangeConfig(Packet);
     };
 }
 

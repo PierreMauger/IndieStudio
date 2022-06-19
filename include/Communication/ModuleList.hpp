@@ -78,6 +78,7 @@ namespace neo
         public:
             enum {
                 KEY_CONFIG = BaseCommand::LAST,
+                CHANGE_CONFIG,
             };
     };
 }

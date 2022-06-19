@@ -15,6 +15,7 @@ ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
     this->_playerConnected.resize(4, false);
     this->_playerModel.resize(4, 0);
     this->_playerConfig.resize(4, 0);
+    this->_playerMode.resize(4, 0);
     this->_availableModels = {"RoboCat", "Asteroid1", "Asteroid2", "Asteroid3"};
 
     this->_objects[0] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
@@ -61,6 +62,7 @@ void ConfigScene::loadScene()
 
 void ConfigScene::handleKeyPressed(int playerNb, std::string action)
 {
+    std::cout << "Player " << playerNb << " pressed " << action << std::endl;
 }
 
 void ConfigScene::handleKeyReleased(int playerNb, std::string action)
@@ -124,6 +126,10 @@ void ConfigScene::addCard(int card)
     data << this->_buttons[card + 4 * 8]->getType() << card + 4 * 8 << *this->_buttons[card + 4 * 8];
     data << this->_objects[card + 1]->getType() << card + 1 << *this->_objects[card + 1];
     this->_messageBus->sendMessage(Message(data, GraphicsCommand::ADD, Module::GRAPHICS));
+
+    data.clear();
+    data << card << this->_playerConfig[card] << this->_playerModel[card];
+    this->_messageBus->sendMessage(Message(data, InputCommand::CHANGE_CONFIG, Module::INPUT));
 }
 
 void ConfigScene::deleteCard(int card)
@@ -147,6 +153,10 @@ void ConfigScene::deleteCard(int card)
     this->_buttons[card] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
     data << this->_buttons[card]->getType() << card << *this->_buttons[card];
     this->_messageBus->sendMessage(Message(data, GraphicsCommand::ADD, Module::GRAPHICS));
+
+    data.clear();
+    data << card << this->_playerConfig[card] << 3;
+    this->_messageBus->sendMessage(Message(data, InputCommand::CHANGE_CONFIG, Module::INPUT));
 }
 
 void ConfigScene::changeModel(int card)
@@ -172,15 +182,30 @@ void ConfigScene::changeModel(int card)
 void ConfigScene::changeConfig(int card)
 {
     int size = this->_availableConfigs.size();
+    int playerNb = card % 4;
+    Packet packet;
 
-    if (card / 4 == 1) {
-        this->_playerConfig[card % 4] = (this->_playerConfig[card % 4] + 1) % size;
+    if (card / 4 == 3) {
+        this->_playerConfig[playerNb] = (this->_playerConfig[playerNb] + 1) % size;
     } else {
-        this->_playerConfig[card % 4] = (this->_playerConfig[card % 4] + size - 1) % size;
+        this->_playerConfig[playerNb] = (this->_playerConfig[playerNb] + size - 1) % size;
     }
+    packet << playerNb << this->_playerConfig[playerNb] << this->_playerMode[playerNb];
+    this->_messageBus->sendMessage(Message(packet, InputCommand::CHANGE_CONFIG, Module::INPUT));
 }
 
 void ConfigScene::changeMode(int card)
 {
-    std::cout << "Change mode for player " << card % 4 << std::endl;
+    int playerNb = card % 4;
+    Packet packet;
+
+    if (card / 4 == 5) {
+        this->_playerMode[playerNb] = 0;
+    } else if (card / 4 == 6) {
+        this->_playerMode[playerNb] = 1;
+    } else {
+        this->_playerMode[playerNb] = 2;
+    }
+    packet << playerNb << this->_playerConfig[playerNb] << this->_playerMode[playerNb];
+    this->_messageBus->sendMessage(Message(packet, InputCommand::CHANGE_CONFIG, Module::INPUT));
 }

@@ -12,6 +12,7 @@ using namespace neo;
 Input::Input(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
     this->_functionTab.push_back(std::bind(&Input::receiveKeyConfig, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Input::receiveChangeConfig, this, std::placeholders::_1));
 }
 
 void Input::run()
@@ -25,8 +26,8 @@ void Input::run()
 
 void Input::update()
 {
-    for (int i = 0; i < this->_configs.size(); i++)
-        for (auto &conf : this->_configs[i].getActConfig())
+    for (int i = 0; i < this->_usedConfigs.size(); i++)
+        for (auto &conf : this->_usedConfigs[i].getActConfig())
             this->checkInputStatus(conf.second, conf.first, i);
 }
 
@@ -49,19 +50,19 @@ void Input::checkInputStatus(int key, std::string action, int playerNb)
 void Input::checkKeyStatus(int key, std::string action, int playerNb)
 {
     if (IsKeyDown(key)) {
-        if (this->_configs[playerNb].getButtonInputs()[action] == false) {
+        if (this->_usedConfigs[playerNb].getButtonInputs()[action] == false) {
             Packet data;
             data << playerNb << action;
             this->postMessage(Message(data, CoreCommand::KEY_PRESSED, Module::CORE));
-            this->_configs[playerNb].getButtonInputs()[action] = true;
+            this->_usedConfigs[playerNb].getButtonInputs()[action] = true;
         }
     }
     if (IsKeyUp(key)) {
-        if (this->_configs[playerNb].getButtonInputs()[action] == true) {
+        if (this->_usedConfigs[playerNb].getButtonInputs()[action] == true) {
             Packet data;
             data << playerNb << action;
             this->postMessage(Message(data, CoreCommand::KEY_RELEASED, Module::CORE));
-            this->_configs[playerNb].getButtonInputs()[action] = false;
+            this->_usedConfigs[playerNb].getButtonInputs()[action] = false;
         }
     }
 }
@@ -69,18 +70,18 @@ void Input::checkKeyStatus(int key, std::string action, int playerNb)
 void Input::checkButtonStatus(int key, std::string action, int playerNb)
 {
     if (IsGamepadButtonPressed(0, key)) {
-        if (this->_configs[playerNb].getButtonInputs()[action] == false) {
+        if (this->_usedConfigs[playerNb].getButtonInputs()[action] == false) {
             Packet data;
             data << playerNb << action;
             this->postMessage(Message(data, CoreCommand::KEY_PRESSED, Module::CORE));
-            this->_configs[playerNb].getButtonInputs()[action] = true;
+            this->_usedConfigs[playerNb].getButtonInputs()[action] = true;
         }
     } else if (IsGamepadButtonReleased(0, key)) {
-        if (this->_configs[playerNb].getButtonInputs()[action] == true) {
+        if (this->_usedConfigs[playerNb].getButtonInputs()[action] == true) {
             Packet data;
             data << playerNb << action;
             this->postMessage(Message(data, CoreCommand::KEY_RELEASED, Module::CORE));
-            this->_configs[playerNb].getButtonInputs()[action] = false;
+            this->_usedConfigs[playerNb].getButtonInputs()[action] = false;
         }
     }
 }
@@ -105,21 +106,21 @@ void Input::checkJoystickStatus(int key, std::string action, int playerNb)
 
     if (i < 0)
         return;
-    if (this->checkAxisStatus(0, key, action) && !this->_configs[playerNb].getAxisInputs()[i]) {
-        if (this->_configs[playerNb].getButtonInputs()[action] == false) {
+    if (this->checkAxisStatus(0, key, action) && !this->_usedConfigs[playerNb].getAxisInputs()[i]) {
+        if (this->_usedConfigs[playerNb].getButtonInputs()[action] == false) {
             Packet data;
             data << playerNb << action;
             this->postMessage(Message(data, CoreCommand::KEY_PRESSED, Module::CORE));
-            this->_configs[playerNb].getButtonInputs()[action] = true;
-            this->_configs[playerNb].getAxisInputs()[i] = true;
+            this->_usedConfigs[playerNb].getButtonInputs()[action] = true;
+            this->_usedConfigs[playerNb].getAxisInputs()[i] = true;
         }
-    } else if (!this->checkAxisStatus(0, key, action) && this->_configs[playerNb].getAxisInputs()[i]) {
-        if (this->_configs[playerNb].getButtonInputs()[action] == true) {
+    } else if (!this->checkAxisStatus(0, key, action) && this->_usedConfigs[playerNb].getAxisInputs()[i]) {
+        if (this->_usedConfigs[playerNb].getButtonInputs()[action] == true) {
             Packet data;
             data << playerNb << action;
             this->postMessage(Message(data, CoreCommand::KEY_RELEASED, Module::CORE));
-            this->_configs[playerNb].getButtonInputs()[action] = false;
-            this->_configs[playerNb].getAxisInputs()[i] = false;
+            this->_usedConfigs[playerNb].getButtonInputs()[action] = false;
+            this->_usedConfigs[playerNb].getAxisInputs()[i] = false;
         }
     }
 }
@@ -132,4 +133,19 @@ void Input::receiveKeyConfig(Packet data)
         data >> config;
         this->_configs.push_back(config);
     }
+    if (this->_configs.size())
+        this->_usedConfigs[0] = this->_configs[0];
+}
+
+void Input::receiveChangeConfig(Packet data)
+{
+    int playerNb, index, mode;
+
+    data >> playerNb >> index >> mode;
+    if (mode > 1) {
+        this->_usedConfigs.erase(playerNb);
+        return;
+    }
+    this->_usedConfigs[playerNb] = this->_configs[index];
+    this->_usedConfigs[playerNb].setMode(mode);
 }
