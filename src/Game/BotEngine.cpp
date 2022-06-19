@@ -12,7 +12,6 @@ using namespace neo;
 BotEngine::BotEngine()
 {
     this->_visited = std::vector<std::vector<bool>>(20, std::vector<bool>(20, false));
-    this->_found = false;
 }
 
 void BotEngine::doAction(GameScene *gameScene, const int &bot_key, std::string action, bool isPressed)
@@ -55,7 +54,7 @@ int BotEngine::getNeighbor(GameScene *gameScene, glm::vec3 pos)
     return 0;
 }
 
-void BotEngine::checkEnd(GameScene *gameScene, glm::vec3 pos)
+void BotEngine::checkEnd(GameScene *gameScene, glm::vec3 pos, const int &bot_key)
 {
     this->_visited[-pos.y + gameScene->getMapGenerator().getHeight() / 2][pos.x + gameScene->getMapGenerator().getWidth() / 2] = true;
     for (auto &[bomb_key, bomb] : gameScene->getBombs())
@@ -66,15 +65,15 @@ void BotEngine::checkEnd(GameScene *gameScene, glm::vec3 pos)
             bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > pos.x &&
             pos.x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp())
             return;
-    this->_found = true;
+    this->_founds[bot_key] = true;
 }
 
 void BotEngine::recursive(GameScene *gameScene, glm::vec3 pos, const int &bot_key)
 {
     int neighbor = getNeighbor(gameScene, pos);
 
-    this->checkEnd(gameScene, pos);
-    while (neighbor && !this->_found) {
+    this->checkEnd(gameScene, pos, bot_key);
+    while (neighbor && !this->_founds[bot_key]) {
         switch (neighbor) {
             case 1: this->recursive(gameScene, glm::vec3(pos.x + 1.0f, pos.y, pos.z), bot_key);
                 break;
@@ -89,7 +88,7 @@ void BotEngine::recursive(GameScene *gameScene, glm::vec3 pos, const int &bot_ke
         }
         neighbor = getNeighbor(gameScene, pos);
     }
-    if (this->_found)
+    if (this->_founds[bot_key])
         this->_paths[bot_key].push_back(glm::vec3(pos.x + 0.5f, pos.y - 0.5f, pos.z));
 }
 
@@ -102,54 +101,55 @@ void BotEngine::dodgeBombs(GameScene *gameScene, const int &bot_key, std::unique
             std::floor(bot->getPos().y) + 0.5f == bomb->getPos().y &&
             bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > bot->getPos().x &&
             bot->getPos().x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp()) {
-            if (this->_paths[bot_key].empty() && !this->_found) {
+            if (this->_paths[bot_key].empty() && !this->_founds[bot_key]) {
+                this->_founds[bot_key] = false;
+                recursive(gameScene, glm::vec3(std::floor(bot->getPos().x), std::ceil(bot->getPos().y), bot->getPos().z), bot_key);
                 for (size_t i = 0; i < this->_visited.size(); i++)
                     for (size_t j = 0; j < this->_visited.size(); j++)
                         this->_visited[i][j] = false;
-                recursive(gameScene, glm::vec3(std::floor(bot->getPos().x), std::ceil(bot->getPos().y), bot->getPos().z), bot_key);
                 if (!this->_paths[bot_key].empty()) {
                     this->_paths[bot_key].pop_back();
-                    this->_found = false;
+                    this->_founds[bot_key] = false;
                 }
                 else
-                    this->_found = true;
+                    this->_founds[bot_key] = true;
             }
         }
         if (!this->_paths[bot_key].empty()) {
-            if (!this->_found) {
+            if (!this->_founds[bot_key]) {
                 if (_paths[bot_key].back().x == std::floor(bot->getPos().x) + 1.5f) {
                     doAction(gameScene, bot_key, "MoveRight", true);
-                    this->_direction = RIGHT;
+                    this->_directions[bot_key] = RIGHT;
                 }
                 if (_paths[bot_key].back().y == std::floor(bot->getPos().y) + 1.5f) {
                     doAction(gameScene, bot_key, "MoveUp", true);
-                    this->_direction = UP;
+                    this->_directions[bot_key] = UP;
                 }
                 if (_paths[bot_key].back().x == std::floor(bot->getPos().x) - 0.5f) {
                     doAction(gameScene, bot_key, "MoveLeft", true);
-                    this->_direction = LEFT;
+                    this->_directions[bot_key] = LEFT;
                 }
                 if (_paths[bot_key].back().y == std::floor(bot->getPos().y) - 0.5f) {
                     doAction(gameScene, bot_key, "MoveDown", true);
-                    this->_direction = DOWN;
+                    this->_directions[bot_key] = DOWN;
                 }
-                this->_found = true;
+                this->_founds[bot_key] = true;
             }
             else {
-                if (this->_direction == RIGHT && bot->getPos().x > _paths[bot_key].back().x ||
-                    this->_direction == UP && bot->getPos().y > _paths[bot_key].back().y ||
-                    this->_direction == LEFT && bot->getPos().x < _paths[bot_key].back().x ||
-                    this->_direction == DOWN && bot->getPos().y < _paths[bot_key].back().y) {
-                    if (this->_direction == RIGHT)
+                if (this->_directions[bot_key] == RIGHT && bot->getPos().x > _paths[bot_key].back().x ||
+                    this->_directions[bot_key] == UP && bot->getPos().y > _paths[bot_key].back().y ||
+                    this->_directions[bot_key] == LEFT && bot->getPos().x < _paths[bot_key].back().x ||
+                    this->_directions[bot_key] == DOWN && bot->getPos().y < _paths[bot_key].back().y) {
+                    if (this->_directions[bot_key] == RIGHT)
                         doAction(gameScene, bot_key, "MoveRight", false);
-                    if (this->_direction == UP)
+                    if (this->_directions[bot_key] == UP)
                         doAction(gameScene, bot_key, "MoveUp", false);
-                    if (this->_direction == LEFT)
+                    if (this->_directions[bot_key] == LEFT)
                         doAction(gameScene, bot_key, "MoveLeft", false);
-                    if (this->_direction == DOWN)
+                    if (this->_directions[bot_key] == DOWN)
                         doAction(gameScene, bot_key, "MoveDown", false);
                     this->_paths[bot_key].pop_back();
-                    this->_found = false;
+                    this->_founds[bot_key] = false;
                 }
             }
         }

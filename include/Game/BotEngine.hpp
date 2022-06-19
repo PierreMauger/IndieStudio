@@ -21,16 +21,16 @@ namespace neo
         // dodgeBombs functions
         void getDirection(GameScene *gameScene, std::unique_ptr<Player> &bot, std::unique_ptr<Bomb> &bomb);
         void recursive(GameScene *gameScene, glm::vec3 pos, const int &bot_key);
-        void checkEnd(GameScene *gameScene, glm::vec3 pos);
+        void checkEnd(GameScene *gameScene, glm::vec3 pos, const int &bot_key);
         int getNeighbor(GameScene *gameScene, glm::vec3 pos);
         bool canMoveToPos(GameScene *gameScene, glm::vec3 pos);
         
         void doAction(GameScene *gameScene, const int &bot_key, std::string action, bool isPressed);
 
         std::vector<std::vector<bool>> _visited;
-        bool _found;
+        std::map<int, bool> _founds;
         std::map<int, std::vector<glm::vec3>> _paths;
-        directions _direction;
+        std::map<int, directions> _directions;
     public:
         BotEngine();
 
