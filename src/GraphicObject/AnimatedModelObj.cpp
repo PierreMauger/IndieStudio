@@ -20,7 +20,7 @@ void AnimatedModelObj::draw(Camera &camera)
 {
     if (this->_status) {
         glDisable(GL_DEPTH_TEST);
-        camera.setOnModel(this->_pos - glm::vec3(0.f, 0.f, this->_scale.z * 0.1f), this->_scale * glm::vec3(1.1f), this->_rotation);
+        camera.setOnModel(this->_pos - glm::vec3(0.0f, 0.0f, this->_scale.z * 0.1f), this->_scale * glm::vec3(1.1f), this->_rotation);
         camera.getShader().setBool("outline", true);
         this->_model->draw(camera.getShader());
         glEnable(GL_DEPTH_TEST);

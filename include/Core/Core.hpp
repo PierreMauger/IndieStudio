@@ -38,6 +38,7 @@ namespace neo
             void receiveChangeScene(Packet);
             void receiveButtonClicked(Packet);
             void receiveConfig(Packet);
+            void receiveStartGame(Packet);
     };
 }
 

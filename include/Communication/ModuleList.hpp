@@ -54,6 +54,7 @@ namespace neo
                 CHANGE_SCENE,
                 BUTTON_CLICKED,
                 CONFIG,
+                START_GAME,
             };
     };
 

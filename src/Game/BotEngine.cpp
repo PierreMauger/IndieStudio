@@ -36,19 +36,19 @@ bool BotEngine::canMoveToPos(GameScene *gameScene, glm::vec3 pos)
 
 int BotEngine::getNeighbor(GameScene *gameScene, glm::vec3 pos)
 {
-    if (canMoveToPos(gameScene, glm::vec3(pos.x + 1.f, pos.y, pos.z)) &&
+    if (canMoveToPos(gameScene, glm::vec3(pos.x + 1.0f, pos.y, pos.z)) &&
         this->_visited[-pos.y + gameScene->getMapGenerator().getHeight() / 2][pos.x + gameScene->getMapGenerator().getWidth() / 2 + 1] == false) {
         return 1;
     }
-    else if (canMoveToPos(gameScene, glm::vec3(pos.x, pos.y + 1.f, pos.z)) &&
+    else if (canMoveToPos(gameScene, glm::vec3(pos.x, pos.y + 1.0f, pos.z)) &&
         this->_visited[-pos.y + gameScene->getMapGenerator().getHeight() / 2 + 1][pos.x + gameScene->getMapGenerator().getWidth() / 2] == false) {
         return 2;
     }
-    else if (canMoveToPos(gameScene, glm::vec3(pos.x - 1.f, pos.y, pos.z)) &&
+    else if (canMoveToPos(gameScene, glm::vec3(pos.x - 1.0f, pos.y, pos.z)) &&
         this->_visited[-pos.y + gameScene->getMapGenerator().getHeight() / 2][pos.x + gameScene->getMapGenerator().getWidth() / 2 - 1] == false) {
         return 3;
     }
-    else if (canMoveToPos(gameScene, glm::vec3(pos.x, pos.y - 1.f, pos.z)) &&
+    else if (canMoveToPos(gameScene, glm::vec3(pos.x, pos.y - 1.0f, pos.z)) &&
         this->_visited[-pos.y + gameScene->getMapGenerator().getHeight() / 2 - 1][pos.x + gameScene->getMapGenerator().getWidth() / 2] == false) {
         return 4;
     }
@@ -60,11 +60,11 @@ void BotEngine::checkEnd(GameScene *gameScene, glm::vec3 pos)
     this->_visited[-pos.y + gameScene->getMapGenerator().getHeight() / 2][pos.x + gameScene->getMapGenerator().getWidth() / 2] = true;
     for (auto &[bomb_key, bomb] : gameScene->getBombs())
         if (pos.x + 0.5f == bomb->getPos().x &&
-            bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > pos.y - 1.f &&
+            bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > pos.y - 1.0f &&
             pos.y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
             pos.y - 0.5f == bomb->getPos().y &&
             bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > pos.x &&
-            pos.x + 1.f > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp())
+            pos.x + 1.0f > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp())
             return;
     this->_found = true;
 }
@@ -76,13 +76,13 @@ void BotEngine::recursive(GameScene *gameScene, glm::vec3 pos)
     this->checkEnd(gameScene, pos);
     while (neighbor && !this->_found) {
         switch (neighbor) {
-        case 1: this->recursive(gameScene, glm::vec3(pos.x + 1.f, pos.y, pos.z));
+        case 1: this->recursive(gameScene, glm::vec3(pos.x + 1.0f, pos.y, pos.z));
             break;
-        case 2: this->recursive(gameScene, glm::vec3(pos.x, pos.y + 1.f, pos.z));
+        case 2: this->recursive(gameScene, glm::vec3(pos.x, pos.y + 1.0f, pos.z));
             break;
-        case 3: this->recursive(gameScene, glm::vec3(pos.x - 1.f, pos.y, pos.z));
+        case 3: this->recursive(gameScene, glm::vec3(pos.x - 1.0f, pos.y, pos.z));
             break;
-        case 4: this->recursive(gameScene, glm::vec3(pos.x, pos.y - 1.f, pos.z));
+        case 4: this->recursive(gameScene, glm::vec3(pos.x, pos.y - 1.0f, pos.z));
             break;
         default:
             break;

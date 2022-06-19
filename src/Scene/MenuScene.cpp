@@ -79,6 +79,10 @@ void MenuScene::handleConfig(std::vector<std::string> config)
 {
 }
 
+void MenuScene::handleStartGame(Packet data)
+{
+}
+
 void MenuScene::handleMainPressed(int playerNb, std::string action)
 {
     if (action == "Main") {

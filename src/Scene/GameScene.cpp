@@ -304,6 +304,11 @@ void GameScene::handleConfig(std::vector<std::string> config)
 {
 }
 
+void GameScene::handleStartGame(Packet data)
+{
+    std::cout << "startGame" << std::endl;
+}
+
 std::shared_ptr<MessageBus> GameScene::getMessageBus()
 {
     return this->_messageBus;

@@ -22,6 +22,7 @@ Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->_functionTab.push_back(std::bind(&Core::receiveChangeScene, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Core::receiveButtonClicked, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Core::receiveConfig, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Core::receiveStartGame, this, std::placeholders::_1));
 }
 
 void Core::run()
@@ -96,4 +97,9 @@ void Core::receiveConfig(Packet data)
     }
     for (auto &scene : this->_scenes)
         scene->handleConfig(config);
+}
+
+void Core::receiveStartGame(Packet data)
+{
+    this->_scenes[2]->handleStartGame(data);
 }

@@ -21,11 +21,14 @@ ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
     this->_objects[0] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
     this->_objects[0]->setShiny(false);
 
-    float pos = -1.f + 0.28f;
+    float pos = -1.0f + 0.28f;
     this->_buttons[0] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos            , 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
     this->_buttons[1] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 1 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
     this->_buttons[2] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 2 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
     this->_buttons[3] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 3 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
+
+    this->_buttons[36] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos, -0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
+    this->_buttons[37] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos+ 3 * 0.48f, -0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
 }
 
 ConfigScene::~ConfigScene()
@@ -62,7 +65,6 @@ void ConfigScene::loadScene()
 
 void ConfigScene::handleKeyPressed(int playerNb, std::string action)
 {
-    std::cout << "Player " << playerNb << " pressed " << action << std::endl;
 }
 
 void ConfigScene::handleKeyReleased(int playerNb, std::string action)
@@ -71,7 +73,16 @@ void ConfigScene::handleKeyReleased(int playerNb, std::string action)
 
 void ConfigScene::handleButtonClicked(int button)
 {
-    if (button < this->_playerConnected.size()) {
+    if (button == 36) {
+        Packet data;
+        data << 0;
+        this->_messageBus->sendMessage(Message(data, CoreCommand::CHANGE_SCENE, Module::CORE));
+    } else if (button == 37) {
+        this->_messageBus->sendMessage(Message(Packet(), CoreCommand::START_GAME, Module::CORE));
+        Packet data;
+        data << 2;
+        this->_messageBus->sendMessage(Message(data, CoreCommand::CHANGE_SCENE, Module::CORE));
+    } else if (button < this->_playerConnected.size()) {
         if (!this->_playerConnected[button]) {
             this->addCard(button);
             this->_playerConnected[button] = true;
@@ -95,10 +106,14 @@ void ConfigScene::handleConfig(std::vector<std::string> config)
     this->_availableConfigs = config;
 }
 
+void ConfigScene::handleStartGame(Packet data)
+{
+}
+
 void ConfigScene::addCard(int card)
 {
     Packet data;
-    float pos = -1.f + 0.28f + card * 0.48f;
+    float pos = -1.0f + 0.28f + card * 0.48f;
 
     data << this->_buttons[card]->getType() << card;
     this->_messageBus->sendMessage(Message(data, GraphicsCommand::DELETE, Module::GRAPHICS));
@@ -135,7 +150,7 @@ void ConfigScene::addCard(int card)
 void ConfigScene::deleteCard(int card)
 {
     Packet data;
-    float pos = -1.f + 0.28f + card * 0.48f;
+    float pos = -1.0f + 0.28f + card * 0.48f;
 
     data << this->_buttons[card]->getType() << card;
     data << this->_buttons[card + 4 * 1]->getType() << card + 4 * 1;
@@ -162,7 +177,7 @@ void ConfigScene::deleteCard(int card)
 void ConfigScene::changeModel(int card)
 {
     int size = this->_availableModels.size();
-    float pos = -1.f + 0.28f + card * 0.48f;
+    float pos = -1.0f + 0.28f + card * 0.48f;
     int playerNb = card % 4;
     Packet packet;
 
