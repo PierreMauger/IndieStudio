@@ -70,10 +70,7 @@ void ConfigScene::handleKeyReleased(int playerNb, std::string action)
 void ConfigScene::handleButtonClicked(int button)
 {
     if (button < this->_playerConnected.size()) {
-        if (this->_playerConnected[button]) {
-            this->deleteCard(button);
-            this->_playerConnected[button] = false;
-        } else {
+        if (!this->_playerConnected[button]) {
             this->addCard(button);
             this->_playerConnected[button] = true;
         }
@@ -81,8 +78,13 @@ void ConfigScene::handleButtonClicked(int button)
         this->changeModel(button);
     } else if (button / 4 == 3 || button / 4 == 4) {
         this->changeConfig(button);
-    } else if (button / 4 == 5 || button / 4 == 6) {
+    } else if (button / 4 == 5 || button / 4 == 6 || button / 4 == 7) {
         this->changeMode(button);
+    } else if (button / 4 == 8) {
+        if (!this->_playerConnected[button]) {
+            this->deleteCard(button % 4);
+            this->_playerConnected[button % 4] = false;
+        }
     }
 }
 
@@ -101,12 +103,14 @@ void ConfigScene::addCard(int card)
     data.clear();
 
     this->_buttons[card] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, 0.45f, 0.0f), glm::vec3(0.2f, 0.45f, 0.0f));
-    this->_buttons[card + 4 * 1] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, -0.9f, 0.0f), glm::vec3(0.05f, 0.05f, 0.0f));
-    this->_buttons[card + 4 * 2] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, -0.75f, 0.0f), glm::vec3(0.05f, 0.05f, 0.0f));
-    this->_buttons[card + 4 * 3] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, -0.6, 0.0f), glm::vec3(0.05f, 0.05f, 0.0f));
-    this->_buttons[card + 4 * 4] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, -0.45f, 0.0f), glm::vec3(0.05f, 0.05f, 0.0f));
-    this->_buttons[card + 4 * 5] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, -0.3f, 0.0f), glm::vec3(0.05f, 0.05f, 0.0f));
-    this->_buttons[card + 4 * 6] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, -0.15f, 0.0f), glm::vec3(0.05f, 0.05f, 0.0f));
+    this->_buttons[card + 4 * 1] = std::make_unique<GameObject>(3, "RightArrow", glm::vec3(pos + 0.15f, 0.23f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
+    this->_buttons[card + 4 * 2] = std::make_unique<GameObject>(3, "LeftArrow", glm::vec3(pos - 0.15f, 0.23f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
+    this->_buttons[card + 4 * 3] = std::make_unique<GameObject>(3, "RightArrow", glm::vec3(pos + 0.15f, 0.5f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
+    this->_buttons[card + 4 * 4] = std::make_unique<GameObject>(3, "LeftArrow", glm::vec3(pos - 0.15f, 0.5f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
+    this->_buttons[card + 4 * 5] = std::make_unique<GameObject>(3, "RightArrow", glm::vec3(pos - 0.15f, 0.8f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
+    this->_buttons[card + 4 * 6] = std::make_unique<GameObject>(3, "RightArrow", glm::vec3(pos        , 0.8f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
+    this->_buttons[card + 4 * 7] = std::make_unique<GameObject>(3, "RightArrow", glm::vec3(pos + 0.15f, 0.8f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
+    this->_buttons[card + 4 * 8] = std::make_unique<GameObject>(3, "RightArrow", glm::vec3(pos + 0.18f, 0.05f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
     this->_objects[card + 1] = std::make_unique<GameObject>(0, "RoboCat", glm::vec3(pos * 7.0f, -1.5f, 0.0f), glm::vec3(0.5f));
     this->_objects[card + 1]->setRotation(glm::vec3(270.0f, 0.0f, 0.0f));
     data << this->_buttons[card]->getType() << card << *this->_buttons[card];
@@ -116,6 +120,8 @@ void ConfigScene::addCard(int card)
     data << this->_buttons[card + 4 * 4]->getType() << card + 4 * 4 << *this->_buttons[card + 4 * 4];
     data << this->_buttons[card + 4 * 5]->getType() << card + 4 * 5 << *this->_buttons[card + 4 * 5];
     data << this->_buttons[card + 4 * 6]->getType() << card + 4 * 6 << *this->_buttons[card + 4 * 6];
+    data << this->_buttons[card + 4 * 7]->getType() << card + 4 * 7 << *this->_buttons[card + 4 * 7];
+    data << this->_buttons[card + 4 * 8]->getType() << card + 4 * 8 << *this->_buttons[card + 4 * 8];
     data << this->_objects[card + 1]->getType() << card + 1 << *this->_objects[card + 1];
     this->_messageBus->sendMessage(Message(data, GraphicsCommand::ADD, Module::GRAPHICS));
 }
@@ -132,6 +138,8 @@ void ConfigScene::deleteCard(int card)
     data << this->_buttons[card + 4 * 4]->getType() << card + 4 * 4;
     data << this->_buttons[card + 4 * 5]->getType() << card + 4 * 5;
     data << this->_buttons[card + 4 * 6]->getType() << card + 4 * 6;
+    data << this->_buttons[card + 4 * 7]->getType() << card + 4 * 7;
+    data << this->_buttons[card + 4 * 8]->getType() << card + 4 * 8;
     data << this->_objects[card + 1]->getType() << card + 1;
     this->_messageBus->sendMessage(Message(data, GraphicsCommand::DELETE, Module::GRAPHICS));
     data.clear();
