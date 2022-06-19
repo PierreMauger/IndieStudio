@@ -22,7 +22,6 @@ namespace neo
 
         public:
             void addReceiver(std::function<void(Message)>);
-            // void notify();
             void notify(Module module);
             void sendMessage(Message);
     };

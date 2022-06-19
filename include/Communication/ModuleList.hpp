@@ -53,6 +53,7 @@ namespace neo
                 GRAPHICS_READY,
                 CHANGE_SCENE,
                 BUTTON_CLICKED,
+                CONFIG,
             };
     };
 

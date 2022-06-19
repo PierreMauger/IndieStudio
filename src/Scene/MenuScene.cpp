@@ -75,6 +75,10 @@ void MenuScene::handleButtonClicked(int button)
 {
 }
 
+void MenuScene::handleConfig(std::vector<std::string> config)
+{
+}
+
 void MenuScene::handleMainPressed(int playerNb, std::string action)
 {
     if (action == "Main") {
@@ -110,9 +114,9 @@ void MenuScene::handleMovePressed(int playerNb, std::string action)
         if (action == "MoveUp")
             this->_selectedButton = (this->_selectedButton + 1) % 3;
         else {
-            if (this->_selectedButton <= 0)
+            if (this->_selectedButton == -1)
                 this->_selectedButton = 3;
-            this->_selectedButton = (this->_selectedButton - 1) % 3;
+            this->_selectedButton = (this->_selectedButton + 3 - 1) % 3;
         }
         packet << this->_selectedButton << 1;
         this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT_BUTTON, Module::GRAPHICS));

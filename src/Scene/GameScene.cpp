@@ -300,6 +300,10 @@ void GameScene::handleButtonClicked(int button)
 {
 }
 
+void GameScene::handleConfig(std::vector<std::string> config)
+{
+}
+
 std::shared_ptr<MessageBus> GameScene::getMessageBus()
 {
     return this->_messageBus;

@@ -19,6 +19,11 @@ _input(_messageBus)
 {
 }
 
+Neo::~Neo()
+{
+    this->_messageBus.reset();
+}
+
 void Neo::run()
 {
     std::thread audioThread(&Audio::run, &this->_audio);

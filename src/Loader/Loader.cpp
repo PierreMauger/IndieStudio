@@ -34,6 +34,12 @@ void Loader::sendPlayerConfig()
         packet << conf;
     }
     this->postMessage(Message(packet, InputCommand::KEY_CONFIG, Module::INPUT));
+    packet.clear();
+    for (auto &file : files) {
+        std::filesystem::path path(file);
+        packet << path.filename().string();
+    }
+    this->postMessage(Message(packet, CoreCommand::CONFIG, Module::CORE));
 }
 
 void Loader::sendResourceList(void)

@@ -37,6 +37,7 @@ namespace neo
             void receiveGraphicsReady(Packet);
             void receiveChangeScene(Packet);
             void receiveButtonClicked(Packet);
+            void receiveConfig(Packet);
     };
 }
 

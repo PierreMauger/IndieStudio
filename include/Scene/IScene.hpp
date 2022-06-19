@@ -24,6 +24,7 @@ namespace neo
             virtual void handleKeyPressed(int playerNb, std::string action) = 0;
             virtual void handleKeyReleased(int playerNb, std::string action) = 0;
             virtual void handleButtonClicked(int button) = 0;
+            virtual void handleConfig(std::vector<std::string> config) = 0;
     };
 }
 

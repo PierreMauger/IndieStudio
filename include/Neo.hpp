@@ -29,7 +29,7 @@ namespace neo
 
         public:
             Neo();
-            ~Neo() = default;
+            ~Neo();
 
             void run();
     };

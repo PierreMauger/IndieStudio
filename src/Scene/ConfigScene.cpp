@@ -13,6 +13,9 @@ ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
     this->_playerConnected.resize(4, false);
+    this->_playerModel.resize(4, 0);
+    this->_playerConfig.resize(4, 0);
+    this->_availableModels = {"RoboCat", "Asteroid1", "Asteroid2", "Asteroid3"};
 
     this->_objects[0] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
     this->_objects[0]->setShiny(false);
@@ -66,13 +69,26 @@ void ConfigScene::handleKeyReleased(int playerNb, std::string action)
 
 void ConfigScene::handleButtonClicked(int button)
 {
-    if (this->_playerConnected[button]) {
-        this->deleteCard(button);
-        this->_playerConnected[button] = false;
-    } else {
-        this->addCard(button);
-        this->_playerConnected[button] = true;
+    if (button < this->_playerConnected.size()) {
+        if (this->_playerConnected[button]) {
+            this->deleteCard(button);
+            this->_playerConnected[button] = false;
+        } else {
+            this->addCard(button);
+            this->_playerConnected[button] = true;
+        }
+    } else if (button / 4 == 1 || button / 4 == 2) {
+        this->changeModel(button);
+    } else if (button / 4 == 3 || button / 4 == 4) {
+        this->changeConfig(button);
+    } else if (button / 4 == 5 || button / 4 == 6) {
+        this->changeMode(button);
     }
+}
+
+void ConfigScene::handleConfig(std::vector<std::string> config)
+{
+    this->_availableConfigs = config;
 }
 
 void ConfigScene::addCard(int card)
@@ -85,9 +101,21 @@ void ConfigScene::addCard(int card)
     data.clear();
 
     this->_buttons[card] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, 0.45f, 0.0f), glm::vec3(0.2f, 0.45f, 0.0f));
-    this->_objects[card + 1] = std::make_unique<GameObject>(0, "RoboCat", glm::vec3((pos) * 7.0f, -1.5f, 0.0f), glm::vec3(0.5f));
+    this->_buttons[card + 4 * 1] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, -0.9f, 0.0f), glm::vec3(0.05f, 0.05f, 0.0f));
+    this->_buttons[card + 4 * 2] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, -0.75f, 0.0f), glm::vec3(0.05f, 0.05f, 0.0f));
+    this->_buttons[card + 4 * 3] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, -0.6, 0.0f), glm::vec3(0.05f, 0.05f, 0.0f));
+    this->_buttons[card + 4 * 4] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, -0.45f, 0.0f), glm::vec3(0.05f, 0.05f, 0.0f));
+    this->_buttons[card + 4 * 5] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, -0.3f, 0.0f), glm::vec3(0.05f, 0.05f, 0.0f));
+    this->_buttons[card + 4 * 6] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, -0.15f, 0.0f), glm::vec3(0.05f, 0.05f, 0.0f));
+    this->_objects[card + 1] = std::make_unique<GameObject>(0, "RoboCat", glm::vec3(pos * 7.0f, -1.5f, 0.0f), glm::vec3(0.5f));
     this->_objects[card + 1]->setRotation(glm::vec3(270.0f, 0.0f, 0.0f));
     data << this->_buttons[card]->getType() << card << *this->_buttons[card];
+    data << this->_buttons[card + 4 * 1]->getType() << card + 4 * 1 << *this->_buttons[card + 4 * 1];
+    data << this->_buttons[card + 4 * 2]->getType() << card + 4 * 2 << *this->_buttons[card + 4 * 2];
+    data << this->_buttons[card + 4 * 3]->getType() << card + 4 * 3 << *this->_buttons[card + 4 * 3];
+    data << this->_buttons[card + 4 * 4]->getType() << card + 4 * 4 << *this->_buttons[card + 4 * 4];
+    data << this->_buttons[card + 4 * 5]->getType() << card + 4 * 5 << *this->_buttons[card + 4 * 5];
+    data << this->_buttons[card + 4 * 6]->getType() << card + 4 * 6 << *this->_buttons[card + 4 * 6];
     data << this->_objects[card + 1]->getType() << card + 1 << *this->_objects[card + 1];
     this->_messageBus->sendMessage(Message(data, GraphicsCommand::ADD, Module::GRAPHICS));
 }
@@ -98,6 +126,12 @@ void ConfigScene::deleteCard(int card)
     float pos = -1.f + 0.28f + card * 0.48f;
 
     data << this->_buttons[card]->getType() << card;
+    data << this->_buttons[card + 4 * 1]->getType() << card + 4 * 1;
+    data << this->_buttons[card + 4 * 2]->getType() << card + 4 * 2;
+    data << this->_buttons[card + 4 * 3]->getType() << card + 4 * 3;
+    data << this->_buttons[card + 4 * 4]->getType() << card + 4 * 4;
+    data << this->_buttons[card + 4 * 5]->getType() << card + 4 * 5;
+    data << this->_buttons[card + 4 * 6]->getType() << card + 4 * 6;
     data << this->_objects[card + 1]->getType() << card + 1;
     this->_messageBus->sendMessage(Message(data, GraphicsCommand::DELETE, Module::GRAPHICS));
     data.clear();
@@ -105,4 +139,40 @@ void ConfigScene::deleteCard(int card)
     this->_buttons[card] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
     data << this->_buttons[card]->getType() << card << *this->_buttons[card];
     this->_messageBus->sendMessage(Message(data, GraphicsCommand::ADD, Module::GRAPHICS));
+}
+
+void ConfigScene::changeModel(int card)
+{
+    int size = this->_availableModels.size();
+    float pos = -1.f + 0.28f + card * 0.48f;
+    int playerNb = card % 4;
+    Packet packet;
+
+    if (card / 4 == 1) {
+        this->_playerModel[playerNb] = (this->_playerModel[playerNb] + 1) % size;
+    } else {
+        this->_playerModel[playerNb] = (this->_playerModel[playerNb] + size - 1) % size;
+    }
+    this->_objects[playerNb + 1]->setName(this->_availableModels[this->_playerModel[playerNb]]);
+
+    packet << this->_objects[playerNb + 1]->getType() << playerNb + 1;
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
+    packet << *this->_objects[playerNb + 1];
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::ADD, Module::GRAPHICS));
+}
+
+void ConfigScene::changeConfig(int card)
+{
+    int size = this->_availableConfigs.size();
+
+    if (card / 4 == 1) {
+        this->_playerConfig[card % 4] = (this->_playerConfig[card % 4] + 1) % size;
+    } else {
+        this->_playerConfig[card % 4] = (this->_playerConfig[card % 4] + size - 1) % size;
+    }
+}
+
+void ConfigScene::changeMode(int card)
+{
+    std::cout << "Change mode for player " << card % 4 << std::endl;
 }

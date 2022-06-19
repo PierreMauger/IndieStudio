@@ -41,6 +41,7 @@ namespace neo
             void handleMainPressed(int playerNb, std::string action);
             void handleBackPressed(int playerNb, std::string action);
             void handleMovePressed(int playerNb, std::string action);
+            void handleConfig(std::vector<std::string> config);
     };
 }
 

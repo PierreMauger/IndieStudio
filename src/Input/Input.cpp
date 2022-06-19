@@ -32,7 +32,6 @@ void Input::update()
 
 void Input::editConfig(int key, std::string action)
 {
-
 }
 
 void Input::checkInputStatus(int key, std::string action, int playerNb)
