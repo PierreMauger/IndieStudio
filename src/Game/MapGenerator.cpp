@@ -118,10 +118,10 @@ std::vector<std::string> MapGenerator::generateProceduralMap(std::size_t nbPlaye
     // map[x - 2][1] = nbPlayers > 1 ? 'P' : 'B';
     // map[1][y - 2] = nbPlayers > 2 ? 'P' : 'B';
     // for ai testing only
-    map[x - 2][y - 3] = nbPlayers > 0 ? 'P' : 'B';
-    map[x - 2][1] = nbPlayers > 1 ? 'P' : 'B';
-    map[x - 3][y - 2] = nbPlayers > 2 ? 'P' : 'B';
-    map[x - 2][y - 2] = nbPlayers > 3 ? 'P' : 'B';
+    map[x - 3][1] = 'P';
+    map[x - 2][1] = 'B';
+    map[x - 3][y - 2] = 'P';
+    map[x - 2][y - 2] = 'B';
     return map;
 }
 

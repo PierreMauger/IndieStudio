@@ -20,7 +20,7 @@ namespace neo
         void dodgeBombs(GameScene *gameScene, const int &bot_key, std::unique_ptr<Player> &bot);
         // dodgeBombs functions
         void getDirection(GameScene *gameScene, std::unique_ptr<Player> &bot, std::unique_ptr<Bomb> &bomb);
-        void recursive(GameScene *gameScene, glm::vec3 pos);
+        void recursive(GameScene *gameScene, glm::vec3 pos, const int &bot_key);
         void checkEnd(GameScene *gameScene, glm::vec3 pos);
         int getNeighbor(GameScene *gameScene, glm::vec3 pos);
         bool canMoveToPos(GameScene *gameScene, glm::vec3 pos);
@@ -29,7 +29,7 @@ namespace neo
 
         std::vector<std::vector<bool>> _visited;
         bool _found;
-        std::vector<glm::vec3> _path;
+        std::map<int, std::vector<glm::vec3>> _paths;
         directions _direction;
     public:
         BotEngine();

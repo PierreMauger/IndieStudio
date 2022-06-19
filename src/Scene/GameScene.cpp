@@ -14,7 +14,7 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
     this->_messageBus = messageBus;
     this->_incrementor = 0;
 
-    const std::vector<std::string> map = _mapGenerator.generateProceduralMap(3, 20, 20);
+    const std::vector<std::string> map = _mapGenerator.generateProceduralMap(2, 20, 20);
     for (int i = 0; i < map.size(); i++) {
         for (int j = 0; j < map[i].size(); j++) {
             glm::vec3 pos = {i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.0f};
@@ -22,7 +22,6 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
                 this->_players[this->_incrementor++] = std::make_unique<Player>("RoboCat", pos, false, glm::vec3(0.4f));
             else if (map[i][j] == 'B')
                 this->_players[this->_incrementor++] = std::make_unique<Player>("RoboCat", pos, true, glm::vec3(0.4f));
-
         }
     }
     for (int i = 0; i < map.size(); i++) {
@@ -166,26 +165,15 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
     Packet addData;
     Packet deleteData;
 
+    for (auto it = this->_walls.begin(); it != this->_walls.end(); it++) {
+        if (it->second->getPos().x == bomb->getPos().x && it->second->getPos().y == bomb->getPos().y) {
+            deleteData << it->second->getType() << it->first;
+            this->_walls.erase(it++);
+            break;
+        }
+    }
     for (size_t i = RIGHT; i <= DOWN; i++) {
         for (int j = 0; j <= 2 + bomb->getFireUp(); j++) {
-            for (auto it = this->_walls.begin(); it != this->_walls.end(); it++) {
-                if (it->second->getPos().x == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
-                    it->second->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
-                    j = INT_MAX - 1;
-                    if (it->second->getName() == "Block")
-                        break;
-                    deleteData << it->second->getType() << it->first;
-                    if (std::rand() % 1 == 0) {
-                        int tmp = std::rand() % 4;
-                        this->_powerUps[this->_incrementor] = std::make_unique<PowerUp>(powerUps[tmp], it->second->getPos(), glm::vec3(0.5f));
-                        addData << this->_powerUps[this->_incrementor]->getType() << this->_incrementor << *this->_powerUps[this->_incrementor];
-                        this->_incrementor++;
-                    }
-                    this->_walls.erase(it++);
-                    break;
-                }
-            }
-
             for (auto it = this->_players.begin(); it != this->_players.end();) {
                 if (std::floor(it->second->getPos().x) + 0.5f == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
                     std::floor(it->second->getPos().y) + 0.5f == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
@@ -199,20 +187,36 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
             for (auto &[bomb_key, other_bomb] : this->_bombs) {
                 if (other_bomb->getPos() == bomb->getPos())
                     continue;
-                if (std::floor(other_bomb->getPos().x) + 0.5f == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
-                    std::floor(other_bomb->getPos().y) + 0.5f == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
-                    j = INT_MAX - 1;
+                if (other_bomb->getPos().x == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
+                    other_bomb->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0))
                     other_bomb->getTimer() = 0.0f;
-                }
             }
+            
             for (auto it = this->_powerUps.begin(); it != this->_powerUps.end();) {
-                if (std::floor(it->second->getPos().x) + 0.5f == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
-                    std::floor(it->second->getPos().y) + 0.5f == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
-                    j = INT_MAX - 1;
+                if (it->second->getPos().x == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
+                    it->second->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
                     deleteData << it->second->getType() << it->first;
                     this->_powerUps.erase(it++);
                 } else {
                     it++;
+                }
+            }
+
+            for (auto it = this->_walls.begin(); it != this->_walls.end(); it++) {
+                if (it->second->getPos().x == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
+                    it->second->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
+                    j = 2 + bomb->getFireUp();
+                    if (it->second->getName() == "Block")
+                        break;
+                    deleteData << it->second->getType() << it->first;
+                    if (std::rand() % 1 == 0) {
+                        int tmp = std::rand() % 4;
+                        this->_powerUps[this->_incrementor] = std::make_unique<PowerUp>(powerUps[tmp], it->second->getPos(), glm::vec3(0.5f));
+                        addData << this->_powerUps[this->_incrementor]->getType() << this->_incrementor << *this->_powerUps[this->_incrementor];
+                        this->_incrementor++;
+                    }
+                    this->_walls.erase(it++);
+                    break;
                 }
             }
         }
