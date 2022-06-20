@@ -6,42 +6,36 @@ cmake_minimum_required(VERSION 3.16)
 #create project with name, language and version
 project(IndieStudio LANGUAGES CXX VERSION 1)
 
-#set c++ version, flags and other important variables
+#set normal/cache cmake variables
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fexceptions")
 if (WIN32)
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /EHsc")
 endif (WIN32)
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" FORCE)
-set(DirectX_D3DX9_LIBRARY "")
-set(ASSIMP_BUILD_ASSIMP_VIEW False)
-set(ASSIMP_BUILD_ASSIMP_TOOLS False)
-set(ASSIMP_BUILD_TESTS False)
-set(ASSIMP_BUILD_SAMPLES False)
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules/" CACHE PATH "" FORCE)
+set(DirectX_D3DX9_LIBRARY "" CACHE FILEPATH "" FORCE)
+set(ASSIMP_BUILD_ASSIMP_VIEW OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)
 
-#add some color
+#compile options
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     add_compile_options(-fdiagnostics-color=always)
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     add_compile_options(-fcolor-diagnostics)
 endif()
+add_compile_options(-g)
+add_compile_options(-O3 -Ofast -flto)
 
 ################## BUILD ##################
-
-add_compile_options(-g)
 
 #set result executable (target) name
 set(EXEC_NAME
   bomberman
 )
-
-#add -g flag
-# add_compile_options(-g)
-
-#add performance flags
-# add_compile_options(-O3 -Ofast -flto)
 
 #fetch include directories
 set(INC
