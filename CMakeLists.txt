@@ -6,6 +6,11 @@ cmake_minimum_required(VERSION 3.16)
 #create project with name, language and version
 project(IndieStudio LANGUAGES CXX VERSION 1)
 
+set(CMAKE_THREAD_LIBS_INIT "-lpthread")
+set(CMAKE_HAVE_THREADS_LIBRARY 1)
+set(CMAKE_USE_WIN32F_THREADS_INIT 0)
+set(CMAKE_USE_PTHREADS_INIT 1)
+
 #set normal/cache cmake variables
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -127,7 +132,6 @@ if(WIN32)
 else()
   add_custom_command(
     TARGET ${EXEC_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXEC_NAME} ${CMAKE_SOURCE_DIR}
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/build/${EXEC_NAME} ${CMAKE_SOURCE_DIR}
   )
 endif()
