@@ -12,11 +12,11 @@ using namespace neo;
 ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
+    this->_availableModels = {"RoboCat", "Asteroid1", "Asteroid2", "Asteroid3"};
     this->_playerConnected.resize(4, false);
     this->_playerModel.resize(4, 0);
     this->_playerConfig.resize(4, 0);
     this->_playerMode.resize(4, 0);
-    this->_availableModels = {"RoboCat", "Asteroid1", "Asteroid2", "Asteroid3"};
 
     this->_objects[0] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
     this->_objects[0]->setShiny(false);
@@ -61,11 +61,11 @@ void ConfigScene::loadScene()
     Packet packet;
 
     for (auto &object : this->_objects)
-        packet << object.second->getType() << object.first << *object.second;
-    for (auto &button : this->_buttons) {
+        if (object.first < 1)
+            packet << object.second->getType() << object.first << *object.second;
+    for (auto &button : this->_buttons)
         if (button.first < 4 || button.first > 35)
             packet << button.second->getType() <<  button.first << *button.second;
-    }
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
     packet.clear();
@@ -87,6 +87,14 @@ void ConfigScene::handleKeyReleased(int playerNb, std::string action)
 void ConfigScene::handleButtonClicked(int button)
 {
     if (button == 36) {
+        for (int i = 0; i < this->_playerConnected.size(); i++)
+            if (this->_playerConnected[i]) {
+                this->deleteCard(i);
+                this->_playerConnected[i] = false;
+                this->_playerModel[i] = 0;
+                this->_playerConfig[i] = 0;
+                this->_playerMode[i] = 0;
+            }
         Packet data;
         data << 0;
         this->_messageBus->sendMessage(Message(data, CoreCommand::CHANGE_SCENE, Module::CORE));
