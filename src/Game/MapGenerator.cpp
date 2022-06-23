@@ -118,10 +118,23 @@ std::vector<std::string> MapGenerator::generateProceduralMap(std::size_t nbPlaye
     // map[x - 2][1] = nbPlayers > 1 ? 'P' : 'B';
     // map[1][y - 2] = nbPlayers > 2 ? 'P' : 'B';
     // for ai testing only
-    map[x - 3][1] = 'P';
-    map[x - 2][1] = 'B';
-    map[x - 3][y - 2] = 'P';
-    map[x - 2][y - 2] = 'B';
+    // map[x - 3][1] = 'P';
+    // map[x - 2][1] = 'B';
+    // map[x - 3][y - 2] = 'P';
+    // map[x - 2][y - 2] = 'B';
+    return map;
+}
+
+std::vector<std::string> MapGenerator::setPlayer(std::vector<std::string> map, std::vector<bool> players, std::vector<int> mode)
+{
+    if (players[0])
+        map[1][1] = (mode[0] == 2 ? 'B' : 'P');
+    if (players[1])
+        map[this->_width - 2][1] = (mode[1] == 2 ? 'B' : 'P');
+    if (players[2])
+        map[1][this->_height - 2] = (mode[2] == 2 ? 'B' : 'P');
+    if (players[3])
+        map[this->_width - 2][this->_height - 2] = (mode[3] == 2 ? 'B' : 'P');
     return map;
 }
 

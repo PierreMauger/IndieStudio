@@ -17,6 +17,7 @@ ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
     this->_playerModel.resize(4, 0);
     this->_playerConfig.resize(4, 0);
     this->_playerMode.resize(4, 0);
+    this->_map = this->_mapGenerator.generateProceduralMap(0, 20, 20);
 
     this->_objects[0] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
     this->_objects[0]->setShiny(false);
@@ -102,8 +103,16 @@ void ConfigScene::handleButtonClicked(int button)
         data << 0 << this->_playerConfig[0] << this->_playerMode[0];
         this->_messageBus->sendMessage(Message(data, InputCommand::CHANGE_CONFIG, Module::INPUT));
     } else if (button == 37) {
-        this->_messageBus->sendMessage(Message(Packet(), CoreCommand::START_GAME, Module::CORE));
         Packet data;
+        this->_map = this->_mapGenerator.setPlayer(this->_map, this->_playerConnected, this->_playerMode);
+        data << static_cast<int>(this->_map.size());
+        for (auto &line : this->_map)
+            data << line;
+        for (int i = 0; i < this->_playerConnected.size(); i++)
+            if (this->_playerConnected[i])
+                data << i << this->_playerConnected[i];
+        this->_messageBus->sendMessage(Message(data, CoreCommand::START_GAME, Module::CORE));
+        data.clear();
         data << 2;
         this->_messageBus->sendMessage(Message(data, CoreCommand::CHANGE_SCENE, Module::CORE));
     }

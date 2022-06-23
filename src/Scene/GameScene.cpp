@@ -14,25 +14,6 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
     this->_messageBus = messageBus;
     this->_incrementor = 0;
 
-    const std::vector<std::string> map = _mapGenerator.generateProceduralMap(2, 20, 20);
-    for (int i = 0; i < map.size(); i++) {
-        for (int j = 0; j < map[i].size(); j++) {
-            glm::vec3 pos = {i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.0f};
-            if (map[i][j] == 'P')
-                this->_players[this->_incrementor++] = std::make_unique<Player>("RoboCat", pos, false, glm::vec3(0.4f));
-            else if (map[i][j] == 'B')
-                this->_players[this->_incrementor++] = std::make_unique<Player>("RoboCat", pos, true, glm::vec3(0.4f));
-        }
-    }
-    for (int i = 0; i < map.size(); i++) {
-        for (int j = 0; j < map[i].size(); j++) {
-            glm::vec3 pos = {i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.0f};
-            if (map[i][j] == '#')
-                this->_walls[this->_incrementor++] = std::make_unique<Wall>("Block", pos, glm::vec3(0.5f));
-            else if (map[i][j] == 'W')
-                this->_walls[this->_incrementor++] = std::make_unique<Wall>("Wall", pos, glm::vec3(0.5f));
-        }
-    }
     this->_botEngine = std::make_unique<BotEngine>();
 }
 
@@ -191,7 +172,7 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
                     other_bomb->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0))
                     other_bomb->getTimer() = 0.0f;
             }
-            
+
             for (auto it = this->_powerUps.begin(); it != this->_powerUps.end();) {
                 if (it->second->getPos().x == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
                     it->second->getPos().y == bomb->getPos().y + (i == UP ? j : i == DOWN ? -j : 0)) {
@@ -310,6 +291,34 @@ void GameScene::handleConfig(std::vector<std::string> config)
 
 void GameScene::handleStartGame(Packet data)
 {
+    std::vector<std::string> map;
+    int size = 0;
+
+    data >> size;
+    for (int i = 0; i < size; i++) {
+        std::string tmp;
+        data >> tmp;
+        map.push_back(tmp);
+    }
+
+    for (int i = 0; i < map.size(); i++) {
+        for (int j = 0; j < map[i].size(); j++) {
+            glm::vec3 pos = {i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.0f};
+            if (map[i][j] == 'P')
+                this->_players[this->_incrementor++] = std::make_unique<Player>("RoboCat", pos, false, glm::vec3(0.4f));
+            else if (map[i][j] == 'B')
+                this->_players[this->_incrementor++] = std::make_unique<Player>("RoboCat", pos, true, glm::vec3(0.4f));
+        }
+    }
+    for (int i = 0; i < map.size(); i++) {
+        for (int j = 0; j < map[i].size(); j++) {
+            glm::vec3 pos = {i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.0f};
+            if (map[i][j] == '#')
+                this->_walls[this->_incrementor++] = std::make_unique<Wall>("Block", pos, glm::vec3(0.5f));
+            else if (map[i][j] == 'W')
+                this->_walls[this->_incrementor++] = std::make_unique<Wall>("Wall", pos, glm::vec3(0.5f));
+        }
+    }
 }
 
 std::shared_ptr<MessageBus> GameScene::getMessageBus()
