@@ -284,7 +284,28 @@ void ConfigScene::buttonBack()
 
 void ConfigScene::buttonReset()
 {
+    Packet data;
 
+    this->_map = this->_mapGenerator.generateProceduralMap(0, 20, 20);
+    for (int i = 5; i < this->_objects.size(); i++)
+        data << this->_objects[i]->getType() << i;
+    this->_messageBus->sendMessage(Message(data, GraphicsCommand::DELETE, Module::GRAPHICS));
+    data.clear();
+
+    int it = 0;
+    for (int i = 0; i < this->_map.size(); i++) {
+        for (int j = 0; j < this->_map[i].size(); j++) {
+            glm::vec3 pos = {i - ((float)this->_map[i].size() - 1) / 2, -j + ((float)this->_map.size() - 1) / 2 + 12.5f, -50.0f};
+            if (this->_map[i][j] == '#')
+                this->_objects[it++ + 5] = std::make_unique<GameObject>(0, "Block", pos, glm::vec3(0.5f));
+            else if (this->_map[i][j] == 'W')
+                this->_objects[it++ + 5] = std::make_unique<GameObject>(0, "Wall", pos, glm::vec3(0.5f));
+        }
+    }
+    data.clear();
+    for (int i = 5; i < this->_objects.size(); i++)
+        data << this->_objects[i]->getType() << i << *this->_objects[i];
+    this->_messageBus->sendMessage(Message(data, GraphicsCommand::ADD, Module::GRAPHICS));
 }
 
 void ConfigScene::buttonStart()
