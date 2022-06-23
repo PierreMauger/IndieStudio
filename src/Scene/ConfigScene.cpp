@@ -110,7 +110,7 @@ void ConfigScene::handleButtonClicked(int button)
             data << line;
         for (int i = 0; i < this->_playerConnected.size(); i++)
             if (this->_playerConnected[i])
-                data << i << this->_playerConnected[i];
+                data << this->_availableModels[this->_playerModel[i]];
         this->_messageBus->sendMessage(Message(data, CoreCommand::START_GAME, Module::CORE));
         data.clear();
         data << 2;

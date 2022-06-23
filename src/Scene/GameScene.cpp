@@ -293,6 +293,7 @@ void GameScene::handleStartGame(Packet data)
 {
     std::vector<std::string> map;
     int size = 0;
+    int it = 0;
 
     data >> size;
     for (int i = 0; i < size; i++) {
@@ -301,13 +302,20 @@ void GameScene::handleStartGame(Packet data)
         map.push_back(tmp);
     }
 
+    std::vector<std::string> models;
+    while (data.checkSize(1)) {
+        std::string model;
+        data >> model;
+        models.push_back(model);
+    }
+
     for (int i = 0; i < map.size(); i++) {
         for (int j = 0; j < map[i].size(); j++) {
             glm::vec3 pos = {i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.0f};
             if (map[i][j] == 'P')
-                this->_players[this->_incrementor++] = std::make_unique<Player>("RoboCat", pos, false, glm::vec3(0.4f));
+                this->_players[this->_incrementor++] = std::make_unique<Player>(models[it++], pos, false, glm::vec3(0.4f));
             else if (map[i][j] == 'B')
-                this->_players[this->_incrementor++] = std::make_unique<Player>("RoboCat", pos, true, glm::vec3(0.4f));
+                this->_players[this->_incrementor++] = std::make_unique<Player>(models[it++], pos, true, glm::vec3(0.4f));
         }
     }
     for (int i = 0; i < map.size(); i++) {
