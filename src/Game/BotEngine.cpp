@@ -26,10 +26,10 @@ void BotEngine::doAction(GameScene *gameScene, const int &bot_key, std::string a
 
 bool BotEngine::canMoveToPos(GameScene *gameScene, glm::vec3 pos)
 {
-    for (auto &[wall_key, wall] : gameScene->getWalls())
+    for (auto &[wallKey, wall] : gameScene->getWalls())
         if (pos.x + 0.5f == wall->getPos().x && pos.y - 0.5f == wall->getPos().y)
             return false;
-    for (auto &[bomb_key, bomb] : gameScene->getBombs())
+    for (auto &[bombKey, bomb] : gameScene->getBombs())
         if (pos.x + 0.5f == bomb->getPos().x && pos.y - 0.5f == bomb->getPos().y)
             return false;
     return true;
@@ -60,7 +60,7 @@ void BotEngine::checkEnd(GameScene *gameScene, glm::vec3 pos, const int &bot_key
 {
     this->_visited[-pos.y + gameScene->getMapGenerator().getHeight() / 2][pos.x + gameScene->getMapGenerator().getWidth() / 2] = true;
     if (dodgeBombs) {
-        for (auto &[bomb_key, bomb] : gameScene->getBombs()) {
+        for (auto &[bombKey, bomb] : gameScene->getBombs()) {
             if (pos.x + 0.5f == bomb->getPos().x &&
                 bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > pos.y &&
                 pos.y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
@@ -72,8 +72,8 @@ void BotEngine::checkEnd(GameScene *gameScene, glm::vec3 pos, const int &bot_key
         this->_founds[bot_key] = true;
     }
     else {
-        for (auto &[player_key, player] : gameScene->getPlayers()) {
-            if (player_key != bot_key &&
+        for (auto &[playerKey, player] : gameScene->getPlayers()) {
+            if (playerKey != bot_key &&
                 pos.x + 0.5f == std::floor(player->getPos().x) + 0.5f &&
                 pos.y - 0.5f == std::floor(player->getPos().y) + 0.5f) {
                 this->_founds[bot_key] = true;
@@ -118,63 +118,69 @@ void BotEngine::startRecursive(GameScene *gameScene, const int &bot_key, std::un
             this->_paths[bot_key].pop_back();
             this->_founds[bot_key] = false;
         }
-        else
+        else if (dodgeBombs)
             this->_founds[bot_key] = true;
     }
 }
 
 void BotEngine::updateBot(GameScene *gameScene)
 {
-    for (auto &[player_key, player] : gameScene->getPlayers()) {
+    for (auto &[playerKey, player] : gameScene->getPlayers()) {
         if (!player->isBot())
             continue;
-        for (auto &[bomb_key, bomb] : gameScene->getBombs()) {
+        for (auto &[bombKey, bomb] : gameScene->getBombs()) {
             if (std::floor(player->getPos().x) + 0.5f == bomb->getPos().x &&
                 bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > player->getPos().y &&
                 player->getPos().y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
                 std::floor(player->getPos().y) + 0.5f == bomb->getPos().y &&
                 bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > player->getPos().x &&
                 player->getPos().x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp()) {
-                startRecursive(gameScene, player_key, player, true);
+                startRecursive(gameScene, playerKey, player, true);
                 break;
             }
         }
-        startRecursive(gameScene, player_key, player, false);
-        if (!this->_paths[player_key].empty()) {
-            if (!this->_founds[player_key]) {
-                if (_paths[player_key].back().x == std::floor(player->getPos().x) + 1.5f) {
-                    doAction(gameScene, player_key, "MoveRight", true);
-                    this->_directions[player_key] = RIGHT;
+        for (auto &[otherPlayerKey, otherPlayer] : gameScene->getPlayers()) {
+            if (otherPlayerKey != playerKey &&
+                !(std::floor(otherPlayer->getPos().x) + 0.5f == std::floor(player->getPos().x) + 0.5f &&
+                std::floor(otherPlayer->getPos().y) - 0.5f == std::floor(player->getPos().y) + 0.5f)) {
+                startRecursive(gameScene, playerKey, player, false);
+            }
+        }
+        if (!this->_paths[playerKey].empty()) {
+            if (!this->_founds[playerKey]) {
+                if (_paths[playerKey].back().x == std::floor(player->getPos().x) + 1.5f) {
+                    doAction(gameScene, playerKey, "MoveRight", true);
+                    this->_directions[playerKey] = RIGHT;
                 }
-                if (_paths[player_key].back().y == std::floor(player->getPos().y) + 1.5f) {
-                    doAction(gameScene, player_key, "MoveUp", true);
-                    this->_directions[player_key] = UP;
+                if (_paths[playerKey].back().y == std::floor(player->getPos().y) + 1.5f) {
+                    doAction(gameScene, playerKey, "MoveUp", true);
+                    this->_directions[playerKey] = UP;
                 }
-                if (_paths[player_key].back().x == std::floor(player->getPos().x) - 0.5f) {
-                    doAction(gameScene, player_key, "MoveLeft", true);
-                    this->_directions[player_key] = LEFT;
+                if (_paths[playerKey].back().x == std::floor(player->getPos().x) - 0.5f) {
+                    doAction(gameScene, playerKey, "MoveLeft", true);
+                    this->_directions[playerKey] = LEFT;
                 }
-                if (_paths[player_key].back().y == std::floor(player->getPos().y) - 0.5f) {
-                    doAction(gameScene, player_key, "MoveDown", true);
-                    this->_directions[player_key] = DOWN;
+                if (_paths[playerKey].back().y == std::floor(player->getPos().y) - 0.5f) {
+                    doAction(gameScene, playerKey, "MoveDown", true);
+                    this->_directions[playerKey] = DOWN;
                 }
-                this->_founds[player_key] = true;
+                this->_founds[playerKey] = true;
             }
             else {
-                if (this->_directions[player_key] == RIGHT && player->getPos().x > _paths[player_key].back().x ||
-                    this->_directions[player_key] == UP && player->getPos().y > _paths[player_key].back().y ||
-                    this->_directions[player_key] == LEFT && player->getPos().x < _paths[player_key].back().x ||
-                    this->_directions[player_key] == DOWN && player->getPos().y < _paths[player_key].back().y) {
-                    if (this->_directions[player_key] == RIGHT)
-                        doAction(gameScene, player_key, "MoveRight", false);
-                    if (this->_directions[player_key] == UP)
-                        doAction(gameScene, player_key, "MoveUp", false);
-                    if (this->_directions[player_key] == LEFT)
-                        doAction(gameScene, player_key, "MoveLeft", false);
-                    if (this->_directions[player_key] == DOWN)
-                        doAction(gameScene, player_key, "MoveDown", false);
-                    this->_paths[player_key].pop_back();
-                    this->_founds[player_key] = false;
+                if (this->_directions[playerKey] == RIGHT && player->getPos().x > _paths[playerKey].back().x ||
+                    this->_directions[playerKey] == UP && player->getPos().y > _paths[playerKey].back().y ||
+                    this->_directions[playerKey] == LEFT && player->getPos().x < _paths[playerKey].back().x ||
+                    this->_directions[playerKey] == DOWN && player->getPos().y < _paths[playerKey].back().y) {
+                    if (this->_directions[playerKey] == RIGHT)
+                        doAction(gameScene, playerKey, "MoveRight", false);
+                    if (this->_directions[playerKey] == UP)
+                        doAction(gameScene, playerKey, "MoveUp", false);
+                    if (this->_directions[playerKey] == LEFT)
+                        doAction(gameScene, playerKey, "MoveLeft", false);
+                    if (this->_directions[playerKey] == DOWN)
+                        doAction(gameScene, playerKey, "MoveDown", false);
+                    this->_paths[playerKey].pop_back();
+                    this->_founds[playerKey] = false;
                 }
             }
         }

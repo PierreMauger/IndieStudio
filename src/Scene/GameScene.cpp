@@ -38,13 +38,13 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 
 GameScene::~GameScene()
 {
-    for (auto &[player_key, player] : this->_players)
+    for (auto &[playerKey, player] : this->_players)
         player.reset();
-    for (auto &[wall_key, wall] : this->_walls)
+    for (auto &[wallKey, wall] : this->_walls)
         wall.reset();
-    for (auto &[bomb_key, bomb] : this->_bombs)
+    for (auto &[bombKey, bomb] : this->_bombs)
         bomb.reset();
-    for (auto &[powerUp_key, powerUp] : this->_powerUps)
+    for (auto &[powerUpKey, powerUp] : this->_powerUps)
         powerUp.reset();
     this->_players.clear();
     this->_walls.clear();
@@ -57,12 +57,12 @@ void GameScene::loadScene()
 {
     Packet packet;
 
-    for (auto &[player_key, player] : this->_players)
-        packet << player->getType() << player_key << *player;
-    for (auto &[wall_key, wall] : this->_walls)
-        packet << wall->getType() << wall_key << *wall;
-    for (auto &[bomb_key, bomb] : this->_bombs)
-        packet << bomb->getType() << bomb_key << *bomb;
+    for (auto &[playerKey, player] : this->_players)
+        packet << player->getType() << playerKey << *player;
+    for (auto &[wallKey, wall] : this->_walls)
+        packet << wall->getType() << wallKey << *wall;
+    for (auto &[bombKey, bomb] : this->_bombs)
+        packet << bomb->getType() << bombKey << *bomb;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
     packet.clear();
@@ -77,7 +77,7 @@ void GameScene::updatePlayers(void)
 {
     Packet data;
 
-    for (auto &[player_key, player] : this->_players) {
+    for (auto &[playerKey, player] : this->_players) {
         if (player->getDirection(RIGHT))
             player->getSpeed().x += 0.1f + player->getSpeedUp() * 0.05f;
         if (player->getDirection(LEFT))
@@ -109,7 +109,7 @@ void GameScene::updatePlayers(void)
                 it++;
             }
         }
-        for (auto &[bomb_key, bomb] : this->_bombs) {
+        for (auto &[bombKey, bomb] : this->_bombs) {
             if (CheckCollisionRecs(
                 CAST(Rectangle, player->getPos().x - 0.3f, player->getPos().y - 0.3f, 0.6f, 0.6f),
                 CAST(Rectangle, bomb->getPos().x - 0.5f, bomb->getPos().y - 0.5f, 1.0f, 1.0f)))
@@ -151,7 +151,7 @@ void GameScene::updatePlayers(void)
         if (player->getSpeed() != glm::vec3(0.0f)) {
             player->move(player->getSpeed());
             Packet packet;
-            packet << player_key << player->getPos().x << player->getPos().y << player->getPos().z;
+            packet << playerKey << player->getPos().x << player->getPos().y << player->getPos().z;
             this->_messageBus->sendMessage(Message(packet, GraphicsCommand::MOVE, Module::GRAPHICS));
             player->getSpeed() = glm::vec3(0.0f);
         }
@@ -184,7 +184,7 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
                 }
             }
 
-            for (auto &[bomb_key, other_bomb] : this->_bombs) {
+            for (auto &[bombKey, other_bomb] : this->_bombs) {
                 if (other_bomb->getPos() == bomb->getPos())
                     continue;
                 if (other_bomb->getPos().x == bomb->getPos().x + (i == RIGHT ? j : i == LEFT ? -j : 0) &&
