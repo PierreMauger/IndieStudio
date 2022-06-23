@@ -21,8 +21,8 @@ namespace neo
         void startRecursive(GameScene *gameScene, const int &bot_key, std::unique_ptr<Player> &bot, bool dodgeBombs);
         void recursive(GameScene *gameScene, glm::vec3 pos, const int &bot_key, bool dodgeBombs);
         void checkEnd(GameScene *gameScene, glm::vec3 pos, const int &bot_key, bool dodgeBombs);
-        int getNeighbor(GameScene *gameScene, glm::vec3 pos, const int &bot_key);
-        bool canMoveToPos(GameScene *gameScene, glm::vec3 pos, const int &bot_key);
+        int getNeighbor(GameScene *gameScene, glm::vec3 pos, const int &bot_key, bool dodgeBombs);
+        bool canMoveToPos(GameScene *gameScene, glm::vec3 pos, const int &bot_key, bool dodgeBombs);
         
         // bot input function
         void doAction(GameScene *gameScene, const int &bot_key, std::string action, bool isPressed);

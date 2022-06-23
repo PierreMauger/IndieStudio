@@ -24,7 +24,7 @@ void BotEngine::doAction(GameScene *gameScene, const int &bot_key, std::string a
     gameScene->getMessageBus()->sendMessage(Message(data, isPressed ? CoreCommand::KEY_PRESSED : CoreCommand::KEY_RELEASED, Module::CORE));
 }
 
-bool BotEngine::canMoveToPos(GameScene *gameScene, glm::vec3 pos, const int &bot_key)
+bool BotEngine::canMoveToPos(GameScene *gameScene, glm::vec3 pos, const int &bot_key, bool dodgeBombs)
 {
     for (auto &[wallKey, wall] : gameScene->getWalls())
         if (pos.x + 0.5f == wall->getPos().x && pos.y - 0.5f == wall->getPos().y &&
@@ -32,26 +32,32 @@ bool BotEngine::canMoveToPos(GameScene *gameScene, glm::vec3 pos, const int &bot
             gameScene->getPlayers()[bot_key]->getWallPass() && wall->getName() == "Brick"))
             return false;
     for (auto &[bombKey, bomb] : gameScene->getBombs())
-        if (pos.x + 0.5f == bomb->getPos().x && pos.y - 0.5f == bomb->getPos().y)
+        if (pos.x + 0.5f == bomb->getPos().x && pos.y - 0.5f == bomb->getPos().y || !dodgeBombs &&
+            (pos.x + 0.5f == bomb->getPos().x &&
+            bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > pos.y &&
+            pos.y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
+            pos.y - 0.5f == bomb->getPos().y &&
+            bomb->getPos().x + 2.5f + 1.0f * bomb->getFireUp() > pos.x &&
+            pos.x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp()))
             return false;
     return true;
 }
 
-int BotEngine::getNeighbor(GameScene *gameScene, glm::vec3 pos, const int &bot_key)
+int BotEngine::getNeighbor(GameScene *gameScene, glm::vec3 pos, const int &bot_key, bool dodgeBombs)
 {
-    if (canMoveToPos(gameScene, glm::vec3(pos.x + 1.0f, pos.y, pos.z), bot_key) &&
+    if (canMoveToPos(gameScene, glm::vec3(pos.x + 1.0f, pos.y, pos.z), bot_key, dodgeBombs) &&
         this->_visited[-pos.y + gameScene->getMapGenerator().getHeight() / 2][pos.x + gameScene->getMapGenerator().getWidth() / 2 + 1] == false) {
         return 1;
     }
-    else if (canMoveToPos(gameScene, glm::vec3(pos.x, pos.y + 1.0f, pos.z), bot_key) &&
+    else if (canMoveToPos(gameScene, glm::vec3(pos.x, pos.y + 1.0f, pos.z), bot_key, dodgeBombs) &&
         this->_visited[-pos.y + gameScene->getMapGenerator().getHeight() / 2 - 1][pos.x + gameScene->getMapGenerator().getWidth() / 2] == false) {
         return 2;
     }
-    else if (canMoveToPos(gameScene, glm::vec3(pos.x - 1.0f, pos.y, pos.z), bot_key) &&
+    else if (canMoveToPos(gameScene, glm::vec3(pos.x - 1.0f, pos.y, pos.z), bot_key, dodgeBombs) &&
         this->_visited[-pos.y + gameScene->getMapGenerator().getHeight() / 2][pos.x + gameScene->getMapGenerator().getWidth() / 2 - 1] == false) {
         return 3;
     }
-    else if (canMoveToPos(gameScene, glm::vec3(pos.x, pos.y - 1.0f, pos.z), bot_key) &&
+    else if (canMoveToPos(gameScene, glm::vec3(pos.x, pos.y - 1.0f, pos.z), bot_key, dodgeBombs) &&
         this->_visited[-pos.y + gameScene->getMapGenerator().getHeight() / 2 + 1][pos.x + gameScene->getMapGenerator().getWidth() / 2] == false) {
         return 4;
     }
@@ -87,7 +93,7 @@ void BotEngine::checkEnd(GameScene *gameScene, glm::vec3 pos, const int &bot_key
 
 void BotEngine::recursive(GameScene *gameScene, glm::vec3 pos, const int &bot_key, bool dodgeBombs)
 {
-    int neighbor = getNeighbor(gameScene, pos, bot_key);
+    int neighbor = getNeighbor(gameScene, pos, bot_key, dodgeBombs);
 
     this->checkEnd(gameScene, pos, bot_key, dodgeBombs);
     while (neighbor && !this->_founds[bot_key]) {
@@ -103,7 +109,7 @@ void BotEngine::recursive(GameScene *gameScene, glm::vec3 pos, const int &bot_ke
             default:
                 break;
         }
-        neighbor = getNeighbor(gameScene, pos, bot_key);
+        neighbor = getNeighbor(gameScene, pos, bot_key, dodgeBombs);
     }
     if (this->_founds[bot_key])
         this->_paths[bot_key].push_back(glm::vec3(pos.x + 0.5f, pos.y - 0.5f, pos.z));
