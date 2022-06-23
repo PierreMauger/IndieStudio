@@ -35,10 +35,10 @@ bool BotEngine::canMoveToPos(GameScene *gameScene, glm::vec3 pos, bool dodgeBomb
                 return false;
     }
     else {
-        if (pos.x < -(gameScene->getMapGenerator().getWidth() / 2) + 1 ||
-            pos.x > gameScene->getMapGenerator().getWidth() / 2 - 1 ||
-            pos.y < -(gameScene->getMapGenerator().getHeight() / 2) + 1 ||
-            pos.y > gameScene->getMapGenerator().getHeight() / 2 - 1)
+        if (pos.x < -((int)gameScene->getMapGenerator().getWidth() / 2) + 1 ||
+            pos.x > (int)gameScene->getMapGenerator().getWidth() / 2 - 2 ||
+            pos.y < -((int)gameScene->getMapGenerator().getHeight() / 2) + 2 ||
+            pos.y > (int)gameScene->getMapGenerator().getHeight() / 2 - 1)
             return false;
     }
     return true;
@@ -78,16 +78,18 @@ void BotEngine::checkEnd(GameScene *gameScene, glm::vec3 pos, const int &bot_key
                 pos.x > bomb->getPos().x - 2.5f - 1.0f * bomb->getFireUp())
                 return;
         }
+        this->_founds[bot_key] = true;
     }
     else {
         for (auto &[player_key, player] : gameScene->getPlayers()) {
             if (player_key != bot_key &&
-                !(pos.x + 0.5f == std::floor(player->getPos().x) + 0.5f &&
-                pos.y - 0.5f == std::floor(player->getPos().y) + 0.5f))
+                pos.x + 0.5f == std::floor(player->getPos().x) + 0.5f &&
+                pos.y - 0.5f == std::floor(player->getPos().y) + 0.5f) {
+                this->_founds[bot_key] = true;
                 return;
+            }
         }
     }
-    this->_founds[bot_key] = true;
 }
 
 void BotEngine::recursive(GameScene *gameScene, glm::vec3 pos, const int &bot_key, bool dodgeBombs)
@@ -161,8 +163,8 @@ void BotEngine::updateBot(GameScene *gameScene)
     for (auto &[player_key, player] : gameScene->getPlayers()) {
         if (!player->isBot())
             continue;
-        dodgeBombs(gameScene, player_key, player);
-        //searchPlayer(gameScene, player_key, player);
+        //dodgeBombs(gameScene, player_key, player);
+        searchPlayer(gameScene, player_key, player);
         if (!this->_paths[player_key].empty()) {
             if (!this->_founds[player_key]) {
                 if (_paths[player_key].back().x == std::floor(player->getPos().x) + 1.5f) {
