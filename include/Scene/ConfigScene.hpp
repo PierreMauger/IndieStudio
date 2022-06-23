@@ -34,6 +34,12 @@ namespace neo
             void changeConfig(int card);
             void changeMode(int card);
 
+            void buttonAdd(int playerId);
+            void buttonDelete(int playerId);
+            void buttonBack();
+            void buttonReset();
+            void buttonStart();
+
         public:
             ConfigScene(std::shared_ptr<MessageBus> messageBus);
             ~ConfigScene();

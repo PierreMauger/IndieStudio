@@ -22,13 +22,25 @@ ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
     this->_objects[0] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
     this->_objects[0]->setShiny(false);
 
+    int it = 0;
+    for (int i = 0; i < this->_map.size(); i++) {
+        for (int j = 0; j < this->_map[i].size(); j++) {
+            glm::vec3 pos = {i - ((float)this->_map[i].size() - 1) / 2, -j + ((float)this->_map.size() - 1) / 2 + 12.5f, -50.0f};
+            if (this->_map[i][j] == '#')
+                this->_objects[it++ + 5] = std::make_unique<GameObject>(0, "Block", pos, glm::vec3(0.5f));
+            else if (this->_map[i][j] == 'W')
+                this->_objects[it++ + 5] = std::make_unique<GameObject>(0, "Wall", pos, glm::vec3(0.5f));
+        }
+    }
+
     float pos = -1.0f + 0.28f;
     this->_buttons[0] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos            , 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
     this->_buttons[1] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 1 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
     this->_buttons[2] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 2 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
     this->_buttons[3] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 3 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
     this->_buttons[36] = std::make_unique<GameObject>(2, "Back", glm::vec3(pos, -0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
-    this->_buttons[37] = std::make_unique<GameObject>(2, "Start", glm::vec3(pos + 3 * 0.48f, -0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
+    this->_buttons[37] = std::make_unique<GameObject>(2, "Reset", glm::vec3(pos + 2.2 * 0.48f, -0.45f, 0.0f), glm::vec3(0.1f, 0.1f, 0.0f));
+    this->_buttons[38] = std::make_unique<GameObject>(2, "Start", glm::vec3(pos + 3 * 0.48f, -0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
     for (int card = 0; card < 4; card++) {
         pos = -1.0f + 0.28f + card * 0.48f;
 
@@ -62,7 +74,7 @@ void ConfigScene::loadScene()
     Packet packet;
 
     for (auto &object : this->_objects)
-        if (object.first < 1)
+        if (object.first < 1 || object.first > 4)
             packet << object.second->getType() << object.first << *object.second;
     for (auto &button : this->_buttons)
         if (button.first < 4 || button.first > 35)
@@ -77,61 +89,44 @@ void ConfigScene::loadScene()
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_NEXT_POS, Module::GRAPHICS));
 }
 
-void ConfigScene::handleKeyPressed(int playerNb, std::string action)
+void ConfigScene::handleKeyPressed(int playerID, std::string action)
 {
 }
 
-void ConfigScene::handleKeyReleased(int playerNb, std::string action)
+void ConfigScene::handleKeyReleased(int playerID, std::string action)
 {
 }
 
 void ConfigScene::handleButtonClicked(int button)
 {
-    if (button == 36) {
-        for (int i = 0; i < this->_playerConnected.size(); i++)
-            if (this->_playerConnected[i]) {
-                this->deleteCard(i);
-                this->_playerConnected[i] = false;
-                this->_playerModel[i] = 0;
-                this->_playerConfig[i] = 0;
-                this->_playerMode[i] = 0;
-            }
-        Packet data;
-        data << 0;
-        this->_messageBus->sendMessage(Message(data, CoreCommand::CHANGE_SCENE, Module::CORE));
-        data.clear();
-        data << 0 << this->_playerConfig[0] << this->_playerMode[0];
-        this->_messageBus->sendMessage(Message(data, InputCommand::CHANGE_CONFIG, Module::INPUT));
-    } else if (button == 37) {
-        Packet data;
-        this->_map = this->_mapGenerator.setPlayer(this->_map, this->_playerConnected, this->_playerMode);
-        data << static_cast<int>(this->_map.size());
-        for (auto &line : this->_map)
-            data << line;
-        for (int i = 0; i < this->_playerConnected.size(); i++)
-            if (this->_playerConnected[i])
-                data << this->_availableModels[this->_playerModel[i]];
-        this->_messageBus->sendMessage(Message(data, CoreCommand::START_GAME, Module::CORE));
-        data.clear();
-        data << 2;
-        this->_messageBus->sendMessage(Message(data, CoreCommand::CHANGE_SCENE, Module::CORE));
-    }
     if (button < this->_playerConnected.size()) {
-        if (!this->_playerConnected[button]) {
-            this->addCard(button);
-            this->_playerConnected[button] = true;
-        }
-    } else if (button / 4 == 1 || button / 4 == 2) {
-        this->changeModel(button);
-    } else if (button / 4 == 3 || button / 4 == 4) {
-        this->changeConfig(button);
-    } else if (button / 4 == 5 || button / 4 == 6 || button / 4 == 7) {
-        this->changeMode(button);
-    } else if (button / 4 == 8) {
-        if (this->_playerConnected[button % 4]) {
-            this->deleteCard(button % 4);
-            this->_playerConnected[button % 4] = false;
-        }
+        this->buttonAdd(button);
+        return;
+    }
+    switch (button < 36 ? button / 4 : button) {
+        case 1: case 2:
+            this->changeModel(button);
+            break;
+        case 3: case 4:
+            this->changeConfig(button);
+            break;
+        case 5: case 6: case 7:
+            this->changeMode(button);
+            break;
+        case 8:
+            this->buttonDelete(button % 4);
+            break;
+        case 36:
+            this->buttonBack();
+            break;
+        case 37:
+            this->buttonReset();
+            break;
+        case 38:
+            this->buttonStart();
+            break;
+        default:
+            break;
     }
 }
 
@@ -204,49 +199,108 @@ void ConfigScene::changeModel(int card)
 {
     int size = this->_availableModels.size();
     float pos = -1.0f + 0.28f + card * 0.48f;
-    int playerNb = card % 4;
+    int playerID = card % 4;
     Packet packet;
 
     if (card / 4 == 1) {
-        this->_playerModel[playerNb] = (this->_playerModel[playerNb] + 1) % size;
+        this->_playerModel[playerID] = (this->_playerModel[playerID] + 1) % size;
     } else {
-        this->_playerModel[playerNb] = (this->_playerModel[playerNb] + size - 1) % size;
+        this->_playerModel[playerID] = (this->_playerModel[playerID] + size - 1) % size;
     }
-    this->_objects[playerNb + 1]->setName(this->_availableModels[this->_playerModel[playerNb]]);
+    this->_objects[playerID + 1]->setName(this->_availableModels[this->_playerModel[playerID]]);
 
-    packet << this->_objects[playerNb + 1]->getType() << playerNb + 1;
+    packet << this->_objects[playerID + 1]->getType() << playerID + 1;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-    packet << *this->_objects[playerNb + 1];
+    packet << *this->_objects[playerID + 1];
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::ADD, Module::GRAPHICS));
 }
 
 void ConfigScene::changeConfig(int card)
 {
     int size = this->_availableConfigs.size();
-    int playerNb = card % 4;
+    int playerID = card % 4;
     Packet packet;
 
     if (card / 4 == 3) {
-        this->_playerConfig[playerNb] = (this->_playerConfig[playerNb] + 1) % size;
+        this->_playerConfig[playerID] = (this->_playerConfig[playerID] + 1) % size;
     } else {
-        this->_playerConfig[playerNb] = (this->_playerConfig[playerNb] + size - 1) % size;
+        this->_playerConfig[playerID] = (this->_playerConfig[playerID] + size - 1) % size;
     }
-    packet << playerNb << this->_playerConfig[playerNb] << this->_playerMode[playerNb];
+    packet << playerID << this->_playerConfig[playerID] << this->_playerMode[playerID];
     this->_messageBus->sendMessage(Message(packet, InputCommand::CHANGE_CONFIG, Module::INPUT));
 }
 
 void ConfigScene::changeMode(int card)
 {
-    int playerNb = card % 4;
+    int playerID = card % 4;
     Packet packet;
 
     if (card / 4 == 5) {
-        this->_playerMode[playerNb] = 0;
+        this->_playerMode[playerID] = 0;
     } else if (card / 4 == 6) {
-        this->_playerMode[playerNb] = 1;
+        this->_playerMode[playerID] = 1;
     } else {
-        this->_playerMode[playerNb] = 2;
+        this->_playerMode[playerID] = 2;
     }
-    packet << playerNb << this->_playerConfig[playerNb] << this->_playerMode[playerNb];
+    packet << playerID << this->_playerConfig[playerID] << this->_playerMode[playerID];
     this->_messageBus->sendMessage(Message(packet, InputCommand::CHANGE_CONFIG, Module::INPUT));
+}
+
+void ConfigScene::buttonAdd(int playerID)
+{
+    if (!this->_playerConnected[playerID]) {
+        this->addCard(playerID);
+        this->_playerConnected[playerID] = true;
+    }
+}
+
+void ConfigScene::buttonDelete(int playerID)
+{
+    if (this->_playerConnected[playerID]) {
+        this->deleteCard(playerID);
+        this->_playerConnected[playerID] = false;
+    }
+}
+
+void ConfigScene::buttonBack()
+{
+    Packet data;
+
+    for (int i = 0; i < this->_playerConnected.size(); i++)
+        if (this->_playerConnected[i]) {
+            this->deleteCard(i);
+            this->_playerConnected[i] = false;
+            this->_playerModel[i] = 0;
+            this->_playerConfig[i] = 0;
+            this->_playerMode[i] = 0;
+        }
+    data << 0;
+    this->_messageBus->sendMessage(Message(data, CoreCommand::CHANGE_SCENE, Module::CORE));
+    data.clear();
+    data << 0 << this->_playerConfig[0] << this->_playerMode[0];
+    this->_messageBus->sendMessage(Message(data, InputCommand::CHANGE_CONFIG, Module::INPUT));
+
+}
+
+void ConfigScene::buttonReset()
+{
+
+}
+
+void ConfigScene::buttonStart()
+{
+    Packet data;
+
+    this->_map = this->_mapGenerator.setPlayer(this->_map, this->_playerConnected, this->_playerMode);
+    data << static_cast<int>(this->_map.size());
+    for (auto &line : this->_map)
+        data << line;
+    for (int i = 0; i < this->_playerConnected.size(); i++)
+        if (this->_playerConnected[i])
+            data << this->_availableModels[this->_playerModel[i]];
+    this->_messageBus->sendMessage(Message(data, CoreCommand::START_GAME, Module::CORE));
+
+    data.clear();
+    data << 2;
+    this->_messageBus->sendMessage(Message(data, CoreCommand::CHANGE_SCENE, Module::CORE));
 }
