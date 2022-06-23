@@ -19,6 +19,13 @@ namespace neo
         DOWN
     };
 
+    enum goals {
+        NONE,
+        SAFE,
+        PLAYER,
+        WALL
+    };
+
     static const std::array<std::string, 4> powerUps = {
         "BombUp",
         "SpeedUp",

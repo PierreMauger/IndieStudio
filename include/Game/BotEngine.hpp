@@ -18,11 +18,11 @@ namespace neo
     {
     private:
         // recursive backtracking functions
-        void startRecursive(GameScene *gameScene, const int &bot_key, std::unique_ptr<Player> &bot, bool dodgeBombs);
-        void recursive(GameScene *gameScene, glm::vec3 pos, const int &bot_key, bool dodgeBombs);
-        void checkEnd(GameScene *gameScene, glm::vec3 pos, const int &bot_key, bool dodgeBombs);
-        int getNeighbor(GameScene *gameScene, glm::vec3 pos, const int &bot_key, bool dodgeBombs);
-        bool canMoveToPos(GameScene *gameScene, glm::vec3 pos, const int &bot_key, bool dodgeBombs);
+        void startRecursive(GameScene *gameScene, const int &bot_key, std::unique_ptr<Player> &bot, goals goal);
+        void recursive(GameScene *gameScene, glm::vec3 pos, const int &bot_key);
+        void checkEnd(GameScene *gameScene, glm::vec3 pos, const int &bot_key);
+        int getNeighbor(GameScene *gameScene, glm::vec3 pos, const int &bot_key);
+        bool canMoveToPos(GameScene *gameScene, glm::vec3 pos, const int &bot_key);
         
         // bot input function
         void doAction(GameScene *gameScene, const int &bot_key, std::string action, bool isPressed);
@@ -32,6 +32,7 @@ namespace neo
         std::map<int, bool> _founds;
         std::map<int, std::vector<glm::vec3>> _paths;
         std::map<int, directions> _directions;
+        std::map<int, goals> _goals;
     public:
         BotEngine();
         void updateBot(GameScene *gameScene);
