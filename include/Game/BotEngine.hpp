@@ -18,14 +18,11 @@ namespace neo
     {
     private:
         // recursive backtracking functions
+        void startRecursive(GameScene *gameScene, const int &bot_key, std::unique_ptr<Player> &bot, bool dodgeBombs);
         void recursive(GameScene *gameScene, glm::vec3 pos, const int &bot_key, bool dodgeBombs);
         void checkEnd(GameScene *gameScene, glm::vec3 pos, const int &bot_key, bool dodgeBombs);
-        int getNeighbor(GameScene *gameScene, glm::vec3 pos, bool dodgeBombs);
-        bool canMoveToPos(GameScene *gameScene, glm::vec3 pos, bool dodgeBombs);
-
-        //main bot functions
-        void dodgeBombs(GameScene *gameScene, const int &bot_key, std::unique_ptr<Player> &bot);
-        void searchPlayer(GameScene *gameScene, const int &bot_key, std::unique_ptr<Player> &bot);
+        int getNeighbor(GameScene *gameScene, glm::vec3 pos);
+        bool canMoveToPos(GameScene *gameScene, glm::vec3 pos);
         
         // bot input function
         void doAction(GameScene *gameScene, const int &bot_key, std::string action, bool isPressed);
