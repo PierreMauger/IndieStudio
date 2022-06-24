@@ -158,10 +158,13 @@ void BotEngine::updateBot(GameScene *gameScene)
         }
         for (auto &[otherPlayerKey, otherPlayer] : gameScene->getPlayers()) {
             if (otherPlayerKey != playerKey &&
-                !(std::floor(otherPlayer->getPos().x) + 0.5f == std::floor(player->getPos().x) + 0.5f &&
-                std::floor(otherPlayer->getPos().y) - 0.5f == std::floor(player->getPos().y) + 0.5f)) {
-                startRecursive(gameScene, playerKey, player, PLAYER);
+                std::floor(otherPlayer->getPos().x) + 0.5f == std::floor(player->getPos().x) + 0.5f &&
+                std::floor(otherPlayer->getPos().y) + 0.5f == std::floor(player->getPos().y) + 0.5f) {
+                doAction(gameScene, playerKey, "Main", true);
+                doAction(gameScene, playerKey, "Main", false);
             }
+            if (otherPlayerKey == std::prev(gameScene->getPlayers().end())->first)
+                startRecursive(gameScene, playerKey, player, PLAYER);
         }
         if (!this->_paths[playerKey].empty()) {
             if (!this->_founds[playerKey]) {
