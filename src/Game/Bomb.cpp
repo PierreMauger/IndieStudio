@@ -14,11 +14,28 @@ Bomb::Bomb(std::string name, glm::vec3 pos, size_t fireUp, size_t playerId, glm:
     this->_timer = GetTime();
     this->_fireUp = fireUp;
     this->_playerId = playerId;
+    this->_state = 0;
+    this->_stop = {false};
 }
 
 double &Bomb::getTimer()
 {
     return this->_timer;
+}
+
+int &Bomb::getState()
+{
+    return this->_state;
+}
+
+bool &Bomb::getStop(size_t id)
+{
+    return this->_stop[id];
+}
+
+std::map<int, std::unique_ptr<GameObject>> &Bomb::getExplosions()
+{
+    return this->_explosions;
 }
 
 const size_t Bomb::getPlayerId() const
