@@ -12,9 +12,11 @@ using namespace neo;
 GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
-    this->_incrementor = 0;
+    this->_incrementor = 1;
 
     this->_botEngine = std::make_unique<BotEngine>();
+    this->_objects[0] = std::make_unique<GameObject>(0, "SpaceShip", glm::vec3(0.0f, -5.0f, 0.0f), glm::vec3(5.0f));
+    this->_objects[0]->setRotation(glm::vec3(0.0f, 0.0f, 180.0f));
 }
 
 GameScene::~GameScene()
@@ -27,10 +29,13 @@ GameScene::~GameScene()
         bomb.reset();
     for (auto &[powerUp_key, powerUp] : this->_powerUps)
         powerUp.reset();
+    for (auto &[object_key, object] : this->_objects)
+        object.reset();
     this->_players.clear();
     this->_walls.clear();
     this->_bombs.clear();
     this->_powerUps.clear();
+    this->_objects.clear();
     this->_botEngine.reset();
 }
 
@@ -44,10 +49,12 @@ void GameScene::loadScene()
         packet << wall->getType() << wall_key << *wall;
     for (auto &[bomb_key, bomb] : this->_bombs)
         packet << bomb->getType() << bomb_key << *bomb;
+    for (auto &[object_key, object] : this->_objects)
+        packet << object->getType() << object_key << *object;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
     packet.clear();
-    packet << 0 << glm::vec3(0.0f, 0.0f, 50.0f);
+    packet << 0 << glm::vec3(0.0f, 0.0f, 100.0f);
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
     packet.clear();
     packet << 1;

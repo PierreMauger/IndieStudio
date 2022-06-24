@@ -40,6 +40,7 @@ namespace neo
             std::map<int, std::unique_ptr<Bomb>> _bombs;
             std::map<int, std::unique_ptr<Wall>> _walls;
             std::map<int, std::unique_ptr<PowerUp>> _powerUps;
+            std::map<int, std::unique_ptr<GameObject>> _objects;
             std::unique_ptr<BotEngine> _botEngine;
             MapGenerator _mapGenerator;
             int _incrementor;
