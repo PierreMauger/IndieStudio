@@ -12,11 +12,13 @@ using namespace neo;
 GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
-    this->_incrementor = 1;
+    this->_incrementor = 2;
 
     this->_botEngine = std::make_unique<BotEngine>();
-    this->_objects[0] = std::make_unique<GameObject>(0, "SpaceShip", glm::vec3(0.0f, -5.0f, 0.0f), glm::vec3(5.0f));
-    this->_objects[0]->setRotation(glm::vec3(0.0f, 0.0f, 180.0f));
+    this->_objects[0] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
+    this->_objects[0]->setShiny(false);
+    this->_objects[1] = std::make_unique<GameObject>(0, "SpaceShip", glm::vec3(0.0f, -5.0f, 0.0f), glm::vec3(5.0f));
+    this->_objects[1]->setRotation(glm::vec3(0.0f, 0.0f, 180.0f));
 }
 
 GameScene::~GameScene()
@@ -54,7 +56,7 @@ void GameScene::loadScene()
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
     packet.clear();
-    packet << 0 << glm::vec3(0.0f, 0.0f, 100.0f);
+    packet << 0 << glm::vec3(0.0f, -50.0f, 100.0f);
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
     packet.clear();
     packet << 1;

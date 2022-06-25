@@ -17,6 +17,8 @@ AnimatedFramesObj::AnimatedFramesObj(GameObject obj, std::vector<std::shared_ptr
 
 void AnimatedFramesObj::draw(Camera &camera)
 {
+    this->_count = (this->_count + 1) % 2;
+    if (this->_count == 0)
         this->_currentFrame = (this->_currentFrame + 1) % this->_model.size();
     if (this->_status) {
         glDisable(GL_DEPTH_TEST);

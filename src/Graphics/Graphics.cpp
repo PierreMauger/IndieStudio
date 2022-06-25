@@ -208,7 +208,7 @@ void Graphics::receiveSetCameraNextPos(Packet data)
         data >> nextPos >> nextFront;
         this->_camera->setMovement(nextPos, nextFront);
     } else {
-        this->_camera->setMovement(glm::vec3(0.0f, 0.0f, this->getHeightOnMap()), glm::vec3(0.0f));
+        this->_camera->setMovement(glm::vec3(0.0f, -10.0f, this->getHeightOnMap()), glm::vec3(0.0f));
     }
 }
 

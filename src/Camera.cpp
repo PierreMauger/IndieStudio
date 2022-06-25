@@ -19,7 +19,7 @@ neo::Camera::Camera() : _shader("resources/shaders/camera.vs", "resources/shader
     this->_rotating = false;
 
     this->_view = glm::lookAt(this->_pos, this->_pos + this->_front, this->_up);
-    this->_projection = glm::perspective(glm::radians(45.0f), (float)GetScreenWidth() / (float)GetScreenHeight(), 0.1f, 200.0f);
+    this->_projection = glm::perspective(glm::radians(45.0f), (float)GetScreenWidth() / (float)GetScreenHeight(), 0.1f, 300.0f);
     this->_model = glm::mat4(1.0f);
 }
 
