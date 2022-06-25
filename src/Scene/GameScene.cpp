@@ -239,7 +239,7 @@ void GameScene::updateBombs(void)
     Packet data;
 
     for (auto it = this->_bombs.begin(); it != this->_bombs.end();) {
-        if ((GetTime() - it->second->getTimer()) * 10 > (it->second->getState() == 0 ? 30 : 3)) {
+        if ((GetTime() - it->second->getTimer()) * 10 > (it->second->getState() == 0 ? 30 : 1)) {
             this->explode(it->second);
             data << it->second->getType() << it->first;
             it->second->getState()++;

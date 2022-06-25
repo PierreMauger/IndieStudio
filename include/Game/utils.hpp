@@ -21,9 +21,9 @@ namespace neo
 
     enum goals {
         NONE,
-        SAFE,
+        WALL,
         PLAYER,
-        WALL
+        SAFE
     };
 
     static const std::array<std::string, 4> powerUps = {

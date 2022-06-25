@@ -30,7 +30,8 @@ bool BotEngine::canMoveToPos(GameScene *gameScene, glm::vec3 pos, const int &bot
         if (pos.x + 0.5f == wall->getPos().x && pos.y - 0.5f == wall->getPos().y)
             return false;
     for (auto &[bombKey, bomb] : gameScene->getBombs())
-        if (pos.x + 0.5f == bomb->getPos().x && pos.y - 0.5f == bomb->getPos().y || this->_goals[botKey] != SAFE &&
+        if (pos.x + 0.5f == bomb->getPos().x && pos.y - 0.5f == bomb->getPos().y ||
+            this->_goals[botKey] < SAFE &&
             (pos.x + 0.5f == bomb->getPos().x &&
             bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > pos.y &&
             pos.y > bomb->getPos().y - 2.5f - 1.0f * bomb->getFireUp() ||
@@ -87,6 +88,20 @@ void BotEngine::checkEnd(GameScene *gameScene, glm::vec3 pos, const int &botKey)
             }
         }
     }
+    if (this->_goals[botKey] == WALL) {
+        for (auto &[wallKey, wall] : gameScene->getWalls()) {
+            if (wall->getName() == "Wall" &&
+                (pos.x + 0.5f == wall->getPos().x &&
+                wall->getPos().y + 1.0f > pos.y &&
+                pos.y > wall->getPos().y - 1.0f ||
+                pos.y - 0.5f == wall->getPos().y &&
+                wall->getPos().x + 1.0f > pos.x &&
+                pos.x > wall->getPos().x - 1.0f)) {
+                this->_founds[botKey] = true;
+                return;
+            }
+        }
+    }
 }
 
 void BotEngine::recursive(GameScene *gameScene, glm::vec3 pos, const int &botKey)
@@ -115,7 +130,7 @@ void BotEngine::recursive(GameScene *gameScene, glm::vec3 pos, const int &botKey
 
 void BotEngine::startRecursive(GameScene *gameScene, const int &botKey, std::unique_ptr<Player> &bot, goals goal)
 {
-    if (goal == SAFE && (this->_goals[botKey] == PLAYER || this->_goals[botKey] == WALL)) {
+    if (goal > this->_goals[botKey]) {
         this->_paths[botKey].clear();
         this->_founds[botKey] = false;
         doAction(gameScene, botKey, "MoveRight", false);
@@ -133,7 +148,7 @@ void BotEngine::startRecursive(GameScene *gameScene, const int &botKey, std::uni
             this->_paths[botKey].pop_back();
             this->_founds[botKey] = false;
         }
-        else if (this->_goals[botKey] == SAFE)
+        else if (goal == SAFE)
             this->_founds[botKey] = true;
     }
 }
@@ -143,8 +158,10 @@ void BotEngine::updateBot(GameScene *gameScene)
     for (auto &[playerKey, player] : gameScene->getPlayers()) {
         if (!player->isBot())
             continue;
+        
         if (this->_paths[playerKey].empty() && !this->_founds[playerKey])
             this->_goals[playerKey] = NONE;
+        
         for (auto &[bombKey, bomb] : gameScene->getBombs()) {
             if (std::floor(player->getPos().x) + 0.5f == bomb->getPos().x &&
                 bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > player->getPos().y &&
@@ -156,6 +173,7 @@ void BotEngine::updateBot(GameScene *gameScene)
                 break;
             }
         }
+
         for (auto &[otherPlayerKey, otherPlayer] : gameScene->getPlayers()) {
             if (otherPlayerKey != playerKey &&
                 std::floor(otherPlayer->getPos().x) + 0.5f == std::floor(player->getPos().x) + 0.5f &&
@@ -166,6 +184,24 @@ void BotEngine::updateBot(GameScene *gameScene)
             if (otherPlayerKey == std::prev(gameScene->getPlayers().end())->first)
                 startRecursive(gameScene, playerKey, player, PLAYER);
         }
+        
+        for (auto &[wallKey, wall] : gameScene->getWalls()) {
+            if (wall->getName() == "Wall" &&
+                (std::floor(player->getPos().x) + 0.5f == wall->getPos().x &&
+                wall->getPos().y + 1.0f > player->getPos().y &&
+                player->getPos().y > wall->getPos().y - 1.0f ||
+                std::floor(player->getPos().y) + 0.5f == wall->getPos().y &&
+                wall->getPos().x + 1.0f > player->getPos().x &&
+                player->getPos().x > wall->getPos().x - 1.0f)) {
+                this->_goals[playerKey] = WALL;
+                doAction(gameScene, playerKey, "Main", true);
+                doAction(gameScene, playerKey, "Main", false);
+                break;
+            }
+            if (wallKey == std::prev(gameScene->getWalls().end())->first)
+                startRecursive(gameScene, playerKey, player, WALL);
+        }
+
         if (!this->_paths[playerKey].empty()) {
             if (!this->_founds[playerKey]) {
                 if (_paths[playerKey].back().x == std::floor(player->getPos().x) + 1.5f) {
