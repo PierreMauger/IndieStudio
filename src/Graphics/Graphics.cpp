@@ -129,6 +129,11 @@ void Graphics::receiveResourceList(Packet data)
             this->_animations[fileName] = std::shared_ptr<Animation>(new Animation("resources/animations/" + file, *this->_models[fileName]));
         } else if (type == 2) {
             this->_textures[fileName] = std::make_shared<Texture2D>(LoadTexture(std::string("resources/textures/" + file).c_str()));
+        } else if (type == 3) {
+            std::vector<std::shared_ptr<neo::Model>> temp;
+            for (int i = 0; i < 20; i++)
+                temp.push_back(std::shared_ptr<Model>(new Model("resources/frames/" + fileName + std::to_string(i) + ".dae")));
+            this->_frames[fileName] = temp;
         }
     }
     this->_messageBus->sendMessage(Message(Packet(), CoreCommand::GRAPHICS_READY, Module::CORE));
@@ -158,6 +163,8 @@ void Graphics::receiveAdd(Packet data)
             this->_buttons[id] = std::unique_ptr<GraphicObject>(new RectangleObj(obj));
         else if (type == 3 && this->_textures.find(obj.getName()) != this->_textures.end())
             this->_buttons[id] = std::unique_ptr<GraphicObject>(new SpriteObj(obj, this->_textures[obj.getName()]));
+        else if (type == 4 && this->_frames.find(obj.getName()) != this->_frames.end())
+            this->_objects[id] = std::unique_ptr<GraphicObject>(new AnimatedFramesObj(obj, this->_frames[obj.getName()]));
     }
 }
 
@@ -168,7 +175,7 @@ void Graphics::receiveDelete(Packet data)
         int type = 0;
 
         data >> type >> id;
-        if (type == 0 || type == 1) {
+        if (type == 0 || type == 1 || type == 4) {
             if (this->_objects.find(id) != this->_objects.end())
                 this->_objects.erase(id);
         } else if (type == 2 || type == 3) {
@@ -201,7 +208,7 @@ void Graphics::receiveSetCameraNextPos(Packet data)
         data >> nextPos >> nextFront;
         this->_camera->setMovement(nextPos, nextFront);
     } else {
-        this->_camera->setMovement(glm::vec3(0.0f, 0.0f, this->getHeightOnMap()), glm::vec3(0.0f));
+        this->_camera->setMovement(glm::vec3(0.0f, -10.0f, this->getHeightOnMap()), glm::vec3(0.0f));
     }
 }
 

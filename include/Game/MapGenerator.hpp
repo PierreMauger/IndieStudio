@@ -27,6 +27,7 @@ namespace neo
             size_t _height;
         public:
             std::vector<std::string> generateProceduralMap(std::size_t nb_player, std::size_t x, std::size_t y);
+            std::vector<std::string> setPlayer(std::vector<std::string> map, std::vector<bool> players, std::vector<int> mode);
             const size_t getWidth(void) const;
             const size_t getHeight(void) const;
     };

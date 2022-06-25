@@ -14,7 +14,7 @@ using namespace neo;
 
 Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
-    this->_currentScene = 2;
+    this->_currentScene = 0;
 
     this->_functionTab.push_back(std::bind(&Core::receiveKeyPressed, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Core::receiveKeyReleased, this, std::placeholders::_1));

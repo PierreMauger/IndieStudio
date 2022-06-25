@@ -22,6 +22,7 @@ void RectangleObj::draw(Camera &camera)
     if (this->_status)
         color = YELLOW;
     DrawRectangle(this->_pos.x * width / 2 + width / 2 - this->_scale.x * width / 2, this->_pos.y * height / 2 + height / 2 - this->_scale.y * height / 2, this->_scale.x * width, this->_scale.y * height, color);
+    DrawText(this->_name.c_str(), this->_pos.x * width / 2 + width / 2 - this->_scale.x * width / 2, this->_pos.y * height / 2 + height / 2 - this->_scale.y * height / 2, 32, LIGHTGRAY);
 }
 
 Rectangle RectangleObj::getBox() const
@@ -30,5 +31,4 @@ Rectangle RectangleObj::getBox() const
     float width = GetScreenWidth();
 
     return {this->_pos.x * width / 2 + width / 2 - this->_scale.x * width / 2, this->_pos.y * height / 2 + height / 2 - this->_scale.y * height / 2, this->_scale.x * width, this->_scale.y * height};
-
 }

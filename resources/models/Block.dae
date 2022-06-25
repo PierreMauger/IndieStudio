@@ -3,33 +3,47 @@
   <asset>
     <contributor>
       <author>Blender User</author>
-      <authoring_tool>Blender 3.1.2 commit date:2022-03-31, commit time:17:40, hash:cc66d1020c3b</authoring_tool>
+      <authoring_tool>Blender 3.2.0 commit date:2022-06-08, commit time:10:22, hash:e05e1e369187</authoring_tool>
     </contributor>
-    <created>2022-05-06T19:27:47</created>
-    <modified>2022-05-06T19:27:47</modified>
+    <created>2022-06-24T12:28:31</created>
+    <modified>2022-06-24T12:28:31</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
   <library_effects>
     <effect id="Material-effect">
       <profile_COMMON>
+        <newparam sid="Block_png-surface">
+          <surface type="2D">
+            <init_from>Block_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="Block_png-sampler">
+          <sampler2D>
+            <source>Block_png-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <lambert>
             <emission>
               <color sid="emission">0 0 0 1</color>
             </emission>
             <diffuse>
-              <color sid="diffuse">0 0 1 1</color>
+              <texture texture="Block_png-sampler" texcoord="UVMap"/>
             </diffuse>
-            <reflectivity>
-              <float sid="specular">0.5</float>
-            </reflectivity>
+            <index_of_refraction>
+              <float sid="ior">1.45</float>
+            </index_of_refraction>
           </lambert>
         </technique>
       </profile_COMMON>
     </effect>
   </library_effects>
-  <library_images/>
+  <library_images>
+    <image id="Block_png" name="Block_png">
+      <init_from>Block.png</init_from>
+    </image>
+  </library_images>
   <library_materials>
     <material id="Material-material" name="Material">
       <instance_effect url="#Material-effect"/>
@@ -59,7 +73,7 @@
           </technique_common>
         </source>
         <source id="Cube-mesh-map-0">
-          <float_array id="Cube-mesh-map-0-array" count="72">0.875 0.5 0.625 0.75 0.625 0.5 0.625 0.75 0.375 1 0.375 0.75 0.625 0 0.375 0.25 0.375 0 0.375 0.5 0.125 0.75 0.125 0.5 0.625 0.5 0.375 0.75 0.375 0.5 0.625 0.25 0.375 0.5 0.375 0.25 0.875 0.5 0.875 0.75 0.625 0.75 0.625 0.75 0.625 1 0.375 1 0.625 0 0.625 0.25 0.375 0.25 0.375 0.5 0.375 0.75 0.125 0.75 0.625 0.5 0.625 0.75 0.375 0.75 0.625 0.25 0.625 0.5 0.375 0.5</float_array>
+          <float_array id="Cube-mesh-map-0-array" count="72">0 1 1 0 1 1 1 1 0 0 1 0 0 1 1 0 0 0 1 1 0 0 0 1 1 1 0 0 1 0 0 1 1 0 0 0 0 1 0 0 1 0 1 1 0 1 0 0 0 1 1 1 1 0 1 1 1 0 0 0 1 1 0 1 0 0 0 1 1 1 1 0</float_array>
           <technique_common>
             <accessor source="#Cube-mesh-map-0-array" count="36" stride="2">
               <param name="S" type="float"/>
