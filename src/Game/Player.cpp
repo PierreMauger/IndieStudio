@@ -9,7 +9,7 @@
 
 using namespace neo;
 
-Player::Player(std::string name, glm::vec3 pos, bool isBot, glm::vec3 scale) : GameObject(0, name, pos, scale)
+Player::Player(std::string name, glm::vec3 pos, bool isBot, glm::vec3 scale) : GameObject(4, name, pos, scale)
 {
     this->_speed = glm::vec3(0.0f);
     this->_bombUp = 0;
