@@ -70,6 +70,7 @@ set(SRC
   src/GameObject.cpp
   src/GraphicObject/GraphicObject.cpp
   src/GraphicObject/ModelObj.cpp
+  src/GraphicObject/AnimatedFramesObj.cpp
   src/GraphicObject/AnimatedModelObj.cpp
   src/GraphicObject/RectangleObj.cpp
   src/GraphicObject/SpriteObj.cpp

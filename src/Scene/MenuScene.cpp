@@ -15,7 +15,7 @@ MenuScene::MenuScene(std::shared_ptr<MessageBus> messageBus)
     this->_objects[0] = std::make_unique<GameObject>(0, "Asteroid1", glm::vec3(0.0f, -5.0f, -1.75f), glm::vec3(0.5f));
     this->_objects[1] = std::make_unique<GameObject>(0, "Asteroid2", glm::vec3(0.0f, -5.0f, -0.25f), glm::vec3(0.4f));
     this->_objects[2] = std::make_unique<GameObject>(0, "Asteroid3", glm::vec3(0.0f, -5.0f, 1.25f), glm::vec3(0.5f));
-    this->_objects[3] = std::make_unique<GameObject>(1, "Bomb", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f));
+    this->_objects[3] = std::make_unique<GameObject>(4, "Amongus", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f));
     this->_objects[4] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
     this->_objects[4]->setShiny(false);
     this->_selectedButton = -1;

@@ -14,6 +14,7 @@
 
     #include "ModelObj.hpp"
     #include "AnimatedModelObj.hpp"
+    #include "AnimatedFramesObj.hpp"
     #include "RectangleObj.hpp"
     #include "SpriteObj.hpp"
     #include "Camera.hpp"
@@ -29,6 +30,7 @@ namespace neo
             std::map<int, std::unique_ptr<GraphicObject>> _objects;
             std::map<int, std::unique_ptr<GraphicObject>> _buttons;
             std::map<std::string, std::shared_ptr<Model>> _models;
+            std::map<std::string, std::vector<std::shared_ptr<Model>>> _frames;
             std::map<std::string, std::shared_ptr<Animation>> _animations;
             std::map<std::string, std::shared_ptr<Texture2D>> _textures;
 
