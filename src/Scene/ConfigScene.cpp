@@ -38,9 +38,9 @@ ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
     this->_buttons[1] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 1 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
     this->_buttons[2] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 2 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
     this->_buttons[3] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 3 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
-    this->_buttons[36] = std::make_unique<GameObject>(2, "Back", glm::vec3(pos, -0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
-    this->_buttons[37] = std::make_unique<GameObject>(2, "Reset", glm::vec3(pos + 2.2 * 0.48f, -0.45f, 0.0f), glm::vec3(0.1f, 0.1f, 0.0f));
-    this->_buttons[38] = std::make_unique<GameObject>(2, "Start", glm::vec3(pos + 3 * 0.48f, -0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
+    this->_buttons[40] = std::make_unique<GameObject>(2, "Back", glm::vec3(pos, -0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
+    this->_buttons[41] = std::make_unique<GameObject>(2, "Reset", glm::vec3(pos + 2.2 * 0.48f, -0.45f, 0.0f), glm::vec3(0.1f, 0.1f, 0.0f));
+    this->_buttons[42] = std::make_unique<GameObject>(2, "Start", glm::vec3(pos + 3 * 0.48f, -0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
     for (int card = 0; card < 4; card++) {
         pos = -1.0f + 0.28f + card * 0.48f;
 
@@ -52,6 +52,7 @@ ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
         this->_buttons[card + 4 * 6] = std::make_unique<GameObject>(3, "RightArrow", glm::vec3(pos        , 0.8f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
         this->_buttons[card + 4 * 7] = std::make_unique<GameObject>(3, "RightArrow", glm::vec3(pos + 0.15f, 0.8f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
         this->_buttons[card + 4 * 8] = std::make_unique<GameObject>(3, "RightArrow", glm::vec3(pos + 0.18f, 0.05f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
+        this->_buttons[card + 4 * 9] = std::make_unique<GameObject>(2, "", glm::vec3(pos, 0.5f, 0.0f), glm::vec3(0.1f, 0.05f, 0.0f));
     }
 }
 
@@ -103,7 +104,7 @@ void ConfigScene::handleButtonClicked(int button)
         this->buttonAdd(button);
         return;
     }
-    switch (button < 36 ? button / 4 : button) {
+    switch (button < 40 ? button / 4 : button) {
         case 1: case 2:
             this->changeModel(button);
             break;
@@ -116,13 +117,13 @@ void ConfigScene::handleButtonClicked(int button)
         case 8:
             this->buttonDelete(button % 4);
             break;
-        case 36:
+        case 40:
             this->buttonBack();
             break;
-        case 37:
+        case 41:
             this->buttonReset();
             break;
-        case 38:
+        case 42:
             this->buttonStart();
             break;
         default:
@@ -160,6 +161,7 @@ void ConfigScene::addCard(int card)
     data << this->_buttons[card + 4 * 6]->getType() << card + 4 * 6 << *this->_buttons[card + 4 * 6];
     data << this->_buttons[card + 4 * 7]->getType() << card + 4 * 7 << *this->_buttons[card + 4 * 7];
     data << this->_buttons[card + 4 * 8]->getType() << card + 4 * 8 << *this->_buttons[card + 4 * 8];
+    data << this->_buttons[card + 4 * 9]->getType() << card + 4 * 9 << *this->_buttons[card + 4 * 9];
     data << this->_objects[card + 1]->getType() << card + 1 << *this->_objects[card + 1];
     this->_messageBus->sendMessage(Message(data, GraphicsCommand::ADD, Module::GRAPHICS));
 
@@ -182,6 +184,7 @@ void ConfigScene::deleteCard(int card)
     data << this->_buttons[card + 4 * 6]->getType() << card + 4 * 6;
     data << this->_buttons[card + 4 * 7]->getType() << card + 4 * 7;
     data << this->_buttons[card + 4 * 8]->getType() << card + 4 * 8;
+    data << this->_buttons[card + 4 * 9]->getType() << card + 4 * 9;
     data << this->_objects[card + 1]->getType() << card + 1;
     this->_messageBus->sendMessage(Message(data, GraphicsCommand::DELETE, Module::GRAPHICS));
     data.clear();

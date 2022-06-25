@@ -175,7 +175,7 @@ void Graphics::receiveDelete(Packet data)
         int type = 0;
 
         data >> type >> id;
-        if (type == 0 || type == 1) {
+        if (type == 0 || type == 1 || type == 4) {
             if (this->_objects.find(id) != this->_objects.end())
                 this->_objects.erase(id);
         } else if (type == 2 || type == 3) {

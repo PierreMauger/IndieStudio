@@ -21,7 +21,6 @@ namespace neo
         private:
             std::vector<std::shared_ptr<Model>> _model;
             int _currentFrame;
-            int _count;
 
         public:
             AnimatedFramesObj(GameObject obj, std::vector<std::shared_ptr<Model>> _model);
