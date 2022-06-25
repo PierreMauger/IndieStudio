@@ -45,19 +45,19 @@ bool BotEngine::canMoveToPos(GameScene *gameScene, glm::vec3 pos, const int &bot
 int BotEngine::getNeighbor(GameScene *gameScene, glm::vec3 pos, const int &botKey)
 {
     if (canMoveToPos(gameScene, glm::vec3(pos.x + 1.0f, pos.y, pos.z), botKey) &&
-        this->_visited[-pos.y + gameScene->getMapGenerator().getHeight() / 2][pos.x + gameScene->getMapGenerator().getWidth() / 2 + 1] == false) {
+        this->_visited[-pos.y + gameScene->getMapSize().y / 2][pos.x + gameScene->getMapSize().x / 2 + 1] == false) {
         return 1;
     }
     else if (canMoveToPos(gameScene, glm::vec3(pos.x, pos.y + 1.0f, pos.z), botKey) &&
-        this->_visited[-pos.y + gameScene->getMapGenerator().getHeight() / 2 - 1][pos.x + gameScene->getMapGenerator().getWidth() / 2] == false) {
+        this->_visited[-pos.y + gameScene->getMapSize().y / 2 - 1][pos.x + gameScene->getMapSize().x / 2] == false) {
         return 2;
     }
     else if (canMoveToPos(gameScene, glm::vec3(pos.x - 1.0f, pos.y, pos.z), botKey) &&
-        this->_visited[-pos.y + gameScene->getMapGenerator().getHeight() / 2][pos.x + gameScene->getMapGenerator().getWidth() / 2 - 1] == false) {
+        this->_visited[-pos.y + gameScene->getMapSize().y / 2][pos.x + gameScene->getMapSize().x / 2 - 1] == false) {
         return 3;
     }
     else if (canMoveToPos(gameScene, glm::vec3(pos.x, pos.y - 1.0f, pos.z), botKey) &&
-        this->_visited[-pos.y + gameScene->getMapGenerator().getHeight() / 2 + 1][pos.x + gameScene->getMapGenerator().getWidth() / 2] == false) {
+        this->_visited[-pos.y + gameScene->getMapSize().y / 2 + 1][pos.x + gameScene->getMapSize().x / 2] == false) {
         return 4;
     }
     return 0;
@@ -65,7 +65,7 @@ int BotEngine::getNeighbor(GameScene *gameScene, glm::vec3 pos, const int &botKe
 
 void BotEngine::checkEnd(GameScene *gameScene, glm::vec3 pos, const int &botKey)
 {
-    this->_visited[-pos.y + gameScene->getMapGenerator().getHeight() / 2][pos.x + gameScene->getMapGenerator().getWidth() / 2] = true;
+    this->_visited[-pos.y + gameScene->getMapSize().y / 2][pos.x + gameScene->getMapSize().x / 2] = true;
     if (this->_goals[botKey] == SAFE) {
         for (auto &[bombKey, bomb] : gameScene->getBombs()) {
             if (pos.x + 0.5f == bomb->getPos().x &&
@@ -158,10 +158,10 @@ void BotEngine::updateBot(GameScene *gameScene)
     for (auto &[playerKey, player] : gameScene->getPlayers()) {
         if (!player->isBot())
             continue;
-        
+
         if (this->_paths[playerKey].empty() && !this->_founds[playerKey])
             this->_goals[playerKey] = NONE;
-        
+
         for (auto &[bombKey, bomb] : gameScene->getBombs()) {
             if (std::floor(player->getPos().x) + 0.5f == bomb->getPos().x &&
                 bomb->getPos().y + 2.5f + 1.0f * bomb->getFireUp() > player->getPos().y &&
@@ -185,7 +185,7 @@ void BotEngine::updateBot(GameScene *gameScene)
             if (otherPlayerKey == std::prev(gameScene->getPlayers().end())->first)
                 startRecursive(gameScene, playerKey, player, PLAYER);
         }
-        
+
         for (auto &[wallKey, wall] : gameScene->getWalls()) {
             if (wall->getName() == "Wall" &&
                 (std::floor(player->getPos().x) + 0.5f == wall->getPos().x &&

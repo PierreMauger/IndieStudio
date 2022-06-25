@@ -74,11 +74,14 @@ void ConfigScene::loadScene()
 {
     Packet packet;
 
+    for (int i = 0; i < 4; i++)
+        this->_buttons[i + 4 * 9]->setName(this->_availableConfigs[this->_playerConfig[i]]);
+
     for (auto &object : this->_objects)
         if (object.first < 1 || object.first > 4)
             packet << object.second->getType() << object.first << *object.second;
     for (auto &button : this->_buttons)
-        if (button.first < 4 || button.first > 35)
+        if (button.first < 4 || button.first > 39)
             packet << button.second->getType() <<  button.first << *button.second;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
@@ -229,6 +232,14 @@ void ConfigScene::changeConfig(int card)
     } else {
         this->_playerConfig[playerID] = (this->_playerConfig[playerID] + size - 1) % size;
     }
+    this->_buttons[playerID + 4 * 9]->setName(this->_availableConfigs[this->_playerConfig[playerID]]);
+
+    packet << this->_buttons[playerID + 4 * 9]->getType() << playerID + 4 * 9;
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
+    packet << *this->_buttons[playerID + 4 * 9];
+    this->_messageBus->sendMessage(Message(packet, GraphicsCommand::ADD, Module::GRAPHICS));
+    packet.clear();
+
     packet << playerID << this->_playerConfig[playerID] << this->_playerMode[playerID];
     this->_messageBus->sendMessage(Message(packet, InputCommand::CHANGE_CONFIG, Module::INPUT));
 }

@@ -42,7 +42,7 @@ namespace neo
             std::map<int, std::unique_ptr<PowerUp>> _powerUps;
             std::map<int, std::unique_ptr<GameObject>> _objects;
             std::unique_ptr<BotEngine> _botEngine;
-            MapGenerator _mapGenerator;
+            Vector2 _mapSize;
             int _incrementor;
 
         public:
@@ -64,7 +64,7 @@ namespace neo
             std::map<int, std::unique_ptr<Bomb>> &getBombs();
             std::map<int, std::unique_ptr<Wall>> &getWalls();
             std::map<int, std::unique_ptr<PowerUp>> &getPowerUps();
-            MapGenerator &getMapGenerator();
+            Vector2 getMapSize();
     };
 }
 
