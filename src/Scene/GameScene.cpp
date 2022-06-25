@@ -133,7 +133,8 @@ void GameScene::updatePlayers(void)
         for (auto it = this->_powerUps.begin(); it != this->_powerUps.end();) {
             if (CheckCollisionRecs(
                 CAST(Rectangle, player->getPos().x - 0.3f + player->getSpeed().x, player->getPos().y - 0.3f + player->getSpeed().y, 0.6f, 0.6f),
-                CAST(Rectangle, it->second->getPos().x - 0.5f, it->second->getPos().y - 0.5f, 1.0f, 1.0f))) {
+                CAST(Rectangle, it->second->getPos().x - 0.5f, it->second->getPos().y - 0.5f, 1.0f, 1.0f)) &&
+                !player->isBot()) {
                 if (it->second->getName() == "BombUp")
                     player->getBombUp() += 1;
                 if (it->second->getName() == "SpeedUp")
