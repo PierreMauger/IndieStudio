@@ -201,7 +201,7 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
                 if (it->second->getName() == "Block")
                     break;
                 deleteData << it->second->getType() << it->first;
-                if (std::rand() % 10 == 0) {
+                if (std::rand() % 1 == 0) {
                     this->_powerUps[this->_incrementor] = std::make_unique<PowerUp>(powerUps[std::rand() % 4], it->second->getPos(), glm::vec3(0.5f));
                     addData << this->_powerUps[this->_incrementor]->getType() << this->_incrementor << *this->_powerUps[this->_incrementor];
                     this->_incrementor++;
@@ -212,9 +212,9 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
         }
 
         if (bomb->getState() != 2 + bomb->getFireUp() && !bomb->getStop(i)) {
-            bomb->getExplosions()[this->_incrementor] = std::make_unique<GameObject>(0, "Explosion",
+            bomb->getExplosions()[this->_incrementor] = std::make_unique<GameObject>(0, "Fire",
                 glm::vec3(bomb->getPos().x + (i == RIGHT ? bomb->getState() + 1 : i == LEFT ? -bomb->getState() - 1 : 0),
-                bomb->getPos().y + (i == UP ? bomb->getState() + 1 : i == DOWN ? -bomb->getState() - 1 : 0), bomb->getPos().z), glm::vec3(0.4f));
+                bomb->getPos().y + (i == UP ? bomb->getState() + 1 : i == DOWN ? -bomb->getState() - 1 : 0), bomb->getPos().z), glm::vec3(0.45f));
             addData << bomb->getExplosions()[this->_incrementor]->getType() << this->_incrementor << *bomb->getExplosions()[this->_incrementor];
             this->_incrementor++;
         }
