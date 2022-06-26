@@ -6,27 +6,34 @@ cmake_minimum_required(VERSION 3.16)
 #create project with name, language and version
 project(IndieStudio LANGUAGES CXX VERSION 1)
 
-#set c++ version, flags and other important variables
+set(CMAKE_THREAD_LIBS_INIT "-lpthread")
+set(CMAKE_HAVE_THREADS_LIBRARY 1)
+set(CMAKE_USE_WIN32F_THREADS_INIT 0)
+set(CMAKE_USE_PTHREADS_INIT 1)
+
+#set normal/cache cmake variables
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fexceptions")
 if (WIN32)
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /EHsc /Ox /fp:fast")
 endif (WIN32)
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" FORCE)
-set(DirectX_D3DX9_LIBRARY "")
-set(ASSIMP_BUILD_ASSIMP_VIEW False)
-set(ASSIMP_BUILD_ASSIMP_TOOLS False)
-set(ASSIMP_BUILD_TESTS False)
-set(ASSIMP_BUILD_SAMPLES False)
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules/" CACHE PATH "" FORCE)
+set(DirectX_D3DX9_LIBRARY "" CACHE FILEPATH "" FORCE)
+set(ASSIMP_BUILD_ASSIMP_VIEW OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)
 
-#add some color
+#compile options
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     add_compile_options(-fdiagnostics-color=always)
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     add_compile_options(-fcolor-diagnostics)
 endif()
+add_compile_options(-g)
+add_compile_options(-O3 -Ofast -flto)
 
 if (WIN32)
   add_compile_options(/Ox /fp:fast)
@@ -69,6 +76,7 @@ set(SRC
   src/GameObject.cpp
   src/GraphicObject/GraphicObject.cpp
   src/GraphicObject/ModelObj.cpp
+  src/GraphicObject/AnimatedFramesObj.cpp
   src/GraphicObject/AnimatedModelObj.cpp
   src/GraphicObject/RectangleObj.cpp
   src/GraphicObject/SpriteObj.cpp
@@ -131,7 +139,6 @@ if(WIN32)
 else()
   add_custom_command(
     TARGET ${EXEC_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXEC_NAME} ${CMAKE_SOURCE_DIR}
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/build/${EXEC_NAME} ${CMAKE_SOURCE_DIR}
   )
 endif()

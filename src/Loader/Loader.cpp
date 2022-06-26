@@ -61,6 +61,7 @@ void Loader::sendResourceList(void)
         if (path.extension() == ".dae")
             packet << 1 << path.filename().string();
     }
+    packet << 3 << "Amongus";
     for (auto &file : texturesFiles) {
         std::filesystem::path path(file);
         if (path.extension() == ".png")

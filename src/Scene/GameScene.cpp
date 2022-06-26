@@ -17,26 +17,11 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
     playMusic << "gameMusic.mp3";
     this->_messageBus->sendMessage(Message(playMusic, AudioCommand::PLAY_MUSIC, Module::AUDIO));
 
-    const std::vector<std::string> map = _mapGenerator.generateProceduralMap(2, 20, 20);
-    for (int i = 0; i < map.size(); i++) {
-        for (int j = 0; j < map[i].size(); j++) {
-            glm::vec3 pos = {i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.0f};
-            if (map[i][j] == 'P')
-                this->_players[this->_incrementor++] = std::make_unique<Player>("RoboCat", pos, false, glm::vec3(0.4f));
-            else if (map[i][j] == 'B')
-                this->_players[this->_incrementor++] = std::make_unique<Player>("RoboCat", pos, true, glm::vec3(0.4f));
-        }
-    }
-    for (int i = 0; i < map.size(); i++) {
-        for (int j = 0; j < map[i].size(); j++) {
-            glm::vec3 pos = {i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.0f};
-            if (map[i][j] == '#')
-                this->_walls[this->_incrementor++] = std::make_unique<Wall>("Block", pos, glm::vec3(0.5f));
-            else if (map[i][j] == 'W')
-                this->_walls[this->_incrementor++] = std::make_unique<Wall>("Wall", pos, glm::vec3(0.5f));
-        }
-    }
     this->_botEngine = std::make_unique<BotEngine>();
+    this->_objects[0] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
+    this->_objects[0]->setShiny(false);
+    this->_objects[1] = std::make_unique<GameObject>(0, "SpaceShip", glm::vec3(0.0f, -5.0f, 0.0f), glm::vec3(5.0f));
+    this->_objects[1]->setRotation(glm::vec3(0.0f, 0.0f, 180.0f));
 }
 
 GameScene::~GameScene()
@@ -49,10 +34,13 @@ GameScene::~GameScene()
         bomb.reset();
     for (auto &[powerUpKey, powerUp] : this->_powerUps)
         powerUp.reset();
+    for (auto &[object_key, object] : this->_objects)
+        object.reset();
     this->_players.clear();
     this->_walls.clear();
     this->_bombs.clear();
     this->_powerUps.clear();
+    this->_objects.clear();
     this->_botEngine.reset();
 }
 
@@ -60,16 +48,18 @@ void GameScene::loadScene()
 {
     Packet packet;
 
-    for (auto &[playerKey, player] : this->_players)
-        packet << player->getType() << playerKey << *player;
-    for (auto &[wallKey, wall] : this->_walls)
-        packet << wall->getType() << wallKey << *wall;
-    for (auto &[bombKey, bomb] : this->_bombs)
-        packet << bomb->getType() << bombKey << *bomb;
+    for (auto &[player_key, player] : this->_players)
+        packet << player->getType() << player_key << *player;
+    for (auto &[wall_key, wall] : this->_walls)
+        packet << wall->getType() << wall_key << *wall;
+    for (auto &[bomb_key, bomb] : this->_bombs)
+        packet << bomb->getType() << bomb_key << *bomb;
+    for (auto &[object_key, object] : this->_objects)
+        packet << object->getType() << object_key << *object;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
     packet.clear();
-    packet << 0 << glm::vec3(0.0f, 0.0f, 50.0f);
+    packet << 0 << glm::vec3(0.0f, -50.0f, 100.0f);
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_POS, Module::GRAPHICS));
     packet.clear();
     packet << 1;
@@ -336,7 +326,42 @@ void GameScene::handleConfig(std::vector<std::string> config)
 
 void GameScene::handleStartGame(Packet data)
 {
-    std::cout << "startGame" << std::endl;
+    std::vector<std::string> map;
+    int size = 0;
+    int it = 0;
+
+    data >> size;
+    for (int i = 0; i < size; i++) {
+        std::string tmp;
+        data >> tmp;
+        map.push_back(tmp);
+    }
+
+    std::vector<std::string> models;
+    while (data.checkSize(1)) {
+        std::string model;
+        data >> model;
+        models.push_back(model);
+    }
+
+    for (int i = 0; i < map.size(); i++) {
+        for (int j = 0; j < map[i].size(); j++) {
+            glm::vec3 pos = {i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.0f};
+            if (map[i][j] == 'P')
+                this->_players[this->_incrementor++] = std::make_unique<Player>(models[it++], pos, false, glm::vec3(0.4f));
+            else if (map[i][j] == 'B')
+                this->_players[this->_incrementor++] = std::make_unique<Player>(models[it++], pos, true, glm::vec3(0.4f));
+        }
+    }
+    for (int i = 0; i < map.size(); i++) {
+        for (int j = 0; j < map[i].size(); j++) {
+            glm::vec3 pos = {i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.0f};
+            if (map[i][j] == '#')
+                this->_walls[this->_incrementor++] = std::make_unique<Wall>("Block", pos, glm::vec3(0.5f));
+            else if (map[i][j] == 'W')
+                this->_walls[this->_incrementor++] = std::make_unique<Wall>("Wall", pos, glm::vec3(0.5f));
+        }
+    }
 }
 
 std::shared_ptr<MessageBus> GameScene::getMessageBus()

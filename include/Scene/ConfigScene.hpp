@@ -9,6 +9,7 @@
     #define CONFIGSCENE_HPP
 
     #include "IScene.hpp"
+    #include "MapGenerator.hpp"
 
 namespace neo
 {
@@ -24,12 +25,20 @@ namespace neo
             std::vector<int> _playerMode;
             std::vector<std::string> _availableModels;
             std::vector<std::string> _availableConfigs;
+            MapGenerator _mapGenerator;
+            std::vector<std::string> _map;
 
             void addCard(int card);
             void deleteCard(int card);
             void changeModel(int card);
             void changeConfig(int card);
             void changeMode(int card);
+
+            void buttonAdd(int playerId);
+            void buttonDelete(int playerId);
+            void buttonBack();
+            void buttonReset();
+            void buttonStart();
 
         public:
             ConfigScene(std::shared_ptr<MessageBus> messageBus);
