@@ -16,6 +16,8 @@ MappingScene::MappingScene(std::shared_ptr<MessageBus> messageBus)
     this->_messageBus = messageBus;
     this->_objects[0] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
     this->_objects[0]->setShiny(false);
+    this->_objects[1] = std::make_unique<GameObject>(0, "ComingSoon", glm::vec3(0.0f), glm::vec3(10.0f));
+    this->_objects[1]->setRotation(glm::vec3(90.0f, 90.0f, 0.0f));
     this->_buttons[0] = std::make_unique<GameObject>(3, "Back", glm::vec3(pos, -0.45f, 0.0f), glm::vec3(0.2f, 0.35f, 0.0f));
 }
 
