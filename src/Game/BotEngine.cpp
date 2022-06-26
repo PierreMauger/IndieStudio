@@ -235,7 +235,6 @@ void BotEngine::updateBot(GameScene *gameScene)
                 if (this->_directions[playerKey] == DOWN)
                     doAction(gameScene, playerKey, "MoveDown", false);
                 doAction(gameScene, playerKey, "Adjust", true);
-                doAction(gameScene, playerKey, "Adjust", false);
                 this->_paths[playerKey].pop_back();
                 this->_founds[playerKey] = false;
             }

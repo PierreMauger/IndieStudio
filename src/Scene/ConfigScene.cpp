@@ -133,6 +133,9 @@ void ConfigScene::handleButtonClicked(int button)
         default:
             break;
     }
+    Packet playSound;
+    playSound << "buttonClick.mp3";
+    this->_messageBus->sendMessage(Message(playSound, AudioCommand::PLAY_SOUND, Module::AUDIO));
 }
 
 void ConfigScene::handleConfig(std::vector<std::string> config)

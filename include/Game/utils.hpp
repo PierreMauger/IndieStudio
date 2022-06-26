@@ -26,9 +26,15 @@ namespace neo
         SAFE
     };
 
-    static const std::array<std::string, 4> powerUps = {
+    static const std::array<std::string, 10> powerUps = {
+        "BombUp",
+        "BombUp",
         "BombUp",
         "SpeedUp",
+        "SpeedUp",
+        "SpeedUp",
+        "FireUp",
+        "FireUp",
         "FireUp",
         "WallPass"
     };

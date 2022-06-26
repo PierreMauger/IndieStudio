@@ -65,6 +65,9 @@ void GameScene::loadScene()
     packet.clear();
     packet << 1;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_NEXT_POS, Module::GRAPHICS));
+    Packet playMusic;
+    playMusic << "gameMusic.mp3";
+    this->_messageBus->sendMessage(Message(playMusic, AudioCommand::PLAY_MUSIC, Module::AUDIO));
 }
 
 void GameScene::updatePlayers(void)
@@ -131,7 +134,7 @@ void GameScene::updatePlayers(void)
                 (player->isBot() && it->second->getName() != "SpeedUp" || !player->isBot())) {
                 if (it->second->getName() == "BombUp")
                     player->getBombUp() += 1;
-                if (it->second->getName() == "SpeedUp")
+                if (it->second->getName() == "SpeedUp" && player->getSpeedUp() < 5)
                     player->getSpeedUp() += 1;
                 if (it->second->getName() == "FireUp")
                     player->getFireUp() += 1;
@@ -211,7 +214,7 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
                 if (it->second->getName() == "Block")
                     break;
                 deleteData << it->second->getType() << it->first;
-                if (std::rand() % 1 == 0) {
+                if (std::rand() % 5 == 0) {
                     this->_powerUps[this->_incrementor] = std::make_unique<PowerUp>(powerUps[std::rand() % 4], it->second->getPos(), glm::vec3(0.5f));
                     addData << this->_powerUps[this->_incrementor]->getType() << this->_incrementor << *this->_powerUps[this->_incrementor];
                     this->_incrementor++;
@@ -298,7 +301,12 @@ void GameScene::handleKeyPressed(int playerNb, std::string action)
 {
     if (this->_players.find(playerNb) == this->_players.end())
         return;
-    if (action == "MoveRight")
+    if (action == "Adjust")
+        this->_players[playerNb]->teleport(glm::vec3(
+        std::floor(this->_players[playerNb]->getPos().x) + 0.5f,
+        std::floor(this->_players[playerNb]->getPos().y) + 0.5f,
+        this->_players[playerNb]->getPos().z));
+    else if (action == "MoveRight")
         this->_players[playerNb]->getDirection(RIGHT) = true;
     else if (action == "MoveLeft")
         this->_players[playerNb]->getDirection(LEFT) = true;
@@ -313,9 +321,6 @@ void GameScene::handleKeyPressed(int playerNb, std::string action)
         packet << this->_bombs[this->_incrementor]->getType() << this->_incrementor << *this->_bombs[this->_incrementor];
         this->_incrementor++;
         this->_messageBus->sendMessage(Message(packet, GraphicsCommand::ADD, Module::GRAPHICS));
-        Packet playSound;
-        playSound << "layBomb.mp3";
-        this->_messageBus->sendMessage(Message(playSound, AudioCommand::PLAY_SOUND, Module::AUDIO));
     }
 }
 

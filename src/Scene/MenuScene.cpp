@@ -64,6 +64,9 @@ void MenuScene::loadScene()
     packet.clear();
     packet << 0 << glm::vec3(10.0f, 0.0f, 3.0f);
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_NEXT_POS, Module::GRAPHICS));
+    Packet playMusic;
+    playMusic << "menuMusic.mp3";
+    this->_messageBus->sendMessage(Message(playMusic, AudioCommand::PLAY_MUSIC, Module::AUDIO));
 }
 
 void MenuScene::handleKeyPressed(int playerNb, std::string action)
