@@ -92,6 +92,14 @@ void MenuScene::handleStartGame(Packet data)
 {
 }
 
+void MenuScene::handleSaveMap()
+{
+}
+
+void MenuScene::handleMapLoaded(Packet data)
+{
+}
+
 void MenuScene::handleMainPressed(int playerID, std::string action)
 {
     if (action == "Main") {

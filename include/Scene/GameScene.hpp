@@ -43,6 +43,7 @@ namespace neo
             std::map<int, std::unique_ptr<GameObject>> _objects;
             std::unique_ptr<BotEngine> _botEngine;
             std::map<int, std::string> _winners;
+            std::vector<std::string> _storedMap;
             int _top;
             Vector2 _mapSize;
             int _incrementor;
@@ -61,6 +62,8 @@ namespace neo
             void handleButtonClicked(int button);
             void handleConfig(std::vector<std::string> config);
             void handleStartGame(Packet data);
+            void handleSaveMap();
+            void handleMapLoaded(Packet data);
 
             std::shared_ptr<MessageBus> getMessageBus();
             std::map<int, std::unique_ptr<Player>> &getPlayers();

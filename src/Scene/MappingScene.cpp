@@ -82,3 +82,11 @@ void MappingScene::handleConfig(std::vector<std::string> config)
 void MappingScene::handleStartGame(Packet data)
 {
 }
+
+void MappingScene::handleSaveMap()
+{
+}
+
+void MappingScene::handleMapLoaded(Packet data)
+{
+}

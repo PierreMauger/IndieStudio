@@ -57,8 +57,10 @@ void Graphics::run()
         this->update();
         this->draw();
         this->_messageBus->notify(Module::GRAPHICS);
-        if (WindowShouldClose())
+        if (WindowShouldClose()) {
             this->_messageBus->sendMessage(Message(Packet(), BaseCommand::QUIT, Module::BROADCAST));
+            this->_messageBus->sendMessage(Message(Packet(), CoreCommand::SAVE_MAP, Module::CORE));
+        }
     }
     CloseWindow();
 }

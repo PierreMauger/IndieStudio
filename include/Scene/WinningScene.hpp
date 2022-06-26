@@ -32,6 +32,8 @@ namespace neo
             void handleButtonClicked(int button);
             void handleConfig(std::vector<std::string> config);
             void handleStartGame(Packet data);
+            void handleSaveMap();
+            void handleMapLoaded(Packet data);
     };
 }
 

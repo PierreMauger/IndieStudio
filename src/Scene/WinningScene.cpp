@@ -110,3 +110,11 @@ void WinningScene::handleStartGame(Packet data)
         it++;
     }
 }
+
+void WinningScene::handleSaveMap()
+{
+}
+
+void WinningScene::handleMapLoaded(Packet data)
+{
+}
