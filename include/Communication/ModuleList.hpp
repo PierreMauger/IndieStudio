@@ -55,6 +55,7 @@ namespace neo
                 BUTTON_CLICKED,
                 CONFIG,
                 START_GAME,
+                SAVE_MAP,
             };
     };
 
@@ -80,6 +81,14 @@ namespace neo
             enum {
                 KEY_CONFIG = BaseCommand::LAST,
                 CHANGE_CONFIG,
+            };
+    };
+
+    class LoaderCommand : public BaseCommand
+    {
+        public:
+            enum {
+                SAVE_MAP = BaseCommand::LAST,
             };
     };
 }

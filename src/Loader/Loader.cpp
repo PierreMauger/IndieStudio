@@ -11,6 +11,8 @@ using namespace neo;
 
 Loader::Loader(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
 {
+    this->_functionTab.push_back(std::bind(&Loader::receiveSaveMap, this, std::placeholders::_1));
+
     this->sendPlayerConfig();
     this->sendResourceList();
 }
@@ -20,6 +22,18 @@ void Loader::run()
     while (this->_running) {
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
         this->_messageBus->notify(Module::LOADER);
+    }
+}
+
+void Loader::receiveSaveMap(Packet packet)
+{
+    std::ofstream file;
+
+    file.open("resources/last_map.txt");
+    while (file.is_open() && packet.checkSize(1)) {
+        std::string line;
+        packet >> line;
+        file << line << std::endl;
     }
 }
 

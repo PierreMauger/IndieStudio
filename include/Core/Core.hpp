@@ -39,6 +39,7 @@ namespace neo
             void receiveButtonClicked(Packet);
             void receiveConfig(Packet);
             void receiveStartGame(Packet);
+            void receiveSaveMap(Packet);
     };
 }
 

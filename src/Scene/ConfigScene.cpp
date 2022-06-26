@@ -150,6 +150,15 @@ void ConfigScene::handleStartGame(Packet data)
 {
 }
 
+void ConfigScene::handleSaveMap()
+{
+    Packet data;
+
+    for (int i = 0; i < this->_map.size(); i++)
+        data << this->_map[i];
+    this->_messageBus->sendMessage(Message(data, LoaderCommand::SAVE_MAP, Module::LOADER));
+}
+
 void ConfigScene::addCard(int card)
 {
     float pos = -1.0f + 0.28f + card * 0.48f;

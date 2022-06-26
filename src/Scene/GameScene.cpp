@@ -353,16 +353,16 @@ void GameScene::handleConfig(std::vector<std::string> config)
 
 void GameScene::handleStartGame(Packet data)
 {
-    std::vector<std::string> map;
     std::vector<std::string> models;
     int size = 0;
     int it = 0;
 
     data >> size;
+    this->_storedMap.clear();
     for (int i = 0; i < size; i++) {
         std::string tmp;
         data >> tmp;
-        map.push_back(tmp);
+        this->_storedMap.push_back(tmp);
     }
     while (data.checkSize(1)) {
         std::string model;
@@ -371,25 +371,34 @@ void GameScene::handleStartGame(Packet data)
     }
 
     this->_mapSize = CAST(Vector2, (float)size, (float)size);
-    for (int i = 0; i < map.size(); i++) {
-        for (int j = 0; j < map[i].size(); j++) {
-            glm::vec3 pos = {i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.0f};
-            if (map[i][j] == 'P')
+    for (int i = 0; i < this->_storedMap.size(); i++) {
+        for (int j = 0; j < this->_storedMap[i].size(); j++) {
+            glm::vec3 pos = {i - ((float)this->_storedMap[i].size() - 1) / 2, -j + ((float)this->_storedMap.size() - 1) / 2, 0.0f};
+            if (this->_storedMap[i][j] == 'P')
                 this->_players[this->_incrementor++] = std::make_unique<Player>(models[it++], pos, false, glm::vec3(0.4f));
-            else if (map[i][j] == 'B')
+            else if (this->_storedMap[i][j] == 'B')
                 this->_players[this->_incrementor++] = std::make_unique<Player>(models[it++], pos, true, glm::vec3(0.4f));
         }
     }
-    for (int i = 0; i < map.size(); i++) {
-        for (int j = 0; j < map[i].size(); j++) {
-            glm::vec3 pos = {i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.0f};
-            if (map[i][j] == '#')
+    for (int i = 0; i < this->_storedMap.size(); i++) {
+        for (int j = 0; j < this->_storedMap[i].size(); j++) {
+            glm::vec3 pos = {i - ((float)this->_storedMap[i].size() - 1) / 2, -j + ((float)this->_storedMap.size() - 1) / 2, 0.0f};
+            if (this->_storedMap[i][j] == '#')
                 this->_walls[this->_incrementor++] = std::make_unique<Wall>("Block", pos, glm::vec3(0.5f));
-            else if (map[i][j] == 'W')
+            else if (this->_storedMap[i][j] == 'W')
                 this->_walls[this->_incrementor++] = std::make_unique<Wall>("Wall", pos, glm::vec3(0.5f));
         }
     }
     this->_top = this->_players.size();
+}
+
+void GameScene::handleSaveMap()
+{
+    Packet data;
+
+    for (int i = 0; i < this->_storedMap.size(); i++)
+        data << this->_storedMap[i];
+    this->_messageBus->sendMessage(Message(data, LoaderCommand::SAVE_MAP, Module::LOADER));
 }
 
 std::shared_ptr<MessageBus> GameScene::getMessageBus()

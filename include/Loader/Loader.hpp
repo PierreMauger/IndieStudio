@@ -28,6 +28,8 @@ namespace neo
             // Node functions
             void run();
 
+            void receiveSaveMap(Packet);
+
             // Interface functions
             void sendPlayerConfig();
             void sendResourceList();
