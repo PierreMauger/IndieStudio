@@ -398,6 +398,8 @@ void ConfigScene::buttonStart()
     this->_messageBus->sendMessage(Message(data, CoreCommand::CHANGE_SCENE, Module::CORE));
     for (int i = 0; i < this->_playerConnected.size(); i++)
         if (this->_playerConnected[i]) {
+            float pos = -1.0f + 0.28f + i * 0.48f;
+            this->_buttons[i] = std::make_unique<GameObject>(3, "Add", glm::vec3(pos, 0.45f, 0.0f), glm::vec3(0.2f, 0.35f, 0.0f));
             this->_playerConnected[i] = false;
             this->_playerModel[i] = 0;
             this->_playerConfig[i] = 0;
