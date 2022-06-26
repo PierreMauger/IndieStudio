@@ -189,11 +189,11 @@ void BotEngine::updateBot(GameScene *gameScene)
         for (auto &[wallKey, wall] : gameScene->getWalls()) {
             if (wall->getName() == "Wall" &&
                 (std::floor(player->getPos().x) + 0.5f == wall->getPos().x &&
-                wall->getPos().y + 1.0f > player->getPos().y &&
-                player->getPos().y > wall->getPos().y - 1.0f ||
+                wall->getPos().y + 1.0f >= player->getPos().y &&
+                player->getPos().y >= wall->getPos().y - 1.0f ||
                 std::floor(player->getPos().y) + 0.5f == wall->getPos().y &&
-                wall->getPos().x + 1.0f > player->getPos().x &&
-                player->getPos().x > wall->getPos().x - 1.0f)) {
+                wall->getPos().x + 1.0f >= player->getPos().x &&
+                player->getPos().x >= wall->getPos().x - 1.0f)) {
                 doAction(gameScene, playerKey, "Main", true);
                 doAction(gameScene, playerKey, "Main", false);
                 break;
@@ -222,10 +222,10 @@ void BotEngine::updateBot(GameScene *gameScene)
                 }
                 this->_founds[playerKey] = true;
             }
-            else if (this->_directions[playerKey] == RIGHT && player->getPos().x > _paths[playerKey].back().x ||
-                this->_directions[playerKey] == UP && player->getPos().y > _paths[playerKey].back().y ||
-                this->_directions[playerKey] == LEFT && player->getPos().x < _paths[playerKey].back().x ||
-                this->_directions[playerKey] == DOWN && player->getPos().y < _paths[playerKey].back().y) {
+            else if (this->_directions[playerKey] == RIGHT && player->getPos().x >= _paths[playerKey].back().x - 0.1f ||
+                this->_directions[playerKey] == UP && player->getPos().y >= _paths[playerKey].back().y - 0.1f ||
+                this->_directions[playerKey] == LEFT && player->getPos().x <= _paths[playerKey].back().x + 0.1f ||
+                this->_directions[playerKey] == DOWN && player->getPos().y <= _paths[playerKey].back().y + 0.1f) {
                 if (this->_directions[playerKey] == RIGHT)
                     doAction(gameScene, playerKey, "MoveRight", false);
                 if (this->_directions[playerKey] == UP)
@@ -234,6 +234,8 @@ void BotEngine::updateBot(GameScene *gameScene)
                     doAction(gameScene, playerKey, "MoveLeft", false);
                 if (this->_directions[playerKey] == DOWN)
                     doAction(gameScene, playerKey, "MoveDown", false);
+                doAction(gameScene, playerKey, "Adjust", true);
+                doAction(gameScene, playerKey, "Adjust", false);
                 this->_paths[playerKey].pop_back();
                 this->_founds[playerKey] = false;
             }

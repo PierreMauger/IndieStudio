@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fexceptions")
 if (WIN32)
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /EHsc")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /EHsc /Ox /fp:fast")
 endif (WIN32)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" FORCE)
 set(DirectX_D3DX9_LIBRARY "")
@@ -28,20 +28,18 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     add_compile_options(-fcolor-diagnostics)
 endif()
 
-################## BUILD ##################
+if (WIN32)
+  add_compile_options(/Ox /fp:fast)
+else()
+  add_compile_options(-Ofast -flto)
+endif()
 
-add_compile_options(-g)
+################## BUILD ##################
 
 #set result executable (target) name
 set(EXEC_NAME
   bomberman
 )
-
-#add -g flag
-# add_compile_options(-g)
-
-#add performance flags
-# add_compile_options(-O3 -Ofast -flto)
 
 #fetch include directories
 set(INC
