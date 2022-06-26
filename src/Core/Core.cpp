@@ -26,6 +26,7 @@ Core::Core(std::shared_ptr<MessageBus> messageBus) : Node(messageBus)
     this->_functionTab.push_back(std::bind(&Core::receiveConfig, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Core::receiveStartGame, this, std::placeholders::_1));
     this->_functionTab.push_back(std::bind(&Core::receiveSaveMap, this, std::placeholders::_1));
+    this->_functionTab.push_back(std::bind(&Core::receiveMapLoaded, this, std::placeholders::_1));
 }
 
 void Core::run()
@@ -115,4 +116,9 @@ void Core::receiveStartGame(Packet data)
 void Core::receiveSaveMap(Packet data)
 {
     this->_scenes[this->_currentScene]->handleSaveMap();
+}
+
+void Core::receiveMapLoaded(Packet data)
+{
+    this->_scenes[this->_currentScene]->handleMapLoaded(data);
 }

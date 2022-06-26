@@ -42,6 +42,7 @@ ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
     this->_buttons[44] = std::make_unique<GameObject>(3, "Back", glm::vec3(pos, -0.45f, 0.0f), glm::vec3(0.2f, 0.35f, 0.0f));
     this->_buttons[45] = std::make_unique<GameObject>(3, "Reload", glm::vec3(pos + 2.2 * 0.48f, -0.45f, 0.0f), glm::vec3(0.1f, 0.17f, 0.0f));
     this->_buttons[46] = std::make_unique<GameObject>(3, "Play", glm::vec3(pos + 3 * 0.48f, -0.45f, 0.0f), glm::vec3(0.2f, 0.35f, 0.0f));
+    this->_buttons[47] = std::make_unique<GameObject>(3, "File", glm::vec3(pos + 0.8 * 0.48f, -0.45f, 0.0f), glm::vec3(0.1f, 0.17f, 0.0f));
     for (int card = 0; card < 4; card++) {
         pos = -1.0f + 0.28f + card * 0.48f;
 
@@ -133,6 +134,9 @@ void ConfigScene::handleButtonClicked(int button)
         case 46:
             this->buttonStart();
             break;
+        case 47:
+            this->buttonLoad();
+            break;
         default:
             break;
     }
@@ -157,6 +161,32 @@ void ConfigScene::handleSaveMap()
     for (int i = 0; i < this->_map.size(); i++)
         data << this->_map[i];
     this->_messageBus->sendMessage(Message(data, LoaderCommand::SAVE_MAP, Module::LOADER));
+}
+
+void ConfigScene::handleMapLoaded(Packet data)
+{
+    for (int i = 0; i < this->_map.size(); i++)
+        data >> this->_map[i];
+
+    for (int i = 5; i < this->_objects.size(); i++)
+        data << this->_objects[i]->getType() << i;
+    this->_messageBus->sendMessage(Message(data, GraphicsCommand::DELETE, Module::GRAPHICS));
+    data.clear();
+
+    int it = 0;
+    for (int i = 0; i < this->_map.size(); i++) {
+        for (int j = 0; j < this->_map[i].size(); j++) {
+            glm::vec3 pos = {i - ((float)this->_map[i].size() - 1) / 2, -j + ((float)this->_map.size() - 1) / 2 + 12.5f, -50.0f};
+            if (this->_map[i][j] == '#')
+                this->_objects[it++ + 5] = std::make_unique<GameObject>(0, "Block", pos, glm::vec3(0.5f));
+            else if (this->_map[i][j] == 'W')
+                this->_objects[it++ + 5] = std::make_unique<GameObject>(0, "Wall", pos, glm::vec3(0.5f));
+        }
+    }
+    data.clear();
+    for (int i = 5; i < this->_objects.size(); i++)
+        data << this->_objects[i]->getType() << i << *this->_objects[i];
+    this->_messageBus->sendMessage(Message(data, GraphicsCommand::ADD, Module::GRAPHICS));
 }
 
 void ConfigScene::addCard(int card)
@@ -373,4 +403,9 @@ void ConfigScene::buttonStart()
             this->_playerConfig[i] = 0;
             this->_playerMode[i] = 0;
         }
+}
+
+void ConfigScene::buttonLoad()
+{
+    this->_messageBus->sendMessage(Message(Packet(), LoaderCommand::LOAD_MAP, Module::LOADER));
 }

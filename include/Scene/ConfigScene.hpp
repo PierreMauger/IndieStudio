@@ -40,6 +40,7 @@ namespace neo
             void buttonBack();
             void buttonReset();
             void buttonStart();
+            void buttonLoad();
 
         public:
             ConfigScene(std::shared_ptr<MessageBus> messageBus);
@@ -55,6 +56,7 @@ namespace neo
             void handleConfig(std::vector<std::string> config);
             void handleStartGame(Packet data);
             void handleSaveMap();
+            void handleMapLoaded(Packet data);
     };
 }
 

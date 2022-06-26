@@ -401,6 +401,10 @@ void GameScene::handleSaveMap()
     this->_messageBus->sendMessage(Message(data, LoaderCommand::SAVE_MAP, Module::LOADER));
 }
 
+void GameScene::handleMapLoaded(Packet data)
+{
+}
+
 std::shared_ptr<MessageBus> GameScene::getMessageBus()
 {
     return this->_messageBus;

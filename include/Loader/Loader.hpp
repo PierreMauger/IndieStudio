@@ -29,6 +29,7 @@ namespace neo
             void run();
 
             void receiveSaveMap(Packet);
+            void receiveLoadMap(Packet);
 
             // Interface functions
             void sendPlayerConfig();
