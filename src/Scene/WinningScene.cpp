@@ -55,6 +55,12 @@ void WinningScene::loadScene()
 
 void WinningScene::handleKeyPressed(int playerID, std::string action)
 {
+    if (action == "Back") {
+        Packet data;
+
+        data << 0;
+        this->_messageBus->sendMessage(Message(data, CoreCommand::CHANGE_SCENE, Module::CORE));
+    }
 }
 
 void WinningScene::handleKeyReleased(int playerID, std::string action)
