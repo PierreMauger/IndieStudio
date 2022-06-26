@@ -27,8 +27,8 @@ namespace neo
             void update();
             void loadScene();
 
-            void handleKeyPressed(int playerNb, std::string action);
-            void handleKeyReleased(int playerNb, std::string action);
+            void handleKeyPressed(int playerID, std::string action);
+            void handleKeyReleased(int playerID, std::string action);
             void handleButtonClicked(int button);
             void handleConfig(std::vector<std::string> config);
             void handleStartGame(Packet data);

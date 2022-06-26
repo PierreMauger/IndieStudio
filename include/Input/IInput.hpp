@@ -20,10 +20,10 @@ namespace neo
             virtual void update() = 0;
             virtual void editConfig(int key, std::string action) = 0;
             virtual float checkAxisStatus(int gamepad, int key, std::string action) = 0;
-            virtual void checkInputStatus(int key, std::string action, int playerNb) = 0;
-            virtual void checkKeyStatus(int key, std::string action, int playerNb) = 0;
-            virtual void checkButtonStatus(int key, std::string action, int playerNb) = 0;
-            virtual void checkJoystickStatus(int key, std::string action, int playerNb) = 0;
+            virtual void checkInputStatus(int key, std::string action, int playerID) = 0;
+            virtual void checkKeyStatus(int key, std::string action, int playerID) = 0;
+            virtual void checkButtonStatus(int key, std::string action, int playerID) = 0;
+            virtual void checkJoystickStatus(int key, std::string action, int playerID) = 0;
     };
 }
 

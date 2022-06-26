@@ -31,10 +31,10 @@ namespace neo
             void update();
             void editConfig(int key, std::string action);
             float checkAxisStatus(int gamepad, int key, std::string action);
-            void checkInputStatus(int key, std::string action, int playerNb);
-            void checkKeyStatus(int key, std::string action, int playerNb);
-            void checkButtonStatus(int key, std::string action, int playerNb);
-            void checkJoystickStatus(int key, std::string action, int playerNb);
+            void checkInputStatus(int key, std::string action, int playerID);
+            void checkKeyStatus(int key, std::string action, int playerID);
+            void checkButtonStatus(int key, std::string action, int playerID);
+            void checkJoystickStatus(int key, std::string action, int playerID);
 
             void receiveKeyConfig(Packet);
             void receiveChangeConfig(Packet);

@@ -96,6 +96,8 @@ void ConfigScene::loadScene()
 
 void ConfigScene::handleKeyPressed(int playerID, std::string action)
 {
+    if (action == "Back")
+        this->buttonBack();
 }
 
 void ConfigScene::handleKeyReleased(int playerID, std::string action)

@@ -69,14 +69,14 @@ void MenuScene::loadScene()
     this->_messageBus->sendMessage(Message(playMusic, AudioCommand::PLAY_MUSIC, Module::AUDIO));
 }
 
-void MenuScene::handleKeyPressed(int playerNb, std::string action)
+void MenuScene::handleKeyPressed(int playerID, std::string action)
 {
-    this->handleBackPressed(playerNb, action);
-    this->handleMainPressed(playerNb, action);
-    this->handleMovePressed(playerNb, action);
+    this->handleBackPressed(playerID, action);
+    this->handleMainPressed(playerID, action);
+    this->handleMovePressed(playerID, action);
 }
 
-void MenuScene::handleKeyReleased(int playerNb, std::string action)
+void MenuScene::handleKeyReleased(int playerID, std::string action)
 {
 }
 
@@ -92,7 +92,7 @@ void MenuScene::handleStartGame(Packet data)
 {
 }
 
-void MenuScene::handleMainPressed(int playerNb, std::string action)
+void MenuScene::handleMainPressed(int playerID, std::string action)
 {
     if (action == "Main") {
         if (this->_selectedButton == -1)
@@ -108,7 +108,7 @@ void MenuScene::handleMainPressed(int playerNb, std::string action)
     }
 }
 
-void MenuScene::handleBackPressed(int playerNb, std::string action)
+void MenuScene::handleBackPressed(int playerID, std::string action)
 {
     if (action == "Back") {
         Packet packet;
@@ -118,7 +118,7 @@ void MenuScene::handleBackPressed(int playerNb, std::string action)
     }
 }
 
-void MenuScene::handleMovePressed(int playerNb, std::string action)
+void MenuScene::handleMovePressed(int playerID, std::string action)
 {
     if (action == "MoveUp" || action == "MoveDown") {
         Packet packet;

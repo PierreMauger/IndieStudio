@@ -51,19 +51,19 @@ void Core::update()
 void Core::receiveKeyPressed(Packet data)
 {
     std::string action;
-    int playerNb = 0;
+    int playerID = 0;
 
-    data >> playerNb >> action;
-    this->_scenes[this->_currentScene]->handleKeyPressed(playerNb, action);
+    data >> playerID >> action;
+    this->_scenes[this->_currentScene]->handleKeyPressed(playerID, action);
 }
 
 void Core::receiveKeyReleased(Packet data)
 {
     std::string action;
-    int playerNb = 0;
+    int playerID = 0;
 
-    data >> playerNb >> action;
-    this->_scenes[this->_currentScene]->handleKeyReleased(playerNb, action);
+    data >> playerID >> action;
+    this->_scenes[this->_currentScene]->handleKeyReleased(playerID, action);
 }
 
 void Core::receiveGraphicsReady(Packet data)

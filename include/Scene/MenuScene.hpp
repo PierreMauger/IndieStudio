@@ -33,16 +33,16 @@ namespace neo
             void update();
             void loadScene();
 
-            void handleKeyPressed(int playerNb, std::string action);
-            void handleKeyReleased(int playerNb, std::string action);
+            void handleKeyPressed(int playerID, std::string action);
+            void handleKeyReleased(int playerID, std::string action);
             void handleButtonClicked(int button);
             void handleConfig(std::vector<std::string> config);
             void handleStartGame(Packet data);
 
         private:
-            void handleMainPressed(int playerNb, std::string action);
-            void handleBackPressed(int playerNb, std::string action);
-            void handleMovePressed(int playerNb, std::string action);
+            void handleMainPressed(int playerID, std::string action);
+            void handleBackPressed(int playerID, std::string action);
+            void handleMovePressed(int playerID, std::string action);
     };
 }
 

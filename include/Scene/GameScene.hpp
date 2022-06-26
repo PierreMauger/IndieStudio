@@ -32,7 +32,7 @@ namespace neo
             void updateAI(void);
 
             //others
-            bool canPlaceBomb(int playerNb);
+            bool canPlaceBomb(int playerID);
 
             //variables
             std::shared_ptr<MessageBus> _messageBus;
@@ -42,6 +42,8 @@ namespace neo
             std::map<int, std::unique_ptr<PowerUp>> _powerUps;
             std::map<int, std::unique_ptr<GameObject>> _objects;
             std::unique_ptr<BotEngine> _botEngine;
+            std::map<int, std::string> _winners;
+            int _top;
             Vector2 _mapSize;
             int _incrementor;
             float _winTimer;
@@ -54,8 +56,8 @@ namespace neo
             void update();
             void loadScene();
 
-            void handleKeyPressed(int playerNb, std::string action);
-            void handleKeyReleased(int playerNb, std::string action);
+            void handleKeyPressed(int playerID, std::string action);
+            void handleKeyReleased(int playerID, std::string action);
             void handleButtonClicked(int button);
             void handleConfig(std::vector<std::string> config);
             void handleStartGame(Packet data);

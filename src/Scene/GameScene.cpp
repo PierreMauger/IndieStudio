@@ -19,7 +19,7 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
     this->_messageBus->sendMessage(Message(playMusic, AudioCommand::PLAY_MUSIC, Module::AUDIO));
 
     this->_botEngine = std::make_unique<BotEngine>();
-    this->_objects[-1] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
+    this->_objects[-1] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(100.0f));
     this->_objects[-1]->setShiny(false);
     this->_objects[-2] = std::make_unique<GameObject>(0, "SpaceShip", glm::vec3(0.0f, -5.0f, 0.0f), glm::vec3(5.0f));
     this->_objects[-2]->setRotation(glm::vec3(0.0f, 0.0f, 180.0f));
@@ -35,7 +35,7 @@ GameScene::~GameScene()
         bomb.reset();
     for (auto &[powerUpKey, powerUp] : this->_powerUps)
         powerUp.reset();
-    for (auto &[object_key, object] : this->_objects)
+    for (auto &[objectKey, object] : this->_objects)
         object.reset();
     this->_players.clear();
     this->_walls.clear();
@@ -49,14 +49,14 @@ void GameScene::loadScene()
 {
     Packet packet;
 
-    for (auto &[player_key, player] : this->_players)
-        packet << player->getType() << player_key << *player;
-    for (auto &[wall_key, wall] : this->_walls)
-        packet << wall->getType() << wall_key << *wall;
-    for (auto &[bomb_key, bomb] : this->_bombs)
-        packet << bomb->getType() << bomb_key << *bomb;
-    for (auto &[object_key, object] : this->_objects)
-        packet << object->getType() << object_key << *object;
+    for (auto &[playerKey, player] : this->_players)
+        packet << player->getType() << playerKey << *player;
+    for (auto &[wallKey, wall] : this->_walls)
+        packet << wall->getType() << wallKey << *wall;
+    for (auto &[bombKey, bomb] : this->_bombs)
+        packet << bomb->getType() << bombKey << *bomb;
+    for (auto &[objectKey, object] : this->_objects)
+        packet << object->getType() << objectKey << *object;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::LOAD, Module::GRAPHICS));
 
     packet.clear();
@@ -182,6 +182,8 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
             if (std::floor(it->second->getPos().x) + 0.5f == bomb->getPos().x + (i == RIGHT ? bomb->getState() : i == LEFT ? -bomb->getState() : 0) &&
                 std::floor(it->second->getPos().y) + 0.5f == bomb->getPos().y + (i == UP ? bomb->getState() : i == DOWN ? -bomb->getState() : 0)) {
                 deleteData << it->second->getType() << it->first;
+                this->_winners[this->_top] = it->second->getName();
+                this->_top--;
                 this->_players.erase(it++);
             } else {
                 it++;
@@ -215,7 +217,7 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
                     break;
                 deleteData << it->second->getType() << it->first;
                 if (std::rand() % 5 == 0) {
-                    this->_powerUps[this->_incrementor] = std::make_unique<PowerUp>(powerUps[std::rand() % 4], it->second->getPos(), glm::vec3(0.5f));
+                    this->_powerUps[this->_incrementor] = std::make_unique<PowerUp>(powerUps[std::rand() % 10], it->second->getPos(), glm::vec3(0.5f));
                     addData << this->_powerUps[this->_incrementor]->getType() << this->_incrementor << *this->_powerUps[this->_incrementor];
                     this->_incrementor++;
                 }
@@ -270,6 +272,10 @@ void GameScene::update(void)
     } else if (this->_winTimer > 10.0f) {
         Packet packet;
         packet << 4;
+        if (this->_players.size() == 1)
+            this->_winners[this->_top] = this->_players.begin()->second->getName();
+        for (auto &[winnerKey, winner] : this->_winners)
+            packet << winner << winnerKey;
         this->_messageBus->sendMessage(Message(packet, CoreCommand::START_GAME, Module::CORE));
         packet.clear();
         packet << 4;
@@ -285,38 +291,38 @@ void GameScene::update(void)
     }
 }
 
-bool GameScene::canPlaceBomb(int playerNb)
+bool GameScene::canPlaceBomb(int playerID)
 {
     size_t bombsCount = 0;
 
     for (auto it = this->_bombs.begin(); it != this->_bombs.end(); it++)
-        if (it->second->getPlayerId() == playerNb)
+        if (it->second->getPlayerId() == playerID)
             bombsCount++;
-    if (1 + this->_players[playerNb]->getBombUp() > bombsCount)
+    if (1 + this->_players[playerID]->getBombUp() > bombsCount)
         return true;
     return false;
 }
 
-void GameScene::handleKeyPressed(int playerNb, std::string action)
+void GameScene::handleKeyPressed(int playerID, std::string action)
 {
-    if (this->_players.find(playerNb) == this->_players.end())
+    if (this->_players.find(playerID) == this->_players.end())
         return;
     if (action == "Adjust")
-        this->_players[playerNb]->teleport(glm::vec3(
-        std::floor(this->_players[playerNb]->getPos().x) + 0.5f,
-        std::floor(this->_players[playerNb]->getPos().y) + 0.5f,
-        this->_players[playerNb]->getPos().z));
+        this->_players[playerID]->teleport(glm::vec3(
+        std::floor(this->_players[playerID]->getPos().x) + 0.5f,
+        std::floor(this->_players[playerID]->getPos().y) + 0.5f,
+        this->_players[playerID]->getPos().z));
     else if (action == "MoveRight")
-        this->_players[playerNb]->getDirection(RIGHT) = true;
+        this->_players[playerID]->getDirection(RIGHT) = true;
     else if (action == "MoveLeft")
-        this->_players[playerNb]->getDirection(LEFT) = true;
+        this->_players[playerID]->getDirection(LEFT) = true;
     else if (action == "MoveUp")
-        this->_players[playerNb]->getDirection(UP) = true;
+        this->_players[playerID]->getDirection(UP) = true;
     else if (action == "MoveDown")
-        this->_players[playerNb]->getDirection(DOWN) = true;
-    else if (action == "Main" && canPlaceBomb(playerNb)) {
-        glm::vec3 pos(floor(this->_players[playerNb]->getPos().x) + 0.5f, floor(this->_players[playerNb]->getPos().y) + 0.5f, this->_players[playerNb]->getPos().z);
-        this->_bombs[this->_incrementor] = std::make_unique<Bomb>("Bomb", pos, this->_players[playerNb]->getFireUp(), playerNb, glm::vec3(0.5f));
+        this->_players[playerID]->getDirection(DOWN) = true;
+    else if (action == "Main" && canPlaceBomb(playerID)) {
+        glm::vec3 pos(floor(this->_players[playerID]->getPos().x) + 0.5f, floor(this->_players[playerID]->getPos().y) + 0.5f, this->_players[playerID]->getPos().z);
+        this->_bombs[this->_incrementor] = std::make_unique<Bomb>("Bomb", pos, this->_players[playerID]->getFireUp(), playerID, glm::vec3(0.5f));
         Packet packet;
         packet << this->_bombs[this->_incrementor]->getType() << this->_incrementor << *this->_bombs[this->_incrementor];
         this->_incrementor++;
@@ -324,18 +330,18 @@ void GameScene::handleKeyPressed(int playerNb, std::string action)
     }
 }
 
-void GameScene::handleKeyReleased(int playerNb, std::string action)
+void GameScene::handleKeyReleased(int playerID, std::string action)
 {
-    if (this->_players.find(playerNb) == this->_players.end())
+    if (this->_players.find(playerID) == this->_players.end())
         return;
     if (action == "MoveRight")
-        this->_players[playerNb]->getDirection(RIGHT) = false;
+        this->_players[playerID]->getDirection(RIGHT) = false;
     else if (action == "MoveLeft")
-        this->_players[playerNb]->getDirection(LEFT) = false;
+        this->_players[playerID]->getDirection(LEFT) = false;
     else if (action == "MoveUp")
-        this->_players[playerNb]->getDirection(UP) = false;
+        this->_players[playerID]->getDirection(UP) = false;
     else if (action == "MoveDown")
-        this->_players[playerNb]->getDirection(DOWN) = false;
+        this->_players[playerID]->getDirection(DOWN) = false;
 }
 
 
@@ -350,6 +356,7 @@ void GameScene::handleConfig(std::vector<std::string> config)
 void GameScene::handleStartGame(Packet data)
 {
     std::vector<std::string> map;
+    std::vector<std::string> models;
     int size = 0;
     int it = 0;
 
@@ -359,8 +366,6 @@ void GameScene::handleStartGame(Packet data)
         data >> tmp;
         map.push_back(tmp);
     }
-
-    std::vector<std::string> models;
     while (data.checkSize(1)) {
         std::string model;
         data >> model;
@@ -386,6 +391,7 @@ void GameScene::handleStartGame(Packet data)
                 this->_walls[this->_incrementor++] = std::make_unique<Wall>("Wall", pos, glm::vec3(0.5f));
         }
     }
+    this->_top = this->_players.size();
 }
 
 std::shared_ptr<MessageBus> GameScene::getMessageBus()

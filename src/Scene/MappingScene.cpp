@@ -11,11 +11,12 @@ using namespace neo;
 
 MappingScene::MappingScene(std::shared_ptr<MessageBus> messageBus)
 {
+    float pos = -1.0f + 0.28f;
+
     this->_messageBus = messageBus;
     this->_objects[0] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
     this->_objects[0]->setShiny(false);
-
-    int it = 0;
+    this->_buttons[0] = std::make_unique<GameObject>(3, "Back", glm::vec3(pos, -0.45f, 0.0f), glm::vec3(0.2f, 0.35f, 0.0f));
 }
 
 MappingScene::~MappingScene()
@@ -52,6 +53,12 @@ void MappingScene::loadScene()
 
 void MappingScene::handleKeyPressed(int playerID, std::string action)
 {
+    if (action == "Back") {
+        Packet data;
+
+        data << 0;
+        this->_messageBus->sendMessage(Message(data, CoreCommand::CHANGE_SCENE, Module::CORE));
+    }
 }
 
 void MappingScene::handleKeyReleased(int playerID, std::string action)
@@ -60,6 +67,12 @@ void MappingScene::handleKeyReleased(int playerID, std::string action)
 
 void MappingScene::handleButtonClicked(int button)
 {
+    if (button == 0) {
+        Packet data;
+
+        data << 0;
+        this->_messageBus->sendMessage(Message(data, CoreCommand::CHANGE_SCENE, Module::CORE));
+    }
 }
 
 void MappingScene::handleConfig(std::vector<std::string> config)
