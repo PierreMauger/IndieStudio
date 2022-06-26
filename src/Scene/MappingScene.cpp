@@ -86,3 +86,7 @@ void MappingScene::handleStartGame(Packet data)
 void MappingScene::handleSaveMap()
 {
 }
+
+void MappingScene::handleMapLoaded(Packet data)
+{
+}

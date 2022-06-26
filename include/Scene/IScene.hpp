@@ -27,6 +27,7 @@ namespace neo
             virtual void handleConfig(std::vector<std::string> config) = 0;
             virtual void handleStartGame(Packet data) = 0;
             virtual void handleSaveMap() = 0;
+            virtual void handleMapLoaded(Packet data) = 0;
     };
 }
 

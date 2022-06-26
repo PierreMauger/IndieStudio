@@ -63,6 +63,7 @@ namespace neo
             void handleConfig(std::vector<std::string> config);
             void handleStartGame(Packet data);
             void handleSaveMap();
+            void handleMapLoaded(Packet data);
 
             std::shared_ptr<MessageBus> getMessageBus();
             std::map<int, std::unique_ptr<Player>> &getPlayers();

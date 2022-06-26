@@ -40,6 +40,7 @@ namespace neo
             void receiveConfig(Packet);
             void receiveStartGame(Packet);
             void receiveSaveMap(Packet);
+            void receiveMapLoaded(Packet);
     };
 }
 

@@ -56,6 +56,7 @@ namespace neo
                 CONFIG,
                 START_GAME,
                 SAVE_MAP,
+                MAP_LOADED,
             };
     };
 
@@ -89,6 +90,7 @@ namespace neo
         public:
             enum {
                 SAVE_MAP = BaseCommand::LAST,
+                LOAD_MAP,
             };
     };
 }
