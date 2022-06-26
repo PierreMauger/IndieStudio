@@ -18,10 +18,10 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
     this->_messageBus->sendMessage(Message(playMusic, AudioCommand::PLAY_MUSIC, Module::AUDIO));
 
     this->_botEngine = std::make_unique<BotEngine>();
-    this->_objects[0] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
-    this->_objects[0]->setShiny(false);
-    this->_objects[1] = std::make_unique<GameObject>(0, "SpaceShip", glm::vec3(0.0f, -5.0f, 0.0f), glm::vec3(5.0f));
-    this->_objects[1]->setRotation(glm::vec3(0.0f, 0.0f, 180.0f));
+    this->_objects[-1] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
+    this->_objects[-1]->setShiny(false);
+    this->_objects[-2] = std::make_unique<GameObject>(0, "SpaceShip", glm::vec3(0.0f, -5.0f, 0.0f), glm::vec3(5.0f));
+    this->_objects[-2]->setRotation(glm::vec3(0.0f, 0.0f, 180.0f));
 }
 
 GameScene::~GameScene()
@@ -173,7 +173,7 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
 
         if (bomb->getStop(i) == true)
             continue;
-        
+
         for (auto it = this->_players.begin(); it != this->_players.end();) {
             if (std::floor(it->second->getPos().x) + 0.5f == bomb->getPos().x + (i == RIGHT ? bomb->getState() : i == LEFT ? -bomb->getState() : 0) &&
                 std::floor(it->second->getPos().y) + 0.5f == bomb->getPos().y + (i == UP ? bomb->getState() : i == DOWN ? -bomb->getState() : 0)) {
@@ -191,7 +191,7 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
                 other_bomb->getPos().y == bomb->getPos().y + (i == UP ? bomb->getState() : i == DOWN ? -bomb->getState() : 0))
                 other_bomb->getTimer() = 0.0f;
         }
-        
+
         for (auto it = this->_powerUps.begin(); it != this->_powerUps.end();) {
             if (it->second->getPos().x == bomb->getPos().x + (i == RIGHT ? bomb->getState() : i == LEFT ? -bomb->getState() : 0) &&
                 it->second->getPos().y == bomb->getPos().y + (i == UP ? bomb->getState() : i == DOWN ? -bomb->getState() : 0)) {
@@ -221,9 +221,9 @@ void GameScene::explode(std::unique_ptr<Bomb> &bomb)
         }
 
         if (bomb->getState() != 2 + bomb->getFireUp() && !bomb->getStop(i)) {
-            bomb->getExplosions()[this->_incrementor] = std::make_unique<GameObject>(0, "Explosion",
+            bomb->getExplosions()[this->_incrementor] = std::make_unique<GameObject>(0, "Fire",
                 glm::vec3(bomb->getPos().x + (i == RIGHT ? bomb->getState() + 1 : i == LEFT ? -bomb->getState() - 1 : 0),
-                bomb->getPos().y + (i == UP ? bomb->getState() + 1 : i == DOWN ? -bomb->getState() - 1 : 0), bomb->getPos().z), glm::vec3(0.4f));
+                bomb->getPos().y + (i == UP ? bomb->getState() + 1 : i == DOWN ? -bomb->getState() - 1 : 0), bomb->getPos().z), glm::vec3(0.45f));
             addData << bomb->getExplosions()[this->_incrementor]->getType() << this->_incrementor << *bomb->getExplosions()[this->_incrementor];
             this->_incrementor++;
         }
@@ -344,6 +344,7 @@ void GameScene::handleStartGame(Packet data)
         models.push_back(model);
     }
 
+    this->_mapSize = CAST(Vector2, (float)size, (float)size);
     for (int i = 0; i < map.size(); i++) {
         for (int j = 0; j < map[i].size(); j++) {
             glm::vec3 pos = {i - ((float)map[i].size() - 1) / 2, -j + ((float)map.size() - 1) / 2, 0.0f};
@@ -389,7 +390,7 @@ std::map<int, std::unique_ptr<PowerUp>> &GameScene::getPowerUps()
     return this->_powerUps;
 }
 
-neo::MapGenerator &GameScene::getMapGenerator()
+Vector2 GameScene::getMapSize()
 {
-    return this->_mapGenerator;
+    return this->_mapSize;
 }

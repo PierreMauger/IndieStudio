@@ -90,7 +90,7 @@ void Graphics::draw()
             object.second->draw(*this->_camera);
     for (auto &object : this->_objects)
         if (object.second->getStatus()) {
-            glClear(GL_DEPTH_BUFFER_BIT);
+            // glClear(GL_DEPTH_BUFFER_BIT);
             object.second->draw(*this->_camera);
         }
     glDisable(GL_DEPTH_TEST);
