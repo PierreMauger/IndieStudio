@@ -383,6 +383,13 @@ void ConfigScene::buttonStart()
 {
     Packet data;
 
+    int playerCount = 0;
+    for (int i = 0; i < this->_playerConnected.size(); i++)
+        if (this->_playerConnected[i])
+            playerCount++;
+    if (playerCount < 2)
+        return;
+
     data << 3;
     this->_map = this->_mapGenerator.setPlayer(this->_map, this->_playerConnected, this->_playerMode);
     data << static_cast<int>(this->_map.size());
