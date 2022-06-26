@@ -200,7 +200,7 @@ void ConfigScene::deleteCard(int card)
     this->_messageBus->sendMessage(Message(data, GraphicsCommand::ADD, Module::GRAPHICS));
 
     data.clear();
-    data << card << this->_playerConfig[card] << 3;
+    data << card % 4 << this->_playerConfig[card] << 3;
     this->_messageBus->sendMessage(Message(data, InputCommand::CHANGE_CONFIG, Module::INPUT));
 }
 
@@ -267,6 +267,7 @@ void ConfigScene::changeMode(int card)
     packet << *this->_buttons[playerID + 4 * 10];
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::ADD, Module::GRAPHICS));
 
+    packet.clear();
     packet << playerID << this->_playerConfig[playerID] << this->_playerMode[playerID];
     this->_messageBus->sendMessage(Message(packet, InputCommand::CHANGE_CONFIG, Module::INPUT));
 }
