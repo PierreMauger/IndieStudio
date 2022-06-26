@@ -133,19 +133,24 @@ void Input::receiveKeyConfig(Packet data)
         data >> config;
         this->_configs.push_back(config);
     }
-    if (this->_configs.size())
+    if (this->_configs.size()) {
         this->_usedConfigs[0] = this->_configs[0];
+        this->_usedConfigs[1] = this->_configs[0];
+        this->_usedConfigs[1].setMode(1);
+    }
 }
 
 void Input::receiveChangeConfig(Packet data)
 {
     int playerNb, index, mode;
 
-    data >> playerNb >> index >> mode;
-    if (mode > 1) {
-        this->_usedConfigs.erase(playerNb);
-        return;
+    while (data.checkSize(1)) {
+        data >> playerNb >> index >> mode;
+        if (mode == 2) {
+            this->_usedConfigs.erase(playerNb);
+            return;
+        }
+        this->_usedConfigs[playerNb] = this->_configs[index];
+        this->_usedConfigs[playerNb].setMode(mode);
     }
-    this->_usedConfigs[playerNb] = this->_configs[index];
-    this->_usedConfigs[playerNb].setMode(mode);
 }
