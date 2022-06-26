@@ -13,6 +13,7 @@ ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
     this->_availableModels = {"Red", "Yellow", "Green", "Blue"};
+    this->_cardColors = {"CardRed", "CardYellow", "CardGreen", "CardBlue"};
     this->_playerConnected.resize(4, false);
     this->_playerModel.resize(4, 0);
     this->_playerConfig.resize(4, 0);
@@ -158,7 +159,7 @@ void ConfigScene::addCard(int card)
     this->_messageBus->sendMessage(Message(data, GraphicsCommand::DELETE, Module::GRAPHICS));
     data.clear();
 
-    this->_buttons[card] = std::make_unique<GameObject>(3, "Card", glm::vec3(pos, 0.45f, 0.0f), glm::vec3(0.2f, 0.45f, 0.0f));
+    this->_buttons[card] = std::make_unique<GameObject>(3, this->_cardColors[card], glm::vec3(pos, 0.45f, 0.0f), glm::vec3(0.2f, 0.45f, 0.0f));
     this->_objects[card + 1] = std::make_unique<GameObject>(4, this->_availableModels[this->_playerModel[card]], glm::vec3(pos * 7.0f, -1.5f, 0.0f), glm::vec3(0.5f));
     this->_objects[card + 1]->setRotation(glm::vec3(270.0f, 0.0f, 0.0f));
     data << this->_buttons[card]->getType() << card << *this->_buttons[card];
@@ -246,8 +247,8 @@ void ConfigScene::changeConfig(int card)
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
     packet << *this->_buttons[playerID + 4 * 9];
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::ADD, Module::GRAPHICS));
-    packet.clear();
 
+    packet.clear();
     packet << playerID << this->_playerConfig[playerID] << this->_playerMode[playerID];
     this->_messageBus->sendMessage(Message(packet, InputCommand::CHANGE_CONFIG, Module::INPUT));
 }

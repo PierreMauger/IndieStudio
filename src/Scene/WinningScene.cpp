@@ -77,6 +77,8 @@ void WinningScene::handleButtonClicked(int button)
         data.clear();
         data << 0 << 0 << 0;
         data << 1 << 0 << 1;
+        data << 2 << 0 << 3;
+        data << 3 << 0 << 3;
         this->_messageBus->sendMessage(Message(data, InputCommand::CHANGE_CONFIG, Module::INPUT));
     }
 }

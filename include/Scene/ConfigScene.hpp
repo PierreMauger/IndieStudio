@@ -23,6 +23,7 @@ namespace neo
             std::vector<int> _playerModel;
             std::vector<int> _playerConfig;
             std::vector<int> _playerMode;
+            std::vector<std::string> _cardColors;
             std::vector<std::string> _availableModels;
             std::vector<std::string> _availableConfigs;
             MapGenerator _mapGenerator;
