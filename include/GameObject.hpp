@@ -44,6 +44,7 @@ namespace neo
             void setShiny(bool shiny);
 
             void move(glm::vec3 speed);
+            void teleport(glm::vec3 pos);
     };
 }
 

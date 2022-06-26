@@ -88,3 +88,9 @@ void GameObject::move(glm::vec3 speed)
     this->_pos.x += speed.x;
     this->_pos.y += speed.y;
 }
+
+void GameObject::teleport(glm::vec3 pos)
+{
+    this->_pos.x = pos.x;
+    this->_pos.y = pos.y;
+}

@@ -103,5 +103,5 @@ void Core::receiveConfig(Packet data)
 
 void Core::receiveStartGame(Packet data)
 {
-    this->_scenes[2]->handleStartGame(data);
+    this->_scenes[3]->handleStartGame(data);
 }

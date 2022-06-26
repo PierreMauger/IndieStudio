@@ -133,6 +133,9 @@ void ConfigScene::handleButtonClicked(int button)
         default:
             break;
     }
+    Packet playSound;
+    playSound << "buttonClick.mp3";
+    this->_messageBus->sendMessage(Message(playSound, AudioCommand::PLAY_SOUND, Module::AUDIO));
 }
 
 void ConfigScene::handleConfig(std::vector<std::string> config)
@@ -303,7 +306,7 @@ void ConfigScene::buttonBack()
     data << 0;
     this->_messageBus->sendMessage(Message(data, CoreCommand::CHANGE_SCENE, Module::CORE));
     data.clear();
-    data << 0 << this->_playerConfig[0] << this->_playerMode[0];
+    data << 0 << this->_playerConfig[0] << 0;
     this->_messageBus->sendMessage(Message(data, InputCommand::CHANGE_CONFIG, Module::INPUT));
 
 }
