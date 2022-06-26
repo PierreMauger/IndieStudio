@@ -17,7 +17,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fexceptions")
 if (WIN32)
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /EHsc")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /EHsc /Ox /fp:fast")
 endif (WIN32)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules/" CACHE PATH "" FORCE)
 set(DirectX_D3DX9_LIBRARY "" CACHE FILEPATH "" FORCE)
@@ -34,6 +34,12 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 endif()
 add_compile_options(-g)
 add_compile_options(-O3 -Ofast -flto)
+
+if (WIN32)
+  add_compile_options(/Ox /fp:fast)
+else()
+  add_compile_options(-Ofast -flto)
+endif()
 
 ################## BUILD ##################
 

@@ -13,6 +13,9 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
     this->_incrementor = 0;
+    Packet playMusic;
+    playMusic << "gameMusic.mp3";
+    this->_messageBus->sendMessage(Message(playMusic, AudioCommand::PLAY_MUSIC, Module::AUDIO));
 
     this->_botEngine = std::make_unique<BotEngine>();
     this->_objects[-1] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
@@ -65,7 +68,7 @@ void GameScene::loadScene()
 
 void GameScene::updatePlayers(void)
 {
-    Packet data;
+    Packet deleteGraphicObject;
 
     for (auto &[playerKey, player] : this->_players) {
         if (player->getDirection(RIGHT))
@@ -124,7 +127,7 @@ void GameScene::updatePlayers(void)
             if (CheckCollisionRecs(
                 CAST(Rectangle, player->getPos().x - 0.3f + player->getSpeed().x, player->getPos().y - 0.3f + player->getSpeed().y, 0.6f, 0.6f),
                 CAST(Rectangle, it->second->getPos().x - 0.5f, it->second->getPos().y - 0.5f, 1.0f, 1.0f)) &&
-                !player->isBot()) {
+                (player->isBot() && it->second->getName() != "SpeedUp" || !player->isBot())) {
                 if (it->second->getName() == "BombUp")
                     player->getBombUp() += 1;
                 if (it->second->getName() == "SpeedUp")
@@ -133,7 +136,10 @@ void GameScene::updatePlayers(void)
                     player->getFireUp() += 1;
                 if (it->second->getName() == "WallPass")
                     player->getWallPass() = true;
-                data << it->second->getType() << it->first;
+                Packet playSound;
+                playSound << "powerUp.mp3";
+                this->_messageBus->sendMessage(Message(playSound, AudioCommand::PLAY_SOUND, Module::AUDIO));
+                deleteGraphicObject << it->second->getType() << it->first;
                 this->_powerUps.erase(it++);
             } else {
                 it++;
@@ -141,14 +147,17 @@ void GameScene::updatePlayers(void)
         }
         if (player->getSpeed() != glm::vec3(0.0f)) {
             player->move(player->getSpeed());
-            Packet packet;
-            packet << playerKey << player->getPos().x << player->getPos().y << player->getPos().z;
-            this->_messageBus->sendMessage(Message(packet, GraphicsCommand::MOVE, Module::GRAPHICS));
+            Packet moveGraphicObject;
+            moveGraphicObject << playerKey << player->getPos().x << player->getPos().y << player->getPos().z;
+            this->_messageBus->sendMessage(Message(moveGraphicObject, GraphicsCommand::MOVE, Module::GRAPHICS));
+            Packet playSound;
+            playSound << "playerStep.mp3";
+            this->_messageBus->sendMessage(Message(playSound, AudioCommand::PLAY_SOUND, Module::AUDIO));
             player->getSpeed() = glm::vec3(0.0f);
         }
     }
-    if (data.checkSize(1))
-        this->_messageBus->sendMessage(Message(data, GraphicsCommand::DELETE, Module::GRAPHICS));
+    if (deleteGraphicObject.checkSize(1))
+        this->_messageBus->sendMessage(Message(deleteGraphicObject, GraphicsCommand::DELETE, Module::GRAPHICS));
 }
 
 void GameScene::explode(std::unique_ptr<Bomb> &bomb)
@@ -232,6 +241,9 @@ void GameScene::updateBombs(void)
     for (auto it = this->_bombs.begin(); it != this->_bombs.end();) {
         if ((GetTime() - it->second->getTimer()) * 10 > (it->second->getState() == 0 ? 30 : 1)) {
             this->explode(it->second);
+            Packet playSound;
+            playSound << "bombExplosion.mp3";
+            this->_messageBus->sendMessage(Message(playSound, AudioCommand::PLAY_SOUND, Module::AUDIO));
             data << it->second->getType() << it->first;
             it->second->getState()++;
             it->second->getTimer() = GetTime();
@@ -283,6 +295,9 @@ void GameScene::handleKeyPressed(int playerNb, std::string action)
         packet << this->_bombs[this->_incrementor]->getType() << this->_incrementor << *this->_bombs[this->_incrementor];
         this->_incrementor++;
         this->_messageBus->sendMessage(Message(packet, GraphicsCommand::ADD, Module::GRAPHICS));
+        Packet playSound;
+        playSound << "layBomb.mp3";
+        this->_messageBus->sendMessage(Message(playSound, AudioCommand::PLAY_SOUND, Module::AUDIO));
     }
 }
 
