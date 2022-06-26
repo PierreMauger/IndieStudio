@@ -8,6 +8,7 @@
 #include "Core.hpp"
 #include "MenuScene.hpp"
 #include "ConfigScene.hpp"
+#include "MappingScene.hpp"
 #include "GameScene.hpp"
 
 using namespace neo;
@@ -29,6 +30,7 @@ void Core::run()
 {
     std::srand(std::time(0));
     this->_scenes.push_back(std::make_unique<MenuScene>(this->_messageBus));
+    this->_scenes.push_back(std::make_unique<MappingScene>(this->_messageBus));
     this->_scenes.push_back(std::make_unique<ConfigScene>(this->_messageBus));
     this->_scenes.push_back(std::make_unique<GameScene>(this->_messageBus));
 

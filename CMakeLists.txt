@@ -77,6 +77,7 @@ set(SRC
   src/Audio/Audio.cpp
   src/Core/Core.cpp
   src/Scene/ConfigScene.cpp
+  src/Scene/MappingScene.cpp
   src/Scene/GameScene.cpp
   src/Scene/MenuScene.cpp
   src/Graphics/Graphics.cpp

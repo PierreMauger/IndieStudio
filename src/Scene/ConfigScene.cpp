@@ -348,6 +348,6 @@ void ConfigScene::buttonStart()
     this->_messageBus->sendMessage(Message(data, CoreCommand::START_GAME, Module::CORE));
 
     data.clear();
-    data << 2;
+    data << 3;
     this->_messageBus->sendMessage(Message(data, CoreCommand::CHANGE_SCENE, Module::CORE));
 }

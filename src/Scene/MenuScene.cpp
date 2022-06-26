@@ -94,17 +94,6 @@ void MenuScene::handleStartGame(Packet data)
 void MenuScene::handleMainPressed(int playerNb, std::string action)
 {
     if (action == "Main") {
-        Packet packet;
-        packet << this->_selectedButton << 0;
-        this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT_BUTTON, Module::GRAPHICS));
-        this->_selectedButton = -1;
-        return;
-    }
-}
-
-void MenuScene::handleBackPressed(int playerNb, std::string action)
-{
-    if (action == "Back") {
         if (this->_selectedButton == -1)
             return;
         if (this->_selectedButton == 0) {
@@ -114,6 +103,16 @@ void MenuScene::handleBackPressed(int playerNb, std::string action)
         Packet packet;
         packet << this->_selectedButton;
         this->_messageBus->sendMessage(Message(packet, CoreCommand::CHANGE_SCENE, Module::CORE));
+        this->_selectedButton = -1;
+    }
+}
+
+void MenuScene::handleBackPressed(int playerNb, std::string action)
+{
+    if (action == "Back") {
+        Packet packet;
+        packet << this->_selectedButton << 0;
+        this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SELECT_BUTTON, Module::GRAPHICS));
         this->_selectedButton = -1;
     }
 }
