@@ -26,6 +26,7 @@ CPackConfig.cmake
 CPackSourceConfig.cmake
 cmake_install.cmake
 Makefile
+resources/last_map.txt
 
 #dorian related
 dorian

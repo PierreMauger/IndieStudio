@@ -29,12 +29,13 @@ void Loader::receiveSaveMap(Packet packet)
 {
     std::ofstream file;
 
-    file.open("resources/last_map.txt");
+    file.open("resources/last_map.txt", std::fstream::app);
     while (file.is_open() && packet.checkSize(1)) {
         std::string line;
         packet >> line;
         file << line << std::endl;
     }
+    file.close();
 }
 
 void Loader::sendPlayerConfig()
