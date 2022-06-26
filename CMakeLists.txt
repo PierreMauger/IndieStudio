@@ -86,6 +86,7 @@ set(SRC
   src/Scene/MappingScene.cpp
   src/Scene/GameScene.cpp
   src/Scene/MenuScene.cpp
+  src/Scene/WinningScene.cpp
   src/Graphics/Graphics.cpp
   src/Input/Input.cpp
   src/Loader/Loader.cpp

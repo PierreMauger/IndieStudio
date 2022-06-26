@@ -19,7 +19,7 @@ ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
     this->_playerMode.resize(4, 0);
     this->_map = this->_mapGenerator.generateProceduralMap(0, 20, 20);
 
-    this->_objects[0] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(70.0f));
+    this->_objects[0] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(100.0f));
     this->_objects[0]->setShiny(false);
 
     int it = 0;
@@ -338,6 +338,7 @@ void ConfigScene::buttonStart()
 {
     Packet data;
 
+    data << 3;
     this->_map = this->_mapGenerator.setPlayer(this->_map, this->_playerConnected, this->_playerMode);
     data << static_cast<int>(this->_map.size());
     for (auto &line : this->_map)

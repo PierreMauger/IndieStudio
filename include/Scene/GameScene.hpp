@@ -44,6 +44,7 @@ namespace neo
             std::unique_ptr<BotEngine> _botEngine;
             Vector2 _mapSize;
             int _incrementor;
+            float _winTimer;
 
         public:
             GameScene(std::shared_ptr<MessageBus> messageBus);

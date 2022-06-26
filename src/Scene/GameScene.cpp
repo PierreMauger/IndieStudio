@@ -13,6 +13,7 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
     this->_incrementor = 0;
+    this->_winTimer = 0.0f;
     Packet playMusic;
     playMusic << "gameMusic.mp3";
     this->_messageBus->sendMessage(Message(playMusic, AudioCommand::PLAY_MUSIC, Module::AUDIO));
@@ -259,9 +260,26 @@ void GameScene::updateBombs(void)
 
 void GameScene::update(void)
 {
-    this->_botEngine->updateBot(this);
-    this->updatePlayers();
-    this->updateBombs();
+    if (this->_winTimer == 0.0f) {
+        this->_botEngine->updateBot(this);
+        this->updatePlayers();
+        this->updateBombs();
+    } else if (this->_winTimer > 10.0f) {
+        Packet packet;
+        packet << 4;
+        this->_messageBus->sendMessage(Message(packet, CoreCommand::START_GAME, Module::CORE));
+        packet.clear();
+        packet << 4;
+        this->_messageBus->sendMessage(Message(packet, CoreCommand::CHANGE_SCENE, Module::CORE));
+    }
+    if (this->_players.size() <= 1) {
+        if (this->_winTimer == 0.0f) {
+            Packet packet;
+            packet << 0 << glm::vec3(0.0f, -50.0f, 100.0f);
+            this->_messageBus->sendMessage(Message(packet, GraphicsCommand::SET_CAMERA_NEXT_POS, Module::GRAPHICS));
+        }
+        this->_winTimer += GetFrameTime();
+    }
 }
 
 bool GameScene::canPlaceBomb(int playerNb)
