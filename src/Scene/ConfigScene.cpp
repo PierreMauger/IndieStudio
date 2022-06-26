@@ -34,26 +34,26 @@ ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
     }
 
     float pos = -1.0f + 0.28f;
-    this->_buttons[0] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos            , 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
-    this->_buttons[1] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 1 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
-    this->_buttons[2] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 2 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
-    this->_buttons[3] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos + 3 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
-    this->_buttons[44] = std::make_unique<GameObject>(2, "Back", glm::vec3(pos, -0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
-    this->_buttons[45] = std::make_unique<GameObject>(2, "Reset", glm::vec3(pos + 2.2 * 0.48f, -0.45f, 0.0f), glm::vec3(0.1f, 0.1f, 0.0f));
-    this->_buttons[46] = std::make_unique<GameObject>(2, "Start", glm::vec3(pos + 3 * 0.48f, -0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
+    this->_buttons[0] = std::make_unique<GameObject>(3, "Add", glm::vec3(pos            , 0.45f, 0.0f), glm::vec3(0.2f, 0.35f, 0.0f));
+    this->_buttons[1] = std::make_unique<GameObject>(3, "Add", glm::vec3(pos + 1 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.35f, 0.0f));
+    this->_buttons[2] = std::make_unique<GameObject>(3, "Add", glm::vec3(pos + 2 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.35f, 0.0f));
+    this->_buttons[3] = std::make_unique<GameObject>(3, "Add", glm::vec3(pos + 3 * 0.48f, 0.45f, 0.0f), glm::vec3(0.2f, 0.35f, 0.0f));
+    this->_buttons[44] = std::make_unique<GameObject>(3, "Back", glm::vec3(pos, -0.45f, 0.0f), glm::vec3(0.2f, 0.35f, 0.0f));
+    this->_buttons[45] = std::make_unique<GameObject>(3, "Reload", glm::vec3(pos + 2.2 * 0.48f, -0.45f, 0.0f), glm::vec3(0.1f, 0.17f, 0.0f));
+    this->_buttons[46] = std::make_unique<GameObject>(3, "Play", glm::vec3(pos + 3 * 0.48f, -0.45f, 0.0f), glm::vec3(0.2f, 0.35f, 0.0f));
     for (int card = 0; card < 4; card++) {
         pos = -1.0f + 0.28f + card * 0.48f;
 
-        this->_buttons[card + 4 * 1] = std::make_unique<GameObject>(3, "RightArrow", glm::vec3(pos + 0.15f, 0.23f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
-        this->_buttons[card + 4 * 2] = std::make_unique<GameObject>(3, "LeftArrow", glm::vec3(pos - 0.15f, 0.23f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
-        this->_buttons[card + 4 * 3] = std::make_unique<GameObject>(3, "RightArrow", glm::vec3(pos + 0.15f, 0.5f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
-        this->_buttons[card + 4 * 4] = std::make_unique<GameObject>(3, "LeftArrow", glm::vec3(pos - 0.15f, 0.5f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
-        this->_buttons[card + 4 * 5] = std::make_unique<GameObject>(3, "RightArrow", glm::vec3(pos - 0.15f, 0.8f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
-        this->_buttons[card + 4 * 6] = std::make_unique<GameObject>(3, "RightArrow", glm::vec3(pos        , 0.8f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
-        this->_buttons[card + 4 * 7] = std::make_unique<GameObject>(3, "RightArrow", glm::vec3(pos + 0.15f, 0.8f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
-        this->_buttons[card + 4 * 8] = std::make_unique<GameObject>(3, "RightArrow", glm::vec3(pos + 0.18f, 0.05f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
-        this->_buttons[card + 4 * 9] = std::make_unique<GameObject>(2, "", glm::vec3(pos, 0.5f, 0.0f), glm::vec3(0.1f, 0.05f, 0.0f));
-        this->_buttons[card + 4 * 10] = std::make_unique<GameObject>(3, "LeftArrow", glm::vec3(pos - 0.15f, 0.8f, 0.0f), glm::vec3(0.02f, 0.05f, 0.0f));
+        this->_buttons[card + 4 * 1] = std::make_unique<GameObject>(3, "Right", glm::vec3(pos + 0.175f, 0.23f, 0.0f), glm::vec3(0.02f, 0.035f, 0.0f));
+        this->_buttons[card + 4 * 2] = std::make_unique<GameObject>(3, "Left", glm::vec3(pos - 0.175f, 0.23f, 0.0f), glm::vec3(0.02f, 0.035f, 0.0f));
+        this->_buttons[card + 4 * 3] = std::make_unique<GameObject>(3, "Right", glm::vec3(pos + 0.15f, 0.55f, 0.0f), glm::vec3(0.02f, 0.035f, 0.0f));
+        this->_buttons[card + 4 * 4] = std::make_unique<GameObject>(3, "Left", glm::vec3(pos - 0.15f, 0.55f, 0.0f), glm::vec3(0.02f, 0.035f, 0.0f));
+        this->_buttons[card + 4 * 5] = std::make_unique<GameObject>(3, "Keyboard", glm::vec3(pos - 0.12f, 0.75f, 0.0f), glm::vec3(0.04f, 0.07f, 0.0f));
+        this->_buttons[card + 4 * 6] = std::make_unique<GameObject>(3, "Controller", glm::vec3(pos        , 0.75f, 0.0f), glm::vec3(0.04f, 0.07f, 0.0f));
+        this->_buttons[card + 4 * 7] = std::make_unique<GameObject>(3, "AI", glm::vec3(pos + 0.12f, 0.75f, 0.0f), glm::vec3(0.04f, 0.07f, 0.0f));
+        this->_buttons[card + 4 * 8] = std::make_unique<GameObject>(3, "Close", glm::vec3(pos + 0.175f, 0.05f, 0.0f), glm::vec3(0.02f, 0.035f, 0.0f));
+        this->_buttons[card + 4 * 9] = std::make_unique<GameObject>(2, "", glm::vec3(pos, 0.55f, 0.0f), glm::vec3(0.1f, 0.035f, 0.0f));
+        this->_buttons[card + 4 * 10] = std::make_unique<GameObject>(3, "Select", glm::vec3(pos - 0.12f, 0.75f, 0.0f), glm::vec3(0.04f, 0.070f, 0.0f));
     }
 }
 
@@ -195,7 +195,7 @@ void ConfigScene::deleteCard(int card)
     this->_messageBus->sendMessage(Message(data, GraphicsCommand::DELETE, Module::GRAPHICS));
     data.clear();
 
-    this->_buttons[card] = std::make_unique<GameObject>(2, "Connect", glm::vec3(pos, 0.45f, 0.0f), glm::vec3(0.2f, 0.2f, 0.0f));
+    this->_buttons[card] = std::make_unique<GameObject>(3, "Add", glm::vec3(pos, 0.45f, 0.0f), glm::vec3(0.2f, 0.35f, 0.0f));
     data << this->_buttons[card]->getType() << card << *this->_buttons[card];
     this->_messageBus->sendMessage(Message(data, GraphicsCommand::ADD, Module::GRAPHICS));
 
@@ -263,7 +263,7 @@ void ConfigScene::changeMode(int card)
 
     packet << this->_buttons[playerID + 4 * 10]->getType() << playerID + 4 * 10;
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::DELETE, Module::GRAPHICS));
-    this->_buttons[playerID + 4 * 10]->setPos(glm::vec3(pos - 0.15f + 0.15f * this->_playerMode[playerID], 0.8f, 0.0f));
+    this->_buttons[playerID + 4 * 10]->setPos(glm::vec3(pos - 0.12f + 0.12f * this->_playerMode[playerID], 0.75f, 0.0f));
     packet << *this->_buttons[playerID + 4 * 10];
     this->_messageBus->sendMessage(Message(packet, GraphicsCommand::ADD, Module::GRAPHICS));
 
