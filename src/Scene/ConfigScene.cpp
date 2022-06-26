@@ -12,7 +12,7 @@ using namespace neo;
 ConfigScene::ConfigScene(std::shared_ptr<MessageBus> messageBus)
 {
     this->_messageBus = messageBus;
-    this->_availableModels = {"Amongus", "Asteroid1", "Asteroid2", "Asteroid3"};
+    this->_availableModels = {"Red", "Yellow", "Green", "Blue"};
     this->_playerConnected.resize(4, false);
     this->_playerModel.resize(4, 0);
     this->_playerConfig.resize(4, 0);
@@ -356,4 +356,11 @@ void ConfigScene::buttonStart()
     data.clear();
     data << 3;
     this->_messageBus->sendMessage(Message(data, CoreCommand::CHANGE_SCENE, Module::CORE));
+    for (int i = 0; i < this->_playerConnected.size(); i++)
+        if (this->_playerConnected[i]) {
+            this->_playerConnected[i] = false;
+            this->_playerModel[i] = 0;
+            this->_playerConfig[i] = 0;
+            this->_playerMode[i] = 0;
+        }
 }

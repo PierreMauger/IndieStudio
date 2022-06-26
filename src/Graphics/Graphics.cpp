@@ -89,10 +89,8 @@ void Graphics::draw()
         if (!object.second->getStatus())
             object.second->draw(*this->_camera);
     for (auto &object : this->_objects)
-        if (object.second->getStatus()) {
-            // glClear(GL_DEPTH_BUFFER_BIT);
+        if (object.second->getStatus())
             object.second->draw(*this->_camera);
-        }
     glDisable(GL_DEPTH_TEST);
     for (auto &button : this->_buttons)
         button.second->draw(*this->_camera);
@@ -132,7 +130,7 @@ void Graphics::receiveResourceList(Packet data)
         } else if (type == 3) {
             std::vector<std::shared_ptr<neo::Model>> temp;
             for (int i = 0; i < 20; i++)
-                temp.push_back(std::shared_ptr<Model>(new Model("resources/frames/" + fileName + std::to_string(i) + ".dae")));
+                temp.push_back(std::shared_ptr<Model>(new Model("resources/frames/" + fileName + "/" + fileName + std::to_string(i) + ".dae")));
             this->_frames[fileName] = temp;
         }
     }

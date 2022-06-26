@@ -48,6 +48,7 @@ GameScene::~GameScene()
 void GameScene::loadScene()
 {
     Packet packet;
+    this->_winTimer = 0.0f;
 
     for (auto &[playerKey, player] : this->_players)
         packet << player->getType() << playerKey << *player;
