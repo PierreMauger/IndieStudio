@@ -110,6 +110,9 @@ void ConfigScene::handleButtonClicked(int button)
 {
     if (button < this->_playerConnected.size()) {
         this->buttonAdd(button);
+        Packet playSound;
+        playSound << "buttonClick.mp3";
+        this->_messageBus->sendMessage(Message(playSound, AudioCommand::PLAY_SOUND, Module::AUDIO));
         return;
     }
     switch (button < 44 ? button / 4 : button) {

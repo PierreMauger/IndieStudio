@@ -14,9 +14,6 @@ GameScene::GameScene(std::shared_ptr<MessageBus> messageBus)
     this->_messageBus = messageBus;
     this->_incrementor = 0;
     this->_winTimer = 0.0f;
-    Packet playMusic;
-    playMusic << "gameMusic.mp3";
-    this->_messageBus->sendMessage(Message(playMusic, AudioCommand::PLAY_MUSIC, Module::AUDIO));
 
     this->_botEngine = std::make_unique<BotEngine>();
     this->_objects[-1] = std::make_unique<GameObject>(0, "SphereBackground", glm::vec3(0.0f), glm::vec3(100.0f));
@@ -268,6 +265,12 @@ void GameScene::update(void)
         this->updatePlayers();
         this->updateBombs();
     } else if (this->_winTimer > 10.0f) {
+        Packet stopMusic;
+        stopMusic << "gameMusic.mp3";
+        this->_messageBus->sendMessage(Message(stopMusic, AudioCommand::STOP_MUSIC, Module::AUDIO));
+        Packet playMusic;
+        playMusic << "victoryMusic.mp3";
+        this->_messageBus->sendMessage(Message(playMusic, AudioCommand::PLAY_MUSIC, Module::AUDIO));
         Packet packet;
         packet << 4;
         if (this->_players.size() == 1)
