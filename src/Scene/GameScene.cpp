@@ -150,9 +150,6 @@ void GameScene::updatePlayers(void)
             Packet moveGraphicObject;
             moveGraphicObject << playerKey << player->getPos().x << player->getPos().y << player->getPos().z;
             this->_messageBus->sendMessage(Message(moveGraphicObject, GraphicsCommand::MOVE, Module::GRAPHICS));
-            Packet playSound;
-            playSound << "playerStep.mp3";
-            this->_messageBus->sendMessage(Message(playSound, AudioCommand::PLAY_SOUND, Module::AUDIO));
             player->getSpeed() = glm::vec3(0.0f);
         }
     }
