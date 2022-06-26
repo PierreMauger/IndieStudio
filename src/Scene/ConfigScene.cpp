@@ -307,8 +307,8 @@ void ConfigScene::buttonBack()
     this->_messageBus->sendMessage(Message(data, CoreCommand::CHANGE_SCENE, Module::CORE));
     data.clear();
     data << 0 << this->_playerConfig[0] << 0;
+    data << 1 << this->_playerConfig[0] << 1;
     this->_messageBus->sendMessage(Message(data, InputCommand::CHANGE_CONFIG, Module::INPUT));
-
 }
 
 void ConfigScene::buttonReset()

@@ -71,8 +71,6 @@ void MenuScene::loadScene()
 
 void MenuScene::handleKeyPressed(int playerNb, std::string action)
 {
-    if (playerNb != 0)
-        return;
     this->handleBackPressed(playerNb, action);
     this->handleMainPressed(playerNb, action);
     this->handleMovePressed(playerNb, action);
