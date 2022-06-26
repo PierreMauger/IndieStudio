@@ -10,6 +10,7 @@
 #include "ConfigScene.hpp"
 #include "MappingScene.hpp"
 #include "GameScene.hpp"
+#include "WinningScene.hpp"
 
 using namespace neo;
 
@@ -33,6 +34,7 @@ void Core::run()
     this->_scenes.push_back(std::make_unique<MappingScene>(this->_messageBus));
     this->_scenes.push_back(std::make_unique<ConfigScene>(this->_messageBus));
     this->_scenes.push_back(std::make_unique<GameScene>(this->_messageBus));
+    this->_scenes.push_back(std::make_unique<WinningScene>(this->_messageBus));
 
     while (this->_running) {
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
@@ -103,5 +105,8 @@ void Core::receiveConfig(Packet data)
 
 void Core::receiveStartGame(Packet data)
 {
-    this->_scenes[3]->handleStartGame(data);
+    int scene = 0;
+
+    data >> scene;
+    this->_scenes[scene]->handleStartGame(data);
 }
